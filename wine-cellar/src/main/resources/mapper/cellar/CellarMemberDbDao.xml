@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarMemberDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarMemberDbEntity" id="cellarMemberDbMap">
+        <result property="memberId" column="member_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="state" column="state"/>
+        <result property="level" column="level"/>
+        <result property="headPortrait" column="head_portrait"/>
+        <result property="nickname" column="nickname"/>
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <result property="mobilePhone" column="mobile_phone"/>
+        <result property="password" column="password"/>
+        <result property="payPassword" column="pay_password"/>
+        <result property="loginToken" column="login_token"/>
+        <result property="openid" column="openid"/>
+        <result property="balance" column="balance"/>
+        <result property="integral" column="integral"/>
+        <result property="individualitySignature" column="individuality_signature"/>
+        <result property="cardBalance" column="card_balance"/>
+    </resultMap>
+
+
+</mapper>

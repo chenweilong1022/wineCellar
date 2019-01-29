@@ -1,0 +1,6 @@
+renren-generator/.idea/
+*.class
+wine-cellar/target/
+wine-cellar/.idea/
+renren-generator/target/
+wine-cellar/logs/
