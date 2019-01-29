@@ -1,11 +1,18 @@
 package io.renren.modules.app.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import io.renren.common.constants.Constants;
 import io.renren.common.utils.R;
+import io.renren.common.validator.Assert;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.app.entity.UserEntity;
 import io.renren.modules.app.form.RegisterForm;
 import io.renren.modules.app.service.UserService;
+import io.renren.modules.cellar.entity.CellarMemberCaptchaEntity;
+import io.renren.modules.cellar.entity.CellarMemberDbEntity;
+import io.renren.modules.cellar.service.CellarMemberCaptchaService;
+import io.renren.modules.cellar.service.CellarMemberDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -15,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -25,24 +33,56 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/app")
-@Api("APP注册接口")
+@Api(value = "APP注册接口",tags = "APP注册接口")
 public class AppRegisterController {
+
     @Autowired
-    private UserService userService;
+    private CellarMemberCaptchaService cellarMemberCaptchaService;
+    @Autowired
+    private CellarMemberDbService cellarMemberDbService;
 
     @PostMapping("register")
     @ApiOperation("注册")
-    public R register(@RequestBody RegisterForm form){
-        //表单校验
-        ValidatorUtils.validateEntity(form);
+    public R register(
+            CellarMemberCaptchaEntity cellarMemberCaptchaEntity
+    ){
+        /**
+         * 校验表单
+         */
+        Assert.isNull(cellarMemberCaptchaEntity,"注册失败");
+        Assert.isBlank(cellarMemberCaptchaEntity.getMemberMobile(), "手机号不能为空");
+        Assert.isBlank(cellarMemberCaptchaEntity.getCode(), "验证码不能为空");
+        Assert.isBlank(cellarMemberCaptchaEntity.getUuid(), "uuid不能为空");
+        Assert.isPhone(cellarMemberCaptchaEntity.getMemberMobile());
+        Assert.isBlank(cellarMemberCaptchaEntity.getPassword(),"密码不能为空");
+        /**
+         * 判断手机号是否注册
+         */
+        CellarMemberDbEntity cellarMemberDbEntityByPhone = cellarMemberDbService.getOne(new LambdaQueryWrapper<CellarMemberDbEntity>()
+                .eq(CellarMemberDbEntity::getMobilePhone, cellarMemberCaptchaEntity.getMemberMobile()));
 
-        UserEntity user = new UserEntity();
-        user.setMobile(form.getMobile());
-        user.setUsername(form.getMobile());
-        user.setPassword(DigestUtils.sha256Hex(form.getPassword()));
-        user.setCreateTime(new Date());
-        userService.save(user);
+        if (cellarMemberDbEntityByPhone != null) {
+            return R.error("手机号已经注册");
+        }
 
+        /**
+         * 校验验证码
+         */
+        cellarMemberCaptchaService.checkCode(cellarMemberCaptchaEntity.getUuid(),cellarMemberCaptchaEntity.getMemberMobile(),cellarMemberCaptchaEntity.getCode());
+        /**
+         * 插入会员
+         */
+        CellarMemberDbEntity cellarMemberDbEntity = new CellarMemberDbEntity();
+        cellarMemberDbEntity.setCreateTime(new Date());
+        cellarMemberDbEntity.setState(Constants.STATE.zero.getKey());
+        cellarMemberDbEntity.setLevel(Constants.LEVEL.one.getKey());
+        cellarMemberDbEntity.setNickname(cellarMemberCaptchaEntity.getMemberMobile());
+        cellarMemberDbEntity.setMobilePhone(cellarMemberCaptchaEntity.getMemberMobile());
+        cellarMemberDbEntity.setPassword(DigestUtils.sha256Hex(cellarMemberCaptchaEntity.getPassword()));
+        cellarMemberDbEntity.setBalance(BigDecimal.ZERO);
+        cellarMemberDbEntity.setIntegral(BigDecimal.ZERO);
+        cellarMemberDbEntity.setCardBalance(BigDecimal.ZERO);
+        cellarMemberDbService.save(cellarMemberDbEntity);
         return R.ok();
     }
 }

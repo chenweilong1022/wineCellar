@@ -4,6 +4,8 @@ import io.renren.modules.app.annotation.LoginUser;
 import io.renren.modules.app.entity.UserEntity;
 import io.renren.modules.app.interceptor.AuthorizationInterceptor;
 import io.renren.modules.app.service.UserService;
+import io.renren.modules.cellar.entity.CellarMemberDbEntity;
+import io.renren.modules.cellar.service.CellarMemberDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import java.io.Serializable;
 
 /**
  * 有@LoginUser注解的方法参数，注入当前登录用户
@@ -22,11 +26,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @Autowired
-    private UserService userService;
+    private CellarMemberDbService cellarMemberDbService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(UserEntity.class) && parameter.hasParameterAnnotation(LoginUser.class);
+        return parameter.getParameterType().isAssignableFrom(CellarMemberDbEntity.class) && parameter.hasParameterAnnotation(LoginUser.class);
     }
 
     @Override
@@ -38,9 +42,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
             return null;
         }
 
-        //获取用户信息
-        UserEntity user = userService.getById((Long)object);
-
-        return user;
+        CellarMemberDbEntity cellarMemberDbEntity = cellarMemberDbService.getById((Serializable) object);
+        return cellarMemberDbEntity;
     }
 }

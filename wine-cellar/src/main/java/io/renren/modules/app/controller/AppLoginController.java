@@ -2,10 +2,14 @@ package io.renren.modules.app.controller;
 
 
 import io.renren.common.utils.R;
+import io.renren.common.validator.Assert;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.app.form.LoginForm;
 import io.renren.modules.app.service.UserService;
 import io.renren.modules.app.utils.JwtUtils;
+import io.renren.modules.cellar.entity.CellarMemberDbEntity;
+import io.renren.modules.cellar.service.CellarMemberDbService;
+import io.renren.modules.sys.entity.SysJwtEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +30,10 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/app")
-@Api("APP登录接口")
+@Api(value = "APP登录接口",tags = "APP登录接口")
 public class AppLoginController {
     @Autowired
-    private UserService userService;
+    private CellarMemberDbService cellarMemberDbService;
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -38,21 +42,35 @@ public class AppLoginController {
      */
     @PostMapping("login")
     @ApiOperation("登录")
-    public R login(@RequestBody LoginForm form){
-        //表单校验
-        ValidatorUtils.validateEntity(form);
-
-        //用户登录
-        long userId = userService.login(form);
-
+    public R login(
+            CellarMemberDbEntity cellarMemberDbEntity
+    ){
+        /**
+         * 校验表单
+         */
+        Assert.isNull(cellarMemberDbEntity,"登录失败");
+        Assert.isBlank(cellarMemberDbEntity.getMobilePhone(), "手机号不能为空");
+        Assert.isBlank(cellarMemberDbEntity.getPassword(), "密码不能为空");
+        Assert.isPhone(cellarMemberDbEntity.getMobilePhone());
+        /**
+         * 登录
+         */
+        CellarMemberDbEntity cellarMemberDbEntityLogin = cellarMemberDbService.login(cellarMemberDbEntity);
         //生成token
-        String token = jwtUtils.generateToken(userId);
+        String token = jwtUtils.generateToken(cellarMemberDbEntityLogin.getMemberId());
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("token", token);
-        map.put("expire", jwtUtils.getExpire());
-
-        return R.ok(map);
+        /**
+         * 返回前端token
+         */
+        SysJwtEntity sysJwtEntity = new SysJwtEntity();
+        sysJwtEntity.setToken(token);
+        sysJwtEntity.setExpire(jwtUtils.getExpire());
+        /**
+         * 修改登录token
+         */
+        cellarMemberDbEntityLogin.setLoginToken(token);
+        cellarMemberDbService.updateById(cellarMemberDbEntityLogin);
+        return R.data(sysJwtEntity);
     }
 
 }

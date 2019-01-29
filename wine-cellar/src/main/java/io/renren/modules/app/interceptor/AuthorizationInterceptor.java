@@ -1,10 +1,14 @@
 package io.renren.modules.app.interceptor;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.jsonwebtoken.Claims;
 import io.renren.common.exception.RRException;
 import io.renren.modules.app.utils.JwtUtils;
 import io.renren.modules.app.annotation.Login;
+import io.renren.modules.cellar.entity.CellarMemberDbEntity;
+import io.renren.modules.cellar.service.CellarMemberDbService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +30,9 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public static final String USER_KEY = "userId";
+    public static final String USER_KEY = "memberId";
+    @Autowired
+    private CellarMemberDbService cellarMemberDbService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -55,6 +61,15 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         Claims claims = jwtUtils.getClaimByToken(token);
         if(claims == null || jwtUtils.isTokenExpired(claims.getExpiration())){
             throw new RRException(jwtUtils.getHeader() + "失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
+        }
+
+        /**
+         * 根据token查询用户是否存在
+         */
+        CellarMemberDbEntity cellarMemberDbServiceOne = cellarMemberDbService.getOne(new QueryWrapper<CellarMemberDbEntity>().lambda()
+                .eq(CellarMemberDbEntity::getLoginToken, token));
+        if (cellarMemberDbServiceOne == null) {
+            throw new RRException(jwtUtils.getHeader() + "不存在,请重新登录", HttpStatus.UNAUTHORIZED.value());
         }
 
         //设置userId到request里，后续根据userId，获取用户信息

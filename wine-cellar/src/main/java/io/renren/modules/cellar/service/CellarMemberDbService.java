@@ -16,5 +16,12 @@ import java.util.Map;
 public interface CellarMemberDbService extends IService<CellarMemberDbEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 登录校验
+     * @param cellarMemberDbEntity
+     * @return
+     */
+    CellarMemberDbEntity login(CellarMemberDbEntity cellarMemberDbEntity);
 }
 
