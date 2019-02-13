@@ -11,12 +11,15 @@ import io.renren.modules.cellar.entity.CellarMemberDbEntity;
 import io.renren.modules.cellar.service.CellarMemberDbService;
 import io.renren.modules.sys.entity.SysJwtEntity;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +45,12 @@ public class AppLoginController {
      */
     @PostMapping("login")
     @ApiOperation("登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="mobilePhone",value="手机号",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="password",value="密码",dataType="String",required=false,paramType="query"),
+    })
     public R login(
-            CellarMemberDbEntity cellarMemberDbEntity
+            @ApiIgnore CellarMemberDbEntity cellarMemberDbEntity
     ){
         /**
          * 校验表单

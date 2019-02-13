@@ -9,10 +9,13 @@ import io.renren.modules.cellar.entity.CellarMemberDbEntity;
 import io.renren.modules.cellar.service.CellarMemberDbService;
 import io.renren.modules.sys.entity.SysJwtEntity;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -39,8 +42,11 @@ public class AppCellarMemberDbController {
     @PostMapping("info")
     @ApiOperation("根据token查询用户信息")
     @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token,用户校验当前用户",dataType="String",required=false,paramType="query"),
+    })
     public R info(
-            @LoginUser CellarMemberDbEntity cellarMemberDbEntity
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity
     ){
         /**
          * 获取用户信息

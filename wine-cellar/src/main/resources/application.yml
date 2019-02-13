@@ -93,3 +93,10 @@ renren:
 
 logging:
   file: logs/logs.log
+#235短信配置
+sms:
+  charset: utf-8
+  account: N665411_N5027997
+  pswd: vZTN8D0ifzd6e5
+  smsSingleRequestServerUrl: http://smssh1.253.com/msg/send/json
+  msg: 【很好赔】验证码：${code}，请勿泄露。您正在授权手机绑定很好赔平台，验证码将在10分钟后过期，请尽快验证。如非本人操作请忽略。
