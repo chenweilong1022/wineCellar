@@ -1,5 +1,7 @@
 package io.renren.modules.cellar.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.exception.RRException;
@@ -22,11 +24,14 @@ import io.renren.modules.cellar.service.CellarMemberDbService;
 public class CellarMemberDbServiceImpl extends ServiceImpl<CellarMemberDbDao, CellarMemberDbEntity> implements CellarMemberDbService {
 
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
+    public PageUtils queryPage(Map<String, Object> params,CellarMemberDbEntity cellarMemberDbEntity) {
         IPage<CellarMemberDbEntity> page = baseMapper.selectPage(
                 new Query<CellarMemberDbEntity>(params).getPage(),
                 new QueryWrapper<CellarMemberDbEntity>().lambda()
                 .notIn(CellarMemberDbEntity::getState, Constants.STATE.funine.getKey())
+                .eq(!StrUtil.isBlankIfStr(params.get("gender").toString()),CellarMemberDbEntity::getGender,params.get("gender"))
+                .eq(!StrUtil.isBlankIfStr(params.get("state").toString()),CellarMemberDbEntity::getState,params.get("state"))
+                .apply(!StrUtil.isBlankIfStr(params.get("key").toString()),"concat(mobile_phone,',',nickname) like concat('%','"+params.get("key")+"','%')")
         );
 
         return new PageUtils(page);

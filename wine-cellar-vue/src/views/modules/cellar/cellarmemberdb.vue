@@ -2,7 +2,27 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="请输入昵称或手机号" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select clearable v-model="dataForm.gender" placeholder="请选择性别">
+          <el-option
+            v-for="item in genders"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select clearable v-model="dataForm.state" placeholder="请选择会员状态">
+          <el-option
+            v-for="item in states"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -167,8 +187,24 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          key: '',
+          gender: '',
+          state: ''
         },
+        genders: [{
+          value: '1',
+          label: '男'
+        }, {
+          value: '2',
+          label: '女'
+        }],
+        states: [{
+          value: '0',
+          label: '正常'
+        }, {
+          value: '-1',
+          label: '禁用'
+        }],
         dataList: [],
         pageIndex: 1,
         pageSize: 10,
@@ -194,7 +230,9 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'key': this.dataForm.key,
+            'state': this.dataForm.state,
+            'gender': this.dataForm.gender
           })
         }).then(({data}) => {
           if (data && data.code === 0) {

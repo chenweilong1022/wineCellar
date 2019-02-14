@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.common.constants.Constants;
+import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,7 +23,7 @@ import java.util.Date;
  */
 @TableName("cellar_member_db")
 @ApiModel("酒窖会员表")
-public class CellarMemberDbEntity implements Serializable {
+public class CellarMemberDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
