@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('cellar:cellarmemberdb:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <!--<el-button v-if="isAuth('cellar:cellarmemberdb:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
         <el-button v-if="isAuth('cellar:cellarmemberdb:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
@@ -34,24 +34,35 @@
         align="center"
         label="创建时间">
       </el-table-column>
+      <!--<el-table-column-->
+        <!--prop="stateStr"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="状态">-->
+      <!--</el-table-column>-->
       <el-table-column
-        prop="state"
+        prop="stateStr"
         header-align="center"
         align="center"
         label="状态">
+        <template slot-scope="scope">
+            <div @click="updateState(scope.row.memberId,scope.row.state)" slot="reference" class="name-wrapper">
+              <el-tag size="medium">{{ scope.row.stateStr }}</el-tag>
+            </div>
+        </template>
       </el-table-column>
-      <el-table-column
-        prop="level"
-        header-align="center"
-        align="center"
-        label="等级">
-      </el-table-column>
-      <el-table-column
-        prop="headPortrait"
-        header-align="center"
-        align="center"
-        label="头像">
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--prop="level"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="等级">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column-->
+        <!--prop="headPortrait"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="头像">-->
+      <!--</el-table-column>-->
       <el-table-column
         prop="nickname"
         header-align="center"
@@ -59,47 +70,47 @@
         label="昵称">
       </el-table-column>
       <el-table-column
-        prop="gender"
+        prop="genderStr"
         header-align="center"
         align="center"
         label="性别">
       </el-table-column>
-      <el-table-column
-        prop="birthday"
-        header-align="center"
-        align="center"
-        label="生日">
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--prop="birthday"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="生日">-->
+      <!--</el-table-column>-->
       <el-table-column
         prop="mobilePhone"
         header-align="center"
         align="center"
         label="手机号">
       </el-table-column>
-      <el-table-column
-        prop="password"
-        header-align="center"
-        align="center"
-        label="登录密码">
-      </el-table-column>
-      <el-table-column
-        prop="payPassword"
-        header-align="center"
-        align="center"
-        label="支付密码">
-      </el-table-column>
-      <el-table-column
-        prop="loginToken"
-        header-align="center"
-        align="center"
-        label="登录token">
-      </el-table-column>
-      <el-table-column
-        prop="openid"
-        header-align="center"
-        align="center"
-        label="微信openid">
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--prop="password"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="登录密码">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column-->
+        <!--prop="payPassword"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="支付密码">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column-->
+        <!--prop="loginToken"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="登录token">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column-->
+        <!--prop="openid"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="微信openid">-->
+      <!--</el-table-column>-->
       <el-table-column
         prop="balance"
         header-align="center"
@@ -112,12 +123,12 @@
         align="center"
         label="积分">
       </el-table-column>
-      <el-table-column
-        prop="individualitySignature"
-        header-align="center"
-        align="center"
-        label="个性签名">
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--prop="individualitySignature"-->
+        <!--header-align="center"-->
+        <!--align="center"-->
+        <!--label="个性签名">-->
+      <!--</el-table-column>-->
       <el-table-column
         prop="cardBalance"
         header-align="center"
@@ -131,7 +142,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.memberId)">修改</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.memberId)">详情</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.memberId)">删除</el-button>
         </template>
       </el-table-column>
@@ -216,6 +227,44 @@
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
+        })
+      },
+      updateState (id, state) {
+        var stateStr
+        var statePost
+        if (state === 0) {
+          stateStr = '禁用'
+          statePost = -1
+        } else if (state === -1) {
+          stateStr = '启用'
+          statePost = 0
+        }
+        this.$confirm(`确定对[id=${id}]进行[${stateStr}]操作?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/cellar/cellarmemberdb/update'),
+            method: 'post',
+            data: this.$http.adornData({
+              'memberId': id,
+              'state': statePost
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
         })
       },
       // 删除

@@ -1,8 +1,11 @@
 package io.renren.modules.cellar.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import io.renren.common.constants.Constants;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,8 +85,16 @@ public class CellarMemberDbController {
     @RequestMapping("/delete")
     @RequiresPermissions("cellar:cellarmemberdb:delete")
     public R delete(@RequestBody Long[] memberIds){
-			cellarMemberDbService.removeByIds(Arrays.asList(memberIds));
+//			cellarMemberDbService.removeByIds(Arrays.asList(memberIds));
 
+        List<CellarMemberDbEntity> list = new ArrayList<>();
+        for (Long memberId : memberIds) {
+            CellarMemberDbEntity cellarMemberDbEntity = new CellarMemberDbEntity();
+            cellarMemberDbEntity.setMemberId(memberId);
+            cellarMemberDbEntity.setState(Constants.STATE.funine.getKey());
+            list.add(cellarMemberDbEntity);
+        }
+        cellarMemberDbService.updateBatchById(list);
         return R.ok();
     }
 

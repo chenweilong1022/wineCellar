@@ -1,7 +1,12 @@
 package io.renren.common.validator;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import io.renren.common.exception.RRException;
+import io.renren.modules.cellar.entity.CellarMemberDbEntity;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -11,8 +16,6 @@ import org.apache.commons.lang.StringUtils;
  * @date 2017-03-23 15:50
  */
 public abstract class Assert {
-
-    public static final String REGEX = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
 
     public static void isBlank(String str, String message) {
         if (StringUtils.isBlank(str)) {
@@ -27,8 +30,9 @@ public abstract class Assert {
     }
 
     public static void isPhone(String phone) {
-        if (!ReUtil.isMatch(REGEX, phone)) {
+        if (!Validator.isMobile(phone)) {
             throw new RRException("手机格式错误");
         }
     }
+
 }

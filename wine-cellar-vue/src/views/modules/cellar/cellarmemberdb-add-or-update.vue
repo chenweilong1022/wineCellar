@@ -1,64 +1,104 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.id ? '详情' : '详情'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="120px">
     <el-form-item label="创建时间" prop="createTime">
-      <el-input v-model="dataForm.createTime" placeholder="创建时间"></el-input>
+      <el-input readonly v-model="dataForm.createTime" placeholder="创建时间"></el-input>
     </el-form-item>
     <el-form-item label="状态" prop="state">
-      <el-input v-model="dataForm.state" placeholder="状态"></el-input>
+      <el-input readonly v-model="dataForm.stateStr" placeholder="状态"></el-input>
     </el-form-item>
     <el-form-item label="等级" prop="level">
-      <el-input v-model="dataForm.level" placeholder="等级"></el-input>
+      <el-input readonly v-model="dataForm.level" placeholder="等级"></el-input>
     </el-form-item>
-    <el-form-item label="头像" prop="headPortrait">
-      <el-input v-model="dataForm.headPortrait" placeholder="头像"></el-input>
+    <!--<el-form-item label="头像" prop="headPortrait">-->
+      <!--<el-input v-model="dataForm.headPortrait" placeholder="头像"></el-input>-->
+    <!--</el-form-item>-->
+    <el-form-item label="头像" prop="pic">
+      <el-upload
+        disabled
+        class="avatar-uploader"
+        action="/file/upload">
+        <img v-if="dataForm.headPortrait" :src="dataForm.headPortrait" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
     </el-form-item>
     <el-form-item label="昵称" prop="nickname">
-      <el-input v-model="dataForm.nickname" placeholder="昵称"></el-input>
+      <el-input readonly v-model="dataForm.nickname" placeholder="昵称"></el-input>
     </el-form-item>
     <el-form-item label="性别" prop="gender">
-      <el-input v-model="dataForm.gender" placeholder="性别"></el-input>
+      <el-input readonly v-model="dataForm.genderStr" placeholder="性别"></el-input>
     </el-form-item>
+    <!--<el-form-item label="生日" prop="birthday">-->
+      <!--<el-input readonly v-model="dataForm.birthday" placeholder="生日"></el-input>-->
+    <!--</el-form-item>-->
     <el-form-item label="生日" prop="birthday">
-      <el-input v-model="dataForm.birthday" placeholder="生日"></el-input>
+      <el-col :span="11">
+        <el-date-picker readonly type="date" placeholder="选择日期" v-model="dataForm.birthday" style="width: 100%;"></el-date-picker>
+      </el-col>
     </el-form-item>
     <el-form-item label="手机号" prop="mobilePhone">
-      <el-input v-model="dataForm.mobilePhone" placeholder="手机号"></el-input>
+      <el-input readonly v-model="dataForm.mobilePhone" placeholder="手机号"></el-input>
     </el-form-item>
-    <el-form-item label="登录密码" prop="password">
-      <el-input v-model="dataForm.password" placeholder="登录密码"></el-input>
-    </el-form-item>
-    <el-form-item label="支付密码" prop="payPassword">
-      <el-input v-model="dataForm.payPassword" placeholder="支付密码"></el-input>
-    </el-form-item>
-    <el-form-item label="登录token" prop="loginToken">
-      <el-input v-model="dataForm.loginToken" placeholder="登录token"></el-input>
-    </el-form-item>
-    <el-form-item label="微信openid" prop="openid">
-      <el-input v-model="dataForm.openid" placeholder="微信openid"></el-input>
-    </el-form-item>
+    <!--<el-form-item label="登录密码" prop="password">-->
+      <!--<el-input v-model="dataForm.password" placeholder="登录密码"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item label="支付密码" prop="payPassword">-->
+      <!--<el-input v-model="dataForm.payPassword" placeholder="支付密码"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item label="登录token" prop="loginToken">-->
+      <!--<el-input v-model="dataForm.loginToken" placeholder="登录token"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item label="微信openid" prop="openid">-->
+      <!--<el-input v-model="dataForm.openid" placeholder="微信openid"></el-input>-->
+    <!--</el-form-item>-->
     <el-form-item label="余额" prop="balance">
-      <el-input v-model="dataForm.balance" placeholder="余额"></el-input>
+      <el-input readonly v-model="dataForm.balance" placeholder="余额"></el-input>
     </el-form-item>
     <el-form-item label="积分" prop="integral">
-      <el-input v-model="dataForm.integral" placeholder="积分"></el-input>
+      <el-input readonly v-model="dataForm.integral" placeholder="积分"></el-input>
     </el-form-item>
     <el-form-item label="个性签名" prop="individualitySignature">
-      <el-input v-model="dataForm.individualitySignature" placeholder="个性签名"></el-input>
+      <el-input readonly v-model="dataForm.individualitySignature" placeholder="个性签名"></el-input>
     </el-form-item>
     <el-form-item label="储值卡余额" prop="cardBalance">
-      <el-input v-model="dataForm.cardBalance" placeholder="储值卡余额"></el-input>
+      <el-input readonly v-model="dataForm.cardBalance" placeholder="储值卡余额"></el-input>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button @click="visible = false">关闭</el-button>
+      <!--<el-button type="primary" @click="dataFormSubmit()">确定</el-button>-->
     </span>
   </el-dialog>
 </template>
+
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>
 
 <script>
   export default {
@@ -69,10 +109,12 @@
           memberId: 0,
           createTime: '',
           state: '',
+          stateStr: '',
           level: '',
           headPortrait: '',
           nickname: '',
           gender: '',
+          genderStr: '',
           birthday: '',
           mobilePhone: '',
           password: '',
@@ -85,54 +127,54 @@
           cardBalance: ''
         },
         dataRule: {
-          createTime: [
-            { required: true, message: '创建时间不能为空', trigger: 'blur' }
-          ],
-          state: [
-            { required: true, message: '状态不能为空', trigger: 'blur' }
-          ],
-          level: [
-            { required: true, message: '等级不能为空', trigger: 'blur' }
-          ],
-          headPortrait: [
-            { required: true, message: '头像不能为空', trigger: 'blur' }
-          ],
-          nickname: [
-            { required: true, message: '昵称不能为空', trigger: 'blur' }
-          ],
-          gender: [
-            { required: true, message: '性别不能为空', trigger: 'blur' }
-          ],
-          birthday: [
-            { required: true, message: '生日不能为空', trigger: 'blur' }
-          ],
-          mobilePhone: [
-            { required: true, message: '手机号不能为空', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '登录密码不能为空', trigger: 'blur' }
-          ],
-          payPassword: [
-            { required: true, message: '支付密码不能为空', trigger: 'blur' }
-          ],
-          loginToken: [
-            { required: true, message: '登录token不能为空', trigger: 'blur' }
-          ],
-          openid: [
-            { required: true, message: '微信openid不能为空', trigger: 'blur' }
-          ],
-          balance: [
-            { required: true, message: '余额不能为空', trigger: 'blur' }
-          ],
-          integral: [
-            { required: true, message: '积分不能为空', trigger: 'blur' }
-          ],
-          individualitySignature: [
-            { required: true, message: '个性签名不能为空', trigger: 'blur' }
-          ],
-          cardBalance: [
-            { required: true, message: '储值卡余额不能为空', trigger: 'blur' }
-          ]
+          // createTime: [
+          //   { required: true, message: '创建时间不能为空', trigger: 'blur' }
+          // ],
+          // state: [
+          //   { required: true, message: '状态不能为空', trigger: 'blur' }
+          // ],
+          // level: [
+          //   { required: true, message: '等级不能为空', trigger: 'blur' }
+          // ],
+          // headPortrait: [
+          //   { required: true, message: '头像不能为空', trigger: 'blur' }
+          // ],
+          // nickname: [
+          //   { required: true, message: '昵称不能为空', trigger: 'blur' }
+          // ],
+          // gender: [
+          //   { required: true, message: '性别不能为空', trigger: 'blur' }
+          // ],
+          // birthday: [
+          //   { required: true, message: '生日不能为空', trigger: 'blur' }
+          // ],
+          // mobilePhone: [
+          //   { required: true, message: '手机号不能为空', trigger: 'blur' }
+          // ],
+          // password: [
+          //   { required: true, message: '登录密码不能为空', trigger: 'blur' }
+          // ],
+          // payPassword: [
+          //   { required: true, message: '支付密码不能为空', trigger: 'blur' }
+          // ],
+          // loginToken: [
+          //   { required: true, message: '登录token不能为空', trigger: 'blur' }
+          // ],
+          // openid: [
+          //   { required: true, message: '微信openid不能为空', trigger: 'blur' }
+          // ],
+          // balance: [
+          //   { required: true, message: '余额不能为空', trigger: 'blur' }
+          // ],
+          // integral: [
+          //   { required: true, message: '积分不能为空', trigger: 'blur' }
+          // ],
+          // individualitySignature: [
+          //   { required: true, message: '个性签名不能为空', trigger: 'blur' }
+          // ],
+          // cardBalance: [
+          //   { required: true, message: '储值卡余额不能为空', trigger: 'blur' }
+          // ]
         }
       }
     },
@@ -151,10 +193,12 @@
               if (data && data.code === 0) {
                 this.dataForm.createTime = data.cellarMemberDb.createTime
                 this.dataForm.state = data.cellarMemberDb.state
+                this.dataForm.stateStr = data.cellarMemberDb.stateStr
                 this.dataForm.level = data.cellarMemberDb.level
                 this.dataForm.headPortrait = data.cellarMemberDb.headPortrait
                 this.dataForm.nickname = data.cellarMemberDb.nickname
                 this.dataForm.gender = data.cellarMemberDb.gender
+                this.dataForm.genderStr = data.cellarMemberDb.genderStr
                 this.dataForm.birthday = data.cellarMemberDb.birthday
                 this.dataForm.mobilePhone = data.cellarMemberDb.mobilePhone
                 this.dataForm.password = data.cellarMemberDb.password

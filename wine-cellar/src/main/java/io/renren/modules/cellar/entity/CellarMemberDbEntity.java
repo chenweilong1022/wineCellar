@@ -1,10 +1,13 @@
 package io.renren.modules.cellar.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.renren.common.constants.Constants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -39,6 +42,12 @@ public class CellarMemberDbEntity implements Serializable {
 	@ApiModelProperty(required=false,value="状态")
 	private Integer state;
 	/**
+	 * 状态中文描述
+	 */
+	@ApiModelProperty(required=false,value="状态中文描述",hidden = true)
+	@TableField(exist = false)
+	private String stateStr;
+	/**
 	 * 等级
 	 */
 	@ApiModelProperty(required=false,value="等级")
@@ -59,9 +68,16 @@ public class CellarMemberDbEntity implements Serializable {
 	@ApiModelProperty(required=false,value="性别")
 	private Integer gender;
 	/**
+	 * 性别中文描述
+	 */
+	@ApiModelProperty(required=false,value="性别中文描述",hidden = true)
+	@TableField(exist = false)
+	private String genderStr;
+	/**
 	 * 生日
 	 */
 	@ApiModelProperty(required=false,value="生日")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birthday;
 	/**
 	 * 手机号
@@ -312,5 +328,27 @@ public class CellarMemberDbEntity implements Serializable {
 	 */
 	public BigDecimal getCardBalance() {
 		return cardBalance;
+	}
+
+	public String getStateStr() {
+		if (state != null) {
+			return Constants.STATE.getValueByKey(state);
+		}
+		return stateStr;
+	}
+
+	public void setStateStr(String stateStr) {
+		this.stateStr = stateStr;
+	}
+
+	public String getGenderStr() {
+		if (gender != null) {
+			return Constants.GENDER.getValueByKey(gender);
+		}
+		return "保密";
+	}
+
+	public void setGenderStr(String genderStr) {
+		this.genderStr = genderStr;
 	}
 }

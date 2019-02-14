@@ -36,3 +36,8 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+
+file:
+    upload:
+        baseurl: http://127.0.0.1:8080/renren-fast/file/
+        saveurl: D:/upload/image/

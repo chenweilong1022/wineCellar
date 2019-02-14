@@ -1,6 +1,7 @@
 package io.renren.modules.cellar.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import io.renren.common.constants.Constants;
 import io.renren.common.exception.RRException;
 import io.renren.common.validator.Assert;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -24,7 +25,8 @@ public class CellarMemberDbServiceImpl extends ServiceImpl<CellarMemberDbDao, Ce
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<CellarMemberDbEntity> page = baseMapper.selectPage(
                 new Query<CellarMemberDbEntity>(params).getPage(),
-                new QueryWrapper<CellarMemberDbEntity>()
+                new QueryWrapper<CellarMemberDbEntity>().lambda()
+                .notIn(CellarMemberDbEntity::getState, Constants.STATE.funine.getKey())
         );
 
         return new PageUtils(page);
