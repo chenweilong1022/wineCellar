@@ -7,6 +7,7 @@ import io.renren.common.constants.Constants;
 import io.renren.common.exception.RRException;
 import io.renren.common.validator.Assert;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,16 +25,15 @@ import io.renren.modules.cellar.service.CellarMemberDbService;
 public class CellarMemberDbServiceImpl extends ServiceImpl<CellarMemberDbDao, CellarMemberDbEntity> implements CellarMemberDbService {
 
     @Override
-    public PageUtils queryPage(Map<String, Object> params,CellarMemberDbEntity cellarMemberDbEntity) {
+    public PageUtils queryPage(CellarMemberDbEntity cellarMemberDbEntity) {
         IPage<CellarMemberDbEntity> page = baseMapper.selectPage(
-                new Query<CellarMemberDbEntity>(params).getPage(),
+                new Query<CellarMemberDbEntity>(cellarMemberDbEntity).getPage(),
                 new QueryWrapper<CellarMemberDbEntity>().lambda()
-                .notIn(CellarMemberDbEntity::getState, Constants.STATE.funine.getKey())
-                .eq(!StrUtil.isBlankIfStr(params.get("gender").toString()),CellarMemberDbEntity::getGender,params.get("gender"))
-                .eq(!StrUtil.isBlankIfStr(params.get("state").toString()),CellarMemberDbEntity::getState,params.get("state"))
-                .apply(!StrUtil.isBlankIfStr(params.get("key").toString()),"concat(mobile_phone,',',nickname) like concat('%','"+params.get("key")+"','%')")
+                        .notIn(CellarMemberDbEntity::getState, Constants.STATE.funine.getKey())
+                        .eq(!ObjectUtil.isNull(cellarMemberDbEntity.getGender()),CellarMemberDbEntity::getGender,cellarMemberDbEntity.getGender())
+                        .eq(!ObjectUtil.isNull(cellarMemberDbEntity.getState()),CellarMemberDbEntity::getState,cellarMemberDbEntity.getState())
+                        .apply(!StrUtil.isBlankIfStr(cellarMemberDbEntity.getKey().toString()),"concat(mobile_phone,',',nickname) like concat('%','"+cellarMemberDbEntity.getKey()+"','%')")
         );
-
         return new PageUtils(page);
     }
 

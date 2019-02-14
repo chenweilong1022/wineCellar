@@ -30,6 +30,18 @@ public abstract class AbstractEntity implements Serializable {
 	@TableField(exist = false)
 	@ApiModelProperty(required=false,value="搜索关键字",hidden = true)
 	private String key;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="当前页数",hidden = true)
+	private Integer page;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="每页条数",hidden = true)
+	private Integer limit;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="暂时无用",hidden = true)
+	private String sidx;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="暂时无用",hidden = true)
+	private String order;
 
 	public String getKey() {
 		return key;
@@ -37,5 +49,37 @@ public abstract class AbstractEntity implements Serializable {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
+	public String getSidx() {
+		return sidx;
+	}
+
+	public void setSidx(String sidx) {
+		this.sidx = sidx;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
 	}
 }

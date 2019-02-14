@@ -39,8 +39,8 @@ public class CellarMemberDbController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("cellar:cellarmemberdb:list")
-    public R list(@RequestParam Map<String, Object> params,CellarMemberDbEntity cellarMemberDbEntity){
-        PageUtils page = cellarMemberDbService.queryPage(params,cellarMemberDbEntity);
+    public R list(CellarMemberDbEntity cellarMemberDbEntity){
+        PageUtils page = cellarMemberDbService.queryPage(cellarMemberDbEntity);
 
         return R.ok().put("page", page);
     }

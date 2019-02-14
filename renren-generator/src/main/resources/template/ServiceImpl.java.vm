@@ -17,9 +17,9 @@ import ${package}.${moduleName}.service.${className}Service;
 public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${className}Entity> implements ${className}Service {
 
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
+    public PageUtils queryPage(${className}Entity ${classname}) {
         IPage<${className}Entity> page = baseMapper.selectPage(
-                new Query<${className}Entity>(params).getPage(),
+                new Query<${className}Entity>(${classname}).getPage(),
                 new QueryWrapper<${className}Entity>()
         );
 

@@ -19,6 +19,7 @@ package io.renren.common.utils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 //import com.baomidou.mybatisplus.plugins.Page;
 import io.renren.common.xss.SQLFilter;
+import io.renren.modules.sys.entity.AbstractEntity;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.LinkedHashMap;
@@ -63,6 +64,39 @@ public class Query<T> extends LinkedHashMap<String, Object> {
         //防止SQL注入（因为sidx、order是通过拼接SQL实现排序的，会有SQL注入风险）
         String sidx = SQLFilter.sqlInject((String)params.get("sidx"));
         String order = SQLFilter.sqlInject((String)params.get("order"));
+        this.put("sidx", sidx);
+        this.put("order", order);
+
+        //mybatis-plus分页
+        this.page = new Page<>(currPage, limit);
+
+        //排序
+//        if(StringUtils.isNotBlank(sidx) && StringUtils.isNotBlank(order)){
+////            this.page.setOrderByField(sidx);
+////            this.page.set
+//            this.page.setAsc("ASC".equalsIgnoreCase(order));
+//        }
+
+    }
+
+    public Query(AbstractEntity abstractEntity){
+//        this.putAll(params);
+
+        //分页参数
+        if(abstractEntity.getPage() != null){
+            currPage = abstractEntity.getPage();
+        }
+        if(abstractEntity.getLimit() != null){
+            limit = abstractEntity.getLimit();
+        }
+
+        this.put("offset", (currPage - 1) * limit);
+        this.put("page", currPage);
+        this.put("limit", limit);
+
+        //防止SQL注入（因为sidx、order是通过拼接SQL实现排序的，会有SQL注入风险）
+        String sidx = SQLFilter.sqlInject(abstractEntity.getSidx());
+        String order = SQLFilter.sqlInject(abstractEntity.getOrder());
         this.put("sidx", sidx);
         this.put("order", order);
 
