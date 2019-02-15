@@ -25,6 +25,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     @Autowired
     private FileConfig fileConfig;
+    @Autowired
+    private HostNameConfig hostNameConfig;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -46,14 +48,15 @@ public class SwaggerConfig implements WebMvcConfigurer {
             //.apis(RequestHandlerSelectors.basePackage("io.renren.controller"))
             .paths(PathSelectors.any())
             .build()
-            .securitySchemes(security());
+            .securitySchemes(security())
+            .host(hostNameConfig.getName());
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
             .title("同城酒窖")
             .description("同城酒窖API文档")
-            .termsOfServiceUrl("http://www.renren.io")
+            .termsOfServiceUrl("http://")
             .version("1.0")
             .build();
     }

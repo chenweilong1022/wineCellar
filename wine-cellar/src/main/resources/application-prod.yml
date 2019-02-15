@@ -4,13 +4,13 @@ spring:
         driverClassName: com.mysql.jdbc.Driver
         druid:
             first:
-                url: jdbc:mysql://localhost:3306/renren_fast?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-                username: renren
-                password: 123456
+                url: jdbc:mysql://172.17.0.3:3306/wine_cellar?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+                username: root
+                password: SEW2018!
             second:
-                url: jdbc:mysql://localhost:3306/renren_fast?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-                username: renren
-                password: 123456
+                url: jdbc:mysql://172.17.0.3:3306/wine_cellar?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+                username: root
+                password: SEW2018!
             initial-size: 10
             max-active: 100
             min-idle: 10
@@ -39,5 +39,8 @@ spring:
 
 file:
     upload:
-        baseurl: http://127.0.0.1:8080/renren-fast/file/
-        saveurl: D:/upload/image/
+        baseurl: http://${project.host.name}/file/
+        saveurl: /home/upload/image/
+project:
+    host:
+        name: tongcheng.xiaoyuancms.cn
