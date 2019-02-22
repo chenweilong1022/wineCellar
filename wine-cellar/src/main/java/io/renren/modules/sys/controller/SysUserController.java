@@ -23,10 +23,10 @@ import java.util.Map;
 
 /**
  * 系统用户
- * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年10月31日 上午10:40:10
+ *
+ * @author chenweilong
+ * @email 1433471850@qq.com
+ * @date 2019-01-29 14:59:19
  */
 @RestController
 @RequestMapping("/sys/user")
@@ -42,12 +42,12 @@ public class SysUserController extends AbstractController {
 	 */
 	@GetMapping("/list")
 	@RequiresPermissions("sys:user:list")
-	public R list(@RequestParam Map<String, Object> params){
+	public R list(SysUserEntity sysUserEntity){
 		//只有超级管理员，才能查看所有管理员列表
 		if(getUserId() != Constant.SUPER_ADMIN){
-			params.put("createUserId", getUserId());
+			sysUserEntity.setCreateUserId(getUserId());
 		}
-		PageUtils page = sysUserService.queryPage(params);
+		PageUtils page = sysUserService.queryPage(sysUserEntity);
 
 		return R.ok().put("page", page);
 	}

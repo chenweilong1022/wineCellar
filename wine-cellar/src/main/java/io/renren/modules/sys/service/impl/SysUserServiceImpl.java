@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -38,17 +39,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 	private SysRoleService sysRoleService;
 
 	@Override
-	public PageUtils queryPage(Map<String, Object> params) {
-		String username = (String)params.get("username");
-		Long createUserId = (Long)params.get("createUserId");
-
-		IPage<SysUserEntity> page = baseMapper.selectPage(
-			new Query<SysUserEntity>(params).getPage(),
-			new QueryWrapper<SysUserEntity>()
-				.like(StringUtils.isNotBlank(username),"username", username)
-				.eq(createUserId != null,"create_user_id", createUserId)
+	public PageUtils queryPage(SysUserEntity sysUserEntity) {
+        IPage<SysUserEntity> page = baseMapper.selectPage(
+				new Query<SysUserEntity>(sysUserEntity).getPage(),
+				new QueryWrapper<SysUserEntity>().lambda()
+						.like(StringUtils.isNotBlank(sysUserEntity.getUsername()),SysUserEntity::getUsername, sysUserEntity.getUsername())
+						.eq(ObjectUtil.isNotNull(sysUserEntity.getCreateUserId()),SysUserEntity::getCreateUserId, sysUserEntity.getCreateUserId())
 		);
-
 		return new PageUtils(page);
 	}
 
@@ -112,7 +109,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 		SysUserEntity userEntity = new SysUserEntity();
 		userEntity.setPassword(newPassword);
 		return this.update(userEntity,
-				new QueryWrapper<SysUserEntity>().eq("user_id", userId).eq("password", password));
+				new QueryWrapper<SysUserEntity>().lambda()
+                        .eq(SysUserEntity::getUserId, userId)
+                        .eq(SysUserEntity::getPassword, password));
 	}
 	
 	/**

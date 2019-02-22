@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public interface SysConfigService extends IService<SysConfigEntity>  {
 
-	PageUtils queryPage(Map<String, Object> params);
+	PageUtils queryPage(SysConfigEntity sysConfigEntity);
 	
 	/**
 	 * 保存配置信息

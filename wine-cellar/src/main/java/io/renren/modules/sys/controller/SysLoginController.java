@@ -24,10 +24,10 @@ import java.util.Map;
 
 /**
  * 登录相关
- * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年11月10日 下午1:15:31
+ *
+ * @author chenweilong
+ * @email 1433471850@qq.com
+ * @date 2019-01-29 14:59:19
  */
 @RestController
 public class SysLoginController extends AbstractController {

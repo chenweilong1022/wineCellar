@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface SysRoleService extends IService<SysRoleEntity> {
 
-	PageUtils queryPage(Map<String, Object> params);
+	PageUtils queryPage(SysRoleEntity sysRoleEntity);
 
 	boolean save(SysRoleEntity role);
 

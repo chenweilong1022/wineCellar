@@ -32,10 +32,10 @@ import java.util.Map;
 
 /**
  * 系统日志
- * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2017-03-08 10:40:56
+ *
+ * @author chenweilong
+ * @email 1433471850@qq.com
+ * @date 2019-01-29 14:59:19
  */
 @Controller
 @RequestMapping("/sys/log")

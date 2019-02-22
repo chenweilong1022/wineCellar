@@ -1,5 +1,7 @@
 package io.renren.modules.sys.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.annotation.SysLog;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
@@ -18,10 +20,10 @@ import java.util.Map;
 
 /**
  * 角色管理
- * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年11月8日 下午2:18:33
+ *
+ * @author chenweilong
+ * @email 1433471850@qq.com
+ * @date 2019-01-29 14:59:19
  */
 @RestController
 @RequestMapping("/sys/role")
@@ -36,13 +38,13 @@ public class SysRoleController extends AbstractController {
 	 */
 	@GetMapping("/list")
 	@RequiresPermissions("sys:role:list")
-	public R list(@RequestParam Map<String, Object> params){
+	public R list(SysRoleEntity sysRoleEntity){
 		//如果不是超级管理员，则只查询自己创建的角色列表
 		if(getUserId() != Constant.SUPER_ADMIN){
-			params.put("createUserId", getUserId());
+			sysRoleEntity.setCreateUserId(getUserId());
 		}
 
-		PageUtils page = sysRoleService.queryPage(params);
+		PageUtils page = sysRoleService.queryPage(sysRoleEntity);
 
 		return R.ok().put("page", page);
 	}
@@ -53,13 +55,14 @@ public class SysRoleController extends AbstractController {
 	@GetMapping("/select")
 	@RequiresPermissions("sys:role:select")
 	public R select(){
-		Map<String, Object> map = new HashMap<>();
+		SysRoleEntity sysRoleEntity = new SysRoleEntity();
 		
 		//如果不是超级管理员，则只查询自己所拥有的角色列表
 		if(getUserId() != Constant.SUPER_ADMIN){
-			map.put("create_user_id", getUserId());
+			sysRoleEntity.setCreateUserId(getUserId());
 		}
-		List<SysRoleEntity> list = (List<SysRoleEntity>) sysRoleService.listByMap(map);
+		List<SysRoleEntity> list = sysRoleService.list(new QueryWrapper<SysRoleEntity>().lambda()
+				.eq(ObjectUtil.isNotNull(sysRoleEntity.getCreateUserId()), SysRoleEntity::getCreateUserId, sysRoleEntity.getCreateUserId()));
 
 		return R.ok().put("list", list);
 	}

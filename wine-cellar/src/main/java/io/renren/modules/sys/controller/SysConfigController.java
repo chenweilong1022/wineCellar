@@ -31,10 +31,10 @@ import java.util.Map;
 
 /**
  * 系统配置信息
- * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年12月4日 下午6:55:53
+ *
+ * @author chenweilong
+ * @email 1433471850@qq.com
+ * @date 2019-01-29 14:59:19
  */
 @RestController
 @RequestMapping("/sys/config")
@@ -47,8 +47,8 @@ public class SysConfigController extends AbstractController {
 	 */
 	@GetMapping("/list")
 	@RequiresPermissions("sys:config:list")
-	public R list(@RequestParam Map<String, Object> params){
-		PageUtils page = sysConfigService.queryPage(params);
+	public R list(SysConfigEntity sysConfigEntity){
+		PageUtils page = sysConfigService.queryPage(sysConfigEntity);
 
 		return R.ok().put("page", page);
 	}

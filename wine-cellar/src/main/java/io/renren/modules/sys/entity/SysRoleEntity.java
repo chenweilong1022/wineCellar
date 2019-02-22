@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2016年9月18日 上午9:27:38
  */
 @TableName("sys_role")
-public class SysRoleEntity implements Serializable {
+public class SysRoleEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**

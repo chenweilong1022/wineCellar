@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -40,15 +41,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
     private SysUserRoleService sysUserRoleService;
 
 	@Override
-	public PageUtils queryPage(Map<String, Object> params) {
-		String roleName = (String)params.get("roleName");
-		Long createUserId = (Long)params.get("createUserId");
-
+	public PageUtils queryPage(SysRoleEntity sysRoleEntity) {
 		IPage<SysRoleEntity> page = baseMapper.selectPage(
-			new Query<SysRoleEntity>(params).getPage(),
-			new QueryWrapper<SysRoleEntity>()
-				.like(StringUtils.isNotBlank(roleName),"role_name", roleName)
-				.eq(createUserId != null,"create_user_id", createUserId)
+			new Query<SysRoleEntity>(sysRoleEntity).getPage(),
+			new QueryWrapper<SysRoleEntity>().lambda()
+				.like(StringUtils.isNotBlank(sysRoleEntity.getRoleName()),SysRoleEntity::getRoleName, sysRoleEntity.getRoleName())
+				.eq(ObjectUtil.isNotNull(sysRoleEntity.getCreateUserId()),SysRoleEntity::getCreateUserId, sysRoleEntity.getCreateUserId())
 		);
 
 		return new PageUtils(page);

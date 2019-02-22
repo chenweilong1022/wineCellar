@@ -8,6 +8,7 @@ import io.renren.common.exception.RRException;
 import io.renren.common.validator.Assert;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -30,9 +31,9 @@ public class CellarMemberDbServiceImpl extends ServiceImpl<CellarMemberDbDao, Ce
                 new Query<CellarMemberDbEntity>(cellarMemberDbEntity).getPage(),
                 new QueryWrapper<CellarMemberDbEntity>().lambda()
                         .notIn(CellarMemberDbEntity::getState, Constants.STATE.funine.getKey())
-                        .eq(!ObjectUtil.isNull(cellarMemberDbEntity.getGender()),CellarMemberDbEntity::getGender,cellarMemberDbEntity.getGender())
-                        .eq(!ObjectUtil.isNull(cellarMemberDbEntity.getState()),CellarMemberDbEntity::getState,cellarMemberDbEntity.getState())
-                        .apply(!StrUtil.isBlankIfStr(cellarMemberDbEntity.getKey().toString()),"concat(mobile_phone,',',nickname) like concat('%','"+cellarMemberDbEntity.getKey()+"','%')")
+                        .eq(ObjectUtil.isNotNull(cellarMemberDbEntity.getGender()),CellarMemberDbEntity::getGender,cellarMemberDbEntity.getGender())
+                        .eq(ObjectUtil.isNotNull(cellarMemberDbEntity.getState()),CellarMemberDbEntity::getState,cellarMemberDbEntity.getState())
+                        .apply(StringUtils.isNotBlank(cellarMemberDbEntity.getKey().toString()),"concat(mobile_phone,',',nickname) like concat('%','"+cellarMemberDbEntity.getKey()+"','%')")
         );
         return new PageUtils(page);
     }

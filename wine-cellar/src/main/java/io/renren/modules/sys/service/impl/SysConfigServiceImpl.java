@@ -41,14 +41,12 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfigEnt
 	private SysConfigRedis sysConfigRedis;
 
 	@Override
-	public PageUtils queryPage(Map<String, Object> params) {
-		String paramKey = (String)params.get("paramKey");
-
+	public PageUtils queryPage(SysConfigEntity sysConfigEntity) {
 		IPage<SysConfigEntity> page = baseMapper.selectPage(
-				new Query<SysConfigEntity>(params).getPage(),
-				new QueryWrapper<SysConfigEntity>()
-					.like(StringUtils.isNotBlank(paramKey),"param_key", paramKey)
-					.eq("status", 1)
+				new Query<SysConfigEntity>(sysConfigEntity).getPage(),
+				new QueryWrapper<SysConfigEntity>().lambda()
+					.like(StringUtils.isNotBlank(sysConfigEntity.getParamKey()),SysConfigEntity::getParamKey, sysConfigEntity.getParamKey())
+					.eq(SysConfigEntity::getStatus, 1)
 		);
 
 		return new PageUtils(page);

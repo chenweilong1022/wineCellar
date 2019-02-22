@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface SysUserService extends IService<SysUserEntity> {
 
-	PageUtils queryPage(Map<String, Object> params);
+	PageUtils queryPage(SysUserEntity sysUserEntity);
 
 	/**
 	 * 查询用户的所有权限

@@ -21,7 +21,7 @@ import java.util.List;
  * @date 2016年9月18日 上午9:28:55
  */
 @TableName("sys_user")
-public class SysUserEntity implements Serializable {
+public class SysUserEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**

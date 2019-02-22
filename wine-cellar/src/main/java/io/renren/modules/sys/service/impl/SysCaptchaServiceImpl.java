@@ -62,7 +62,8 @@ public class SysCaptchaServiceImpl extends ServiceImpl<SysCaptchaDao, SysCaptcha
 
     @Override
     public boolean validate(String uuid, String code) {
-        SysCaptchaEntity captchaEntity = this.getOne(new QueryWrapper<SysCaptchaEntity>().eq("uuid", uuid));
+        SysCaptchaEntity captchaEntity = this.getOne(new QueryWrapper<SysCaptchaEntity>().lambda()
+                .eq(SysCaptchaEntity::getUuid, uuid));
         if(captchaEntity == null){
             return false;
         }
