@@ -23,7 +23,7 @@ import io.renren.common.utils.R;
  *
  * @author chenweilong
  * @email 1433471850@qq.com
- * @date 2019-02-22 10:13:34
+ * @date 2019-02-22 10:37:50
  */
 @RestController
 @RequestMapping("cellar/cellarcommoditydb")

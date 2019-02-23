@@ -1,8 +1,10 @@
 package io.renren.modules.cellar.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import io.renren.common.constants.Constants;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,7 @@ import io.renren.common.utils.R;
  *
  * @author chenweilong
  * @email 1433471850@qq.com
- * @date 2019-02-22 10:13:34
+ * @date 2019-02-22 10:37:50
  */
 @RestController
 @RequestMapping("cellar/cellarstoredb")
@@ -60,7 +62,9 @@ public class CellarStoreDbController {
     @RequestMapping("/save")
     @RequiresPermissions("cellar:cellarstoredb:save")
     public R save(@RequestBody CellarStoreDbEntity cellarStoreDb){
-			cellarStoreDbService.save(cellarStoreDb);
+        cellarStoreDb.setCreateTime(new Date());
+        cellarStoreDb.setState(Constants.STATE.zero.getKey());
+        cellarStoreDbService.save(cellarStoreDb);
 
         return R.ok();
     }

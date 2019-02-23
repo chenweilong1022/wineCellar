@@ -1,5 +1,6 @@
 package io.renren.modules.cellar.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,7 +21,8 @@ public class CellarStoreDbServiceImpl extends ServiceImpl<CellarStoreDbDao, Cell
     public PageUtils queryPage(CellarStoreDbEntity cellarStoreDb) {
         IPage<CellarStoreDbEntity> page = baseMapper.selectPage(
                 new Query<CellarStoreDbEntity>(cellarStoreDb).getPage(),
-                new QueryWrapper<CellarStoreDbEntity>()
+                new QueryWrapper<CellarStoreDbEntity>().lambda()
+                        .like(StringUtils.isNotBlank(cellarStoreDb.getKey()),CellarStoreDbEntity::getStoreName,cellarStoreDb.getKey())
         );
 
         return new PageUtils(page);

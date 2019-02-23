@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 
  * @author chenweilong
  * @email 1433471850@qq.com
- * @date 2019-02-22 10:13:34
+ * @date 2019-02-22 10:37:50
  */
 @Mapper
 public interface CellarStoreDbDao extends BaseMapper<CellarStoreDbEntity> {

@@ -16,7 +16,7 @@ import java.util.Date;
  * 
  * @author chenweilong
  * @email 1433471850@qq.com
- * @date 2019-02-22 10:13:34
+ * @date 2019-02-22 10:37:50
  */
 @TableName("cellar_commodity_db")
 @ApiModel("酒窖商品表")
@@ -48,7 +48,7 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 * 图文详情
 	 */
 	@ApiModelProperty(required=false,value="图文详情")
-	private unknowType graphicDetails;
+	private byte[] graphicDetails;
 	/**
 	 * 图片
 	 */
@@ -161,13 +161,13 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	/**
 	 * 设置：图文详情
 	 */
-	public void setGraphicDetails(unknowType graphicDetails) {
+	public void setGraphicDetails(byte[] graphicDetails) {
 		this.graphicDetails = graphicDetails;
 	}
 	/**
 	 * 获取：图文详情
 	 */
-	public unknowType getGraphicDetails() {
+	public byte[] getGraphicDetails() {
 		return graphicDetails;
 	}
 	/**

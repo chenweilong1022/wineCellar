@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author chenweilong
  * @email 1433471850@qq.com
- * @date 2019-02-22 10:13:34
+ * @date 2019-02-22 10:37:50
  */
 public interface CellarCommodityDbService extends IService<CellarCommodityDbEntity> {
 

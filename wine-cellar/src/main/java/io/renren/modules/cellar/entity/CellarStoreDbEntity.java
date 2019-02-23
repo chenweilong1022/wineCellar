@@ -1,9 +1,16 @@
 package io.renren.modules.cellar.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.renren.common.constants.Constants;
+import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.sys.entity.AbstractEntity;
+import io.renren.modules.sys.entity.SysAreaEntity;
+import io.renren.modules.sys.service.SysAreaService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,7 +23,7 @@ import java.util.Date;
  * 
  * @author chenweilong
  * @email 1433471850@qq.com
- * @date 2019-02-22 10:13:34
+ * @date 2019-02-22 10:37:50
  */
 @TableName("cellar_store_db")
 @ApiModel("酒窖店铺表")
@@ -50,6 +57,24 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	@ApiModelProperty(required=false,value="区")
 	private Long areaId;
 	/**
+	 * 省
+	 */
+	@ApiModelProperty(required=false,value="省")
+	@TableField(exist = false)
+	private String provinceName;
+	/**
+	 * 市
+	 */
+	@ApiModelProperty(required=false,value="市")
+	@TableField(exist = false)
+	private String cityName;
+	/**
+	 * 区
+	 */
+	@ApiModelProperty(required=false,value="区")
+	@TableField(exist = false)
+	private String areaName;
+	/**
 	 * 详细地址
 	 */
 	@ApiModelProperty(required=false,value="详细地址")
@@ -64,6 +89,12 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	 */
 	@ApiModelProperty(required=false,value="支持自取")
 	private Integer supportTheirOwn;
+	/**
+	 * 支持自取
+	 */
+	@ApiModelProperty(required=false,value="支持自取")
+	@TableField(exist = false)
+	private String supportTheirOwnStr;
 	/**
 	 * 满
 	 */
@@ -94,6 +125,16 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	 */
 	@ApiModelProperty(required=false,value="纬度")
 	private String latitude;
+	/**
+	 * 创建时间
+	 */
+	@ApiModelProperty(required=false,value="创建时间")
+	private Date createTime;
+	/**
+	 * 状态
+	 */
+	@ApiModelProperty(required=false,value="状态")
+	private Integer state;
 
 	/**
 	 * 设置：店铺id
@@ -262,5 +303,88 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	 */
 	public String getLatitude() {
 		return latitude;
+	}
+	/**
+	 * 设置：创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	/**
+	 * 获取：创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	/**
+	 * 设置：状态
+	 */
+	public void setState(Integer state) {
+		this.state = state;
+	}
+	/**
+	 * 获取：状态
+	 */
+	public Integer getState() {
+		return state;
+	}
+
+	public String getProvinceName() {
+		if (provinceId != null) {
+			SysAreaService sysAreaService = SpringContextUtils.getBean(SysAreaService.class);
+
+			SysAreaEntity sysAreaEntity = sysAreaService.getOne(new QueryWrapper<SysAreaEntity>().lambda().
+					eq(SysAreaEntity::getId, provinceId));
+
+			return sysAreaEntity == null?null:sysAreaEntity.getAreaName();
+		}
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		if (cityId != null) {
+			SysAreaService sysAreaService = SpringContextUtils.getBean(SysAreaService.class);
+
+			SysAreaEntity sysAreaEntity = sysAreaService.getOne(new QueryWrapper<SysAreaEntity>().lambda().
+					eq(SysAreaEntity::getId, cityId));
+
+			return sysAreaEntity == null?null:sysAreaEntity.getAreaName();
+		}
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getAreaName() {
+		if (areaId != null) {
+			SysAreaService sysAreaService = SpringContextUtils.getBean(SysAreaService.class);
+
+			SysAreaEntity sysAreaEntity = sysAreaService.getOne(new QueryWrapper<SysAreaEntity>().lambda().
+					eq(SysAreaEntity::getId, areaId));
+
+			return sysAreaEntity == null?null:sysAreaEntity.getAreaName();
+		}
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public String getSupportTheirOwnStr() {
+		if (supportTheirOwn != null) {
+			return Constants.SUPPORTTHEIROWN.getValueByKey(supportTheirOwn);
+		}
+		return supportTheirOwnStr;
+	}
+
+	public void setSupportTheirOwnStr(String supportTheirOwnStr) {
+		this.supportTheirOwnStr = supportTheirOwnStr;
 	}
 }

@@ -6,6 +6,7 @@ public class Constants {
      * 数字状态枚举
      */
     public enum Number {
+        zero(0,""),
         one(1,""),
         two(2,""),
         three(3,""),
@@ -128,7 +129,7 @@ public class Constants {
     }
 
     /**
-     * 全局级别描述新注册会员为1级
+     * 全局级别性别
      */
     public enum GENDER {
 
@@ -161,6 +162,48 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (GENDER value : GENDER.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 全局级别是否支持自提
+     */
+    public enum SUPPORTTHEIROWN {
+
+        male(0,"是"),
+        female(1,"否");
+
+        private Integer key;
+        private String value;
+
+        private SUPPORTTHEIROWN(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (SUPPORTTHEIROWN value : SUPPORTTHEIROWN.values()) {
                 if (value.getKey() == key) {
                     return value.value;
                 }
