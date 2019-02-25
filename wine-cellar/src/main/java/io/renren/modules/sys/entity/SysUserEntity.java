@@ -79,6 +79,10 @@ public class SysUserEntity extends AbstractEntity implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
+	/**
+	 * 店铺id
+	 */
+	private Long storeId;
 
 	/**
 	 * 设置：
@@ -214,5 +218,13 @@ public class SysUserEntity extends AbstractEntity implements Serializable {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public Long getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
 	}
 }

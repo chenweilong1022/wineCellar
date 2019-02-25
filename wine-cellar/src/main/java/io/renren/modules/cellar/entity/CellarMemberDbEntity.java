@@ -43,12 +43,6 @@ public class CellarMemberDbEntity extends AbstractEntity implements Serializable
 	@ApiModelProperty(required=false,value="状态")
 	private Integer state;
 	/**
-	 * 状态中文描述
-	 */
-	@ApiModelProperty(required=false,value="状态中文描述",hidden = true)
-	@TableField(exist = false)
-	private String stateStr;
-	/**
 	 * 等级
 	 */
 	@ApiModelProperty(required=false,value="等级")
@@ -154,6 +148,7 @@ public class CellarMemberDbEntity extends AbstractEntity implements Serializable
 	 * 设置：状态
 	 */
 	public void setState(Integer state) {
+		super.setStateStr(state);
 		this.state = state;
 	}
 	/**
@@ -329,17 +324,6 @@ public class CellarMemberDbEntity extends AbstractEntity implements Serializable
 	 */
 	public BigDecimal getCardBalance() {
 		return cardBalance;
-	}
-
-	public String getStateStr() {
-		if (state != null) {
-			return Constants.STATE.getValueByKey(state);
-		}
-		return stateStr;
-	}
-
-	public void setStateStr(String stateStr) {
-		this.stateStr = stateStr;
 	}
 
 	public String getGenderStr() {

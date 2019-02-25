@@ -320,6 +320,7 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	 * 设置：状态
 	 */
 	public void setState(Integer state) {
+		super.setStateStr(state);
 		this.state = state;
 	}
 	/**

@@ -84,7 +84,8 @@
           email: '',
           mobile: '',
           roleIdList: [],
-          status: 1
+          status: 1,
+          storeId: ''
         },
         dataRule: {
           userName: [
@@ -108,6 +109,38 @@
       }
     },
     methods: {
+      disOrModinit (storeId) {
+        this.dataForm.storeId = storeId || 0
+        this.$http({
+          url: this.$http.adornUrl('/sys/role/select'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          this.roleList = data && data.code === 0 ? data.list : []
+        }).then(() => {
+          this.visible = true
+          this.$nextTick(() => {
+            this.$refs['dataForm'].resetFields()
+          })
+        }).then(() => {
+          if (this.dataForm.storeId) {
+            this.$http({
+              url: this.$http.adornUrl(`/sys/user/infoByStoreId/${this.dataForm.storeId}`),
+              method: 'get',
+              params: this.$http.adornParams()
+            }).then(({data}) => {
+              if (data && data.code === 0 && data.user != null) {
+                this.dataForm.userName = data.user.username
+                this.dataForm.salt = data.user.salt
+                this.dataForm.email = data.user.email
+                this.dataForm.mobile = data.user.mobile
+                this.dataForm.roleIdList = data.user.roleIdList
+                this.dataForm.status = data.user.status
+              }
+            })
+          }
+        })
+      },
       init (id) {
         this.dataForm.id = id || 0
         this.$http({
@@ -155,6 +188,7 @@
                 'email': this.dataForm.email,
                 'mobile': this.dataForm.mobile,
                 'status': this.dataForm.status,
+                'storeId': this.dataForm.storeId,
                 'roleIdList': this.dataForm.roleIdList
               })
             }).then(({data}) => {

@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.common.constants.Constants;
+import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.cellar.entity.CellarStoreDbEntity;
+import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,6 +45,12 @@ public abstract class AbstractEntity implements Serializable {
 	@TableField(exist = false)
 	@ApiModelProperty(required=false,value="暂时无用",hidden = true)
 	private String order;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="状态中文描述",hidden = true)
+	private String stateStr;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="店铺名称",hidden = true)
+	private String storeName;
 
 	public String getKey() {
 		return key;
@@ -81,5 +90,33 @@ public abstract class AbstractEntity implements Serializable {
 
 	public void setOrder(String order) {
 		this.order = order;
+	}
+
+	public String getStateStr() {
+        return stateStr;
+    }
+
+    public void setStateStr(String stateStr) {
+        this.stateStr = stateStr;
+    }
+
+	public void setStateStr(Integer state) {
+		this.stateStr = Constants.STATE.getValueByKey(state);
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(Long storeId) {
+		if (storeId != null) {
+			CellarStoreDbService cellarStoreDbService = SpringContextUtils.getBean(CellarStoreDbService.class);
+			CellarStoreDbEntity cellarStoreDbEntity = cellarStoreDbService.getById(storeId);
+			this.storeName = cellarStoreDbEntity == null?"":cellarStoreDbEntity.getStoreName();
+		}
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 }

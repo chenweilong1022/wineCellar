@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.annotation.SysLog;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
@@ -58,6 +59,21 @@ public class SysUserController extends AbstractController {
 	@GetMapping("/info")
 	public R info(){
 		return R.ok().put("user", getUser());
+	}
+
+	/**
+	 * 获取登录的用户信息
+	 */
+	@GetMapping("/infoByStoreId/{storeId}")
+	@RequiresPermissions("sys:user:info")
+	public R infoByStoreId(@PathVariable("storeId") Long storeId){
+		SysUserEntity sysUserEntity = sysUserService.getOne(new QueryWrapper<SysUserEntity>().lambda().
+				eq(SysUserEntity::getStoreId, storeId));
+
+		List<Long> roleIdList = sysUserRoleService.queryRoleIdList(sysUserEntity.getUserId());
+		sysUserEntity.setRoleIdList(roleIdList);
+
+		return R.ok().put("user", sysUserEntity);
 	}
 	
 	/**

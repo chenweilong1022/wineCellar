@@ -54,12 +54,6 @@
         align="center"
         label="创建时间">
       </el-table-column>
-      <!--<el-table-column-->
-        <!--prop="stateStr"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="状态">-->
-      <!--</el-table-column>-->
       <el-table-column
         prop="stateStr"
         header-align="center"
@@ -71,18 +65,6 @@
             </div>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-        <!--prop="level"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="等级">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--prop="headPortrait"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="头像">-->
-      <!--</el-table-column>-->
       <el-table-column
         prop="nickname"
         header-align="center"
@@ -95,42 +77,12 @@
         align="center"
         label="性别">
       </el-table-column>
-      <!--<el-table-column-->
-        <!--prop="birthday"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="生日">-->
-      <!--</el-table-column>-->
       <el-table-column
         prop="mobilePhone"
         header-align="center"
         align="center"
         label="手机号">
       </el-table-column>
-      <!--<el-table-column-->
-        <!--prop="password"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="登录密码">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--prop="payPassword"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="支付密码">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--prop="loginToken"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="登录token">-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--prop="openid"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="微信openid">-->
-      <!--</el-table-column>-->
       <el-table-column
         prop="balance"
         header-align="center"
@@ -143,12 +95,6 @@
         align="center"
         label="积分">
       </el-table-column>
-      <!--<el-table-column-->
-        <!--prop="individualitySignature"-->
-        <!--header-align="center"-->
-        <!--align="center"-->
-        <!--label="个性签名">-->
-      <!--</el-table-column>-->
       <el-table-column
         prop="cardBalance"
         header-align="center"
@@ -191,20 +137,6 @@
           gender: '',
           state: ''
         },
-        genders: [{
-          value: '1',
-          label: '男'
-        }, {
-          value: '2',
-          label: '女'
-        }],
-        states: [{
-          value: '0',
-          label: '正常'
-        }, {
-          value: '-1',
-          label: '禁用'
-        }],
         dataList: [],
         pageIndex: 1,
         pageSize: 10,

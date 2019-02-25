@@ -6,6 +6,7 @@ public class Constants {
      * 数字状态枚举
      */
     public enum Number {
+        fuone(-1,""),
         zero(0,""),
         one(1,""),
         two(2,""),

@@ -1,8 +1,14 @@
 package io.renren.modules.cellar.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import io.renren.common.constants.Constants;
+import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.entity.AbstractEntity;
+import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +33,7 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("cellar/cellarcommoditydb")
-public class CellarCommodityDbController {
+public class CellarCommodityDbController extends AbstractController {
     @Autowired
     private CellarCommodityDbService cellarCommodityDbService;
 
@@ -60,7 +66,14 @@ public class CellarCommodityDbController {
     @RequestMapping("/save")
     @RequiresPermissions("cellar:cellarcommoditydb:save")
     public R save(@RequestBody CellarCommodityDbEntity cellarCommodityDb){
-			cellarCommodityDbService.save(cellarCommodityDb);
+        cellarCommodityDb.setState(Constants.STATE.zero.getKey());
+        cellarCommodityDb.setCreationTime(new Date());
+        cellarCommodityDb.setMonthSales(BigDecimal.ZERO);
+        cellarCommodityDb.setTotalSales(BigDecimal.ZERO);
+        cellarCommodityDb.setHighPraise(BigDecimal.ZERO);
+        cellarCommodityDb.setStoreId(getUser().getStoreId());
+
+        cellarCommodityDbService.save(cellarCommodityDb);
 
         return R.ok();
     }

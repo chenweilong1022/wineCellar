@@ -1,8 +1,12 @@
 package io.renren.modules.cellar.entity;
 
+import cn.hutool.json.JSONArray;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,6 +54,12 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@ApiModelProperty(required=false,value="图文详情")
 	private byte[] graphicDetails;
 	/**
+	 * 图文详情
+	 */
+	@ApiModelProperty(required=false,value="图文详情")
+	@TableField(exist = false)
+	private String graphicDetailsStr;
+	/**
 	 * 图片
 	 */
 	@ApiModelProperty(required=false,value="图片")
@@ -59,6 +69,12 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 */
 	@ApiModelProperty(required=false,value="标签")
 	private String label;
+	/**
+	 * 标签
+	 */
+	@ApiModelProperty(required=false,value="标签")
+	@TableField(exist = false)
+	private String[] labelList;
 	/**
 	 * 创建时间
 	 */
@@ -109,6 +125,17 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 */
 	@ApiModelProperty(required=false,value="分类id")
 	private Long categoryId;
+	/**
+	 * 分类id
+	 */
+	@ApiModelProperty(required=false,value="分类路径")
+	private String categoryPath;
+	/**
+	 * 分类id
+	 */
+	@ApiModelProperty(required=false,value="分类路径")
+	@TableField(exist = false)
+	private Long[] categoryPathList;
 
 	/**
 	 * 设置：商品id
@@ -163,6 +190,9 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 */
 	public void setGraphicDetails(byte[] graphicDetails) {
 		this.graphicDetails = graphicDetails;
+		if (graphicDetails != null) {
+			this.graphicDetailsStr = new String(graphicDetails);
+		}
 	}
 	/**
 	 * 获取：图文详情
@@ -187,6 +217,9 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 */
 	public void setLabel(String label) {
 		this.label = label;
+		if (label != null) {
+			this.labelList = com.alibaba.fastjson.JSONArray.parseArray(label).toJavaObject(String[].class);
+		}
 	}
 	/**
 	 * 获取：标签
@@ -210,6 +243,7 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 * 设置：状态
 	 */
 	public void setState(Integer state) {
+		super.setStateStr(state);
 		this.state = state;
 	}
 	/**
@@ -294,6 +328,7 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 * 设置：店铺id
 	 */
 	public void setStoreId(Long storeId) {
+		super.setStoreName(storeId);
 		this.storeId = storeId;
 	}
 	/**
@@ -313,5 +348,50 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 */
 	public Long getCategoryId() {
 		return categoryId;
+	}
+
+	public String getGraphicDetailsStr() {
+		return graphicDetailsStr;
+	}
+
+	public void setGraphicDetailsStr(String graphicDetailsStr) {
+		this.graphicDetailsStr = graphicDetailsStr;
+		if (graphicDetailsStr != null) {
+			this.graphicDetails = graphicDetailsStr.getBytes();
+		}
+	}
+
+	public String[] getLabelList() {
+		return labelList;
+	}
+
+	public void setLabelList(String[] labelList) {
+		this.labelList = labelList;
+		if (labelList != null) {
+			this.label = new JSONArray(labelList).toString();
+		}
+	}
+
+	public String getCategoryPath() {
+		return categoryPath;
+	}
+
+	public void setCategoryPath(String categoryPath) {
+		this.categoryPath = categoryPath;
+	}
+
+	public Long[] getCategoryPathList() {
+		if (this.categoryPath != null) {
+			this.categoryPathList = com.alibaba.fastjson.JSONArray.parseArray(categoryPath).toJavaObject(Long[].class);
+		}
+		return categoryPathList;
+	}
+
+	public void setCategoryPathList(Long[] categoryPathList) {
+		this.categoryPathList = categoryPathList;
+		if (categoryPathList != null && categoryPathList.length > 0) {
+			this.categoryId = categoryPathList[categoryPathList.length - 1];
+			this.categoryPath = new JSONArray(categoryPathList).toString();
+		}
 	}
 }
