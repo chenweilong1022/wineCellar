@@ -16,5 +16,7 @@ import java.util.Map;
 public interface CellarCommodityDbService extends IService<CellarCommodityDbEntity> {
 
     PageUtils queryPage(CellarCommodityDbEntity cellarCommodityDb);
+
+    PageUtils queryPageApp(CellarCommodityDbEntity cellarCommodityDb);
 }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.cellar.entity.CellarStoreDbEntity;
@@ -24,6 +25,7 @@ import java.util.Date;
  * @date 2019-01-16 17:34:20
  */
 @ApiModel("entity公共类")
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public abstract class AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

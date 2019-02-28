@@ -5,6 +5,7 @@ import io.renren.common.constants.Constants;
 import io.renren.common.utils.ShiroUtils;
 import io.renren.modules.sys.entity.SysAreaEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class CellarCategoryDbServiceImpl extends ServiceImpl<CellarCategoryDbDao
                 new QueryWrapper<CellarCategoryDbEntity>().lambda().
                         eq(ObjectUtil.isNotNull(userEntity.getStoreId()),CellarCategoryDbEntity::getStoreId,userEntity.getStoreId()).
                         eq(ObjectUtil.isNotNull(cellarCategoryDb.getSupCategoryId()),CellarCategoryDbEntity::getSupCategoryId,cellarCategoryDb.getSupCategoryId())
+                        .like(StringUtils.isNotBlank(cellarCategoryDb.getKey()),CellarCategoryDbEntity::getCategoryName,cellarCategoryDb.getKey())
 
         );
 

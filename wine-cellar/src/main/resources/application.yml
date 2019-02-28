@@ -92,7 +92,7 @@ renren:
 #  endpoints.health.sensitive=false
 
 logging:
-  file: logs/logs.log
+  file: logs/webapps/logs/logs.log
 #235短信配置
 sms:
   charset: utf-8

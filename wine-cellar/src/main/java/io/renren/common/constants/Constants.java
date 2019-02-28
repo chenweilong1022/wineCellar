@@ -213,4 +213,46 @@ public class Constants {
         }
     }
 
+    /**
+     * 全局级别是否默认
+     */
+    public enum ISDEFAULT {
+
+        NO(0,"非默认"),
+        YES(1,"默认");
+
+        private Integer key;
+        private String value;
+
+        private ISDEFAULT(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (ISDEFAULT value : ISDEFAULT.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
 }

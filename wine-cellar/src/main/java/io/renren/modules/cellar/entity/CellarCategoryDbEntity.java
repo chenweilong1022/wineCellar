@@ -45,6 +45,12 @@ public class CellarCategoryDbEntity extends AbstractEntity implements Serializab
 	@ApiModelProperty(required=false,value="上级类别")
 	private Long supCategoryId;
 	/**
+	 * 上级类别中文
+	 */
+	@ApiModelProperty(required=false,value="上级类别中文")
+	@TableField(exist = false)
+	private String supCategoryName;
+	/**
 	 * 上级类别
 	 */
 	@ApiModelProperty(required=false,value="上级类别")
@@ -65,12 +71,6 @@ public class CellarCategoryDbEntity extends AbstractEntity implements Serializab
 	 */
 	@ApiModelProperty(required=false,value="店铺id")
 	private Long storeId;
-	/**
-	 * 店铺名称
-	 */
-	@ApiModelProperty(required=false,value="店铺名称")
-	@TableField(exist = false)
-	private String storeName;
 	/**
 	 * 级别
 	 */
@@ -211,17 +211,17 @@ public class CellarCategoryDbEntity extends AbstractEntity implements Serializab
 		}
 	}
 
-	public String getStoreName() {
-		if (storeId != null) {
-			CellarStoreDbService cellarStoreDbService = SpringContextUtils.getBean(CellarStoreDbService.class);
-			CellarStoreDbEntity cellarStoreDbEntity = cellarStoreDbService.getById(storeId);
-			return cellarStoreDbEntity == null?"":cellarStoreDbEntity.getStoreName();
+	public String getSupCategoryName() {
+		if (supCategoryId != null) {
+			CellarCategoryDbService cellarCategoryDbService = SpringContextUtils.getBean(CellarCategoryDbService.class);
+			CellarCategoryDbEntity categoryDbEntity = cellarCategoryDbService.getById(supCategoryId);
+			return supCategoryId.equals(Long.valueOf(0))?"顶级类别": categoryDbEntity == null ? "" : categoryDbEntity.getCategoryName();
 		}
-		return storeName;
+		return supCategoryName;
 	}
 
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
+	public void setSupCategoryName(String supCategoryName) {
+		this.supCategoryName = supCategoryName;
 	}
 
 }
