@@ -9,15 +9,14 @@ import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberAddressDbEntity;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.sys.controller.AbstractController;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -33,6 +32,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("app/cellarcommoditydb")
+@Api(value="APP酒窖商品表",tags="APP酒窖商品表")
 public class AppCellarCommodityDbController extends AbstractController {
     @Autowired
     private CellarCommodityDbService cellarCommodityDbService;
@@ -41,7 +41,7 @@ public class AppCellarCommodityDbController extends AbstractController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/list")
     @ApiOperation(value = "店铺商品列表",notes = "店铺商品列表",response = CellarCommodityDbEntity.class)
     @Login
     @ApiImplicitParams({
@@ -52,9 +52,10 @@ public class AppCellarCommodityDbController extends AbstractController {
             @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
     })
     public R list(
-            CellarCommodityDbEntity cellarCommodityDb
+            @ApiIgnore CellarCommodityDbEntity cellarCommodityDb
     ){
         Assert.isNull(cellarCommodityDb.getStoreId(),"店铺id不能为空");
+        Assert.isNull(cellarCommodityDb.getCategoryId(),"分类id不能为空");
         PageUtils page = cellarCommodityDbService.queryPageApp(cellarCommodityDb);
 
         return R.data(page);
