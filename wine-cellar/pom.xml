@@ -41,6 +41,7 @@
 		<joda.time.version>2.9.9</joda.time.version>
 		<fastjson.version>1.2.47</fastjson.version>
 		<hutool.version>4.1.1</hutool.version>
+		<com.egzosn.version>2.11.3</com.egzosn.version>
 
 		<!--wagon plugin 配置-->
 		<service-path>/work/renren</service-path>
@@ -51,6 +52,18 @@
 	</properties>
 
 	<dependencies>
+		<!--支付jar wx-->
+		<dependency>
+			<groupId>com.egzosn</groupId>
+			<artifactId>pay-java-wx</artifactId>
+			<version>${com.egzosn.version}</version>
+		</dependency>
+		<!--支付jar ali-->
+		<dependency>
+			<groupId>com.egzosn</groupId>
+			<artifactId>pay-java-ali</artifactId>
+			<version>${com.egzosn.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

@@ -28,9 +28,9 @@ public class StartupLoading implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (areaConfig.SYS_AREA_ENTITIES == null) {
-            areaConfig.SYS_AREA_ENTITIES = sysAreaService.listThreeLevel();
-        }
+//        if (areaConfig.SYS_AREA_ENTITIES == null) {
+//            areaConfig.SYS_AREA_ENTITIES = sysAreaService.listThreeLevel();
+//        }
 
     }
 }

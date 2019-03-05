@@ -226,6 +226,7 @@
       },
       init (id) {
         this.listOneLevel()
+        this.dynamicTags = []
         this.dataForm.commodityId = id || 0
         this.url = this.$http.adornUrl(`/app/file/upload`)
         this.visible = true

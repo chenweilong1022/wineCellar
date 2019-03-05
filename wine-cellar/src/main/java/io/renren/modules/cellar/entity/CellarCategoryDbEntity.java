@@ -87,6 +87,12 @@ public class CellarCategoryDbEntity extends AbstractEntity implements Serializab
 	@ApiModelProperty(required=false,value="下级类别集合")
 	@TableField(exist = false)
 	private List<CellarCategoryDbEntity> cellarCategoryDbEntities;
+	/**
+	 * 级别
+	 */
+	@ApiModelProperty(required=false,value="类别下商品集合")
+	@TableField(exist = false)
+	private List<CellarCommodityDbEntity> cellarCommodityDbEntities;
 
 	/**
 	 * 设置：类别id
@@ -224,4 +230,11 @@ public class CellarCategoryDbEntity extends AbstractEntity implements Serializab
 		this.supCategoryName = supCategoryName;
 	}
 
+	public List<CellarCommodityDbEntity> getCellarCommodityDbEntities() {
+		return cellarCommodityDbEntities;
+	}
+
+	public void setCellarCommodityDbEntities(List<CellarCommodityDbEntity> cellarCommodityDbEntities) {
+		this.cellarCommodityDbEntities = cellarCommodityDbEntities;
+	}
 }

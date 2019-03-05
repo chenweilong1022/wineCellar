@@ -8,9 +8,11 @@ import io.renren.common.utils.R;
 import io.renren.common.validator.Assert;
 import io.renren.modules.app.annotation.Login;
 import io.renren.modules.cellar.entity.CellarCategoryDbEntity;
+import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberAddressDbEntity;
 import io.renren.modules.cellar.entity.CellarStoreDbEntity;
 import io.renren.modules.cellar.service.CellarCategoryDbService;
+import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.sys.controller.AbstractController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -40,6 +42,8 @@ import java.util.List;
 public class AppCellarCategoryDbController extends AbstractController {
     @Autowired
     private CellarCategoryDbService cellarCategoryDbService;
+    @Autowired
+    private CellarCommodityDbService cellarCommodityDbService;
 
     /**
      * 查询一级类别
@@ -126,6 +130,15 @@ public class AppCellarCategoryDbController extends AbstractController {
                 eq(CellarCategoryDbEntity::getStoreId, cellarCategoryDbEntity.getStoreId()).
                 eq(CellarCategoryDbEntity::getSupCategoryId, cellarCategoryDbEntity.getCategoryId())
         );
+
+        for (CellarCategoryDbEntity categoryDbEntity : cellarCategoryDbEntities) {
+            CellarCommodityDbEntity cellarCommodityDb = new CellarCommodityDbEntity();
+            cellarCommodityDb.setStoreId(categoryDbEntity.getStoreId());
+            cellarCommodityDb.setCategoryId(categoryDbEntity.getCategoryId());
+            cellarCommodityDb.setLimit(100);
+            PageUtils pageUtils = cellarCommodityDbService.queryPageApp(cellarCommodityDb);
+            categoryDbEntity.setCellarCommodityDbEntities((List<CellarCommodityDbEntity>) pageUtils.getList());
+        }
         return R.data(cellarCategoryDbEntities);
     }
 

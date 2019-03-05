@@ -29,3 +29,33 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
+
+CREATE TABLE `cellar_member_address_db` (
+  `address_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '地址id',
+  `member_id` bigint(20) DEFAULT NULL COMMENT '会员id',
+  `contact` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '联系人',
+  `contact_phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '联系电话',
+  `province_id` bigint(20) DEFAULT NULL COMMENT '省id',
+  `province_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '省名称',
+  `city_id` bigint(20) DEFAULT NULL COMMENT '市id',
+  `city_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '市名称',
+  `county_id` bigint(20) DEFAULT NULL COMMENT '县id',
+  `county_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '县名称',
+  `detailed_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '详细地址',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `state` int(11) DEFAULT NULL COMMENT '状态',
+  `is_default` int(11) DEFAULT NULL COMMENT '是否默认 1 默认 0 非默认',
+  PRIMARY KEY (`address_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='会员地址表';
+
+
+  `commodity_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '商品名称',
+  `picture` longtext CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '商品图片',
+
+alter table cellar_order_db add commodity_name varchar(50)
+alter table cellar_order_db add picture varchar(50)
+alter table cellar_order_db add city_id varchar(50)
+alter table cellar_order_db add city_name varchar(50)
+alter table cellar_order_db add county_id varchar(50)
+alter table cellar_order_db add detailed_address varchar(50) COMMENT '详细地址'
+

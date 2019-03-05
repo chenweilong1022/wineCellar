@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarOrderDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarOrderDbEntity" id="cellarOrderDbMap">
+        <result property="orderId" column="order_id"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="addressId" column="address_id"/>
+        <result property="deliveryTime" column="delivery_time"/>
+        <result property="methodPayment" column="method_payment"/>
+        <result property="paymentTime" column="payment_time"/>
+        <result property="orderNote" column="order_note"/>
+        <result property="totalOrderAmount" column="total_order_amount"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="orderType" column="order_type"/>
+        <result property="storeFullAmount" column="store_full_amount"/>
+        <result property="distributionAmount" column="distribution_amount"/>
+        <result property="discountAmount" column="discount_amount"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="memberId" column="member_id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="actualOrderAmount" column="actual_order_amount"/>
+    </resultMap>
+
+
+</mapper>

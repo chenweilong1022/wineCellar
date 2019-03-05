@@ -255,4 +255,184 @@ public class Constants {
         }
     }
 
+    /**
+     * 全局级别 商品类别
+     */
+    public enum CARTTYPE {
+
+        ZERO(0,"普通商品"),
+        ONE(1,"自提商品"),
+        TWO(2,"预约商品"),
+        THREE(3,"预售商品");
+
+        private Integer key;
+        private String value;
+
+        private CARTTYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (CARTTYPE value : CARTTYPE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 全局级别支付方式
+     */
+    public enum METHODPAYMENT {
+
+        WECHAT(0,"微信"),
+        ALIPAY(1,"支付宝");
+
+        private Integer key;
+        private String value;
+
+        private METHODPAYMENT(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (METHODPAYMENT value : METHODPAYMENT.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 全局级别支付方式
+     */
+    public enum ORDERSTATUS {
+
+        FUTWO(-2,"订单进入售后"),//订单刚生成用户还没有支付
+        FUONE(-1,"待支付"),//订单刚生成用户还没有支付
+        ZERO(0,"已支付"),//订单已经支付,等待发货
+        ONE(1,"已发货"),//订单已经发货等待用户签收
+        TWO(2,"已完成"),//用户签收订单完成
+        THREE(3,"已评价");
+
+
+
+        private Integer key;
+        private String value;
+
+        private ORDERSTATUS(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (ORDERSTATUS value : ORDERSTATUS.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 全局级别 结算类型
+     */
+    public enum SETTLEMENTTYPE {
+
+
+        ONE(1,"购物车结算"),//订单已经发货等待用户签收
+        TWO(2,"已完成"),//用户签收订单完成
+        THREE(3,"已评价");
+
+
+
+        private Integer key;
+        private String value;
+
+        private SETTLEMENTTYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (SETTLEMENTTYPE value : SETTLEMENTTYPE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
 }
