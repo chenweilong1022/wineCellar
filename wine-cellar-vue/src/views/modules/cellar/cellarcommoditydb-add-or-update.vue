@@ -18,17 +18,20 @@
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </el-form-item>
-    <el-form-item label="图片" prop="commodityRotationChart">
-      <el-upload
-        class="avatar-uploader"
-        :action="url"
-        :show-file-list="false"
-        naem="file"
-        :on-success="handleAvatarSuccessCommodityRotationChart">
-        <img v-if="dataForm.commodityRotationChart" :src="dataForm.commodityRotationChart" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
-    </el-form-item>
+      <el-form-item>
+        <el-upload
+          :action="url"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :on-success="handleSuccess"
+          :file-list="editFiles"
+          list-type="picture-card">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+      </el-form-item>
     <el-form-item label="分类id" prop="categoryId">
       <el-cascader
         placeholder="上级类别"
@@ -123,11 +126,16 @@
     display: block;
   }
 </style>
-
 <script>
   export default {
     data () {
       return {
+        editForm: {
+          photo: ''
+        },
+        editFiles: [],
+        dialogImageUrl: '',
+        dialogVisible: false,
         selectedOptions3: [0],
         defaultParams: {
           value: 'categoryId',
@@ -156,6 +164,7 @@
           inventory: '',
           highPraise: '',
           commodityRotationChart: '',
+          commodityRotationChartList: [],
           productSpecifications: '',
           storeId: '',
           categoryId: ''
@@ -207,6 +216,16 @@
       }
     },
     methods: {
+      handleSuccess (response, file, fileList) {
+        this.dataForm.commodityRotationChartList.push(response.data)
+      },
+      handleRemove (file, fileList) {
+        console.log(file, fileList)
+      },
+      handlePictureCardPreview (file) {
+        this.dialogImageUrl = file.url
+        this.dialogVisible = true
+      },
       handleClose (tag) {
         this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
       },
@@ -225,6 +244,7 @@
         this.inputValue = ''
       },
       init (id) {
+        this.editFiles = []
         this.listOneLevel()
         this.dynamicTags = []
         this.dataForm.commodityId = id || 0
@@ -252,11 +272,24 @@
                 this.dataForm.inventory = data.cellarCommodityDb.inventory
                 this.dataForm.highPraise = data.cellarCommodityDb.highPraise
                 this.dataForm.commodityRotationChart = data.cellarCommodityDb.commodityRotationChart
+                this.dataForm.commodityRotationChartList = data.cellarCommodityDb.commodityRotationChartList
                 this.dataForm.productSpecifications = data.cellarCommodityDb.productSpecifications
                 this.dataForm.storeId = data.cellarCommodityDb.storeId
                 this.dataForm.categoryId = data.cellarCommodityDb.categoryId
                 this.dynamicTags = data.cellarCommodityDb.labelList
                 this.selectedOptions3 = data.cellarCommodityDb.categoryPathList
+                this.dataForm.commodityRotationChartList = data.cellarCommodityDb.commodityRotationChartList
+                if (this.dataForm.commodityRotationChartList.length > 0) {
+                  for (let t = 0; t < this.dataForm.commodityRotationChartList.length; t++) {
+                    this.editFiles.push({name: 'name' + t, url: this.dataForm.commodityRotationChartList[t]})
+                    if (t === 0) {
+                      this.editForm.photo += this.dataForm.commodityRotationChartList[t]
+                    } else {
+                      this.editForm.photo += ',' + this.dataForm.commodityRotationChartList[t]
+                    }
+                  }
+                }
+
               }
             })
           }
@@ -308,7 +341,8 @@
                 'storeId': this.dataForm.storeId,
                 'categoryId': this.dataForm.categoryId,
                 'labelList': this.dynamicTags,
-                'categoryPathList': this.selectedOptions3
+                'categoryPathList': this.selectedOptions3,
+                'commodityRotationChartList': this.dataForm.commodityRotationChartList
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

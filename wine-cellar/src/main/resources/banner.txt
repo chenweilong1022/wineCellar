@@ -59,3 +59,31 @@ alter table cellar_order_db add city_name varchar(50)
 alter table cellar_order_db add county_id varchar(50)
 alter table cellar_order_db add detailed_address varchar(50) COMMENT '详细地址'
 
+orderId
+state
+createTime
+addressId
+deliveryTime
+pickUpPhone
+methodPayment
+paymentTime
+orderNote
+totalOrderAmount
+orderStatus
+orderType
+storeFullAmount
+distributionAmount
+discountAmount
+orderNo
+memberId
+storeId
+actualOrderAmount
+provinceId
+provinceName
+cityId
+cityName
+countyId
+countyName
+detailedAddress
+cellarOrderDetailsDbEntities
+

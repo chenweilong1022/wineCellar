@@ -3,6 +3,10 @@ package io.renren.modules.cellar.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.constants.Constants;
+import io.renren.modules.sys.controller.AbstractController;
+import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +31,7 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("cellar/cellarorderdb")
-public class CellarOrderDbController {
+public class CellarOrderDbController extends AbstractController {
     @Autowired
     private CellarOrderDbService cellarOrderDbService;
 
@@ -37,6 +41,7 @@ public class CellarOrderDbController {
     @RequestMapping("/list")
     @RequiresPermissions("cellar:cellarorderdb:list")
     public R list(CellarOrderDbEntity cellarOrderDb){
+
         PageUtils page = cellarOrderDbService.queryPage(cellarOrderDb);
 
         return R.ok().put("page", page);
@@ -75,6 +80,24 @@ public class CellarOrderDbController {
 
         return R.ok();
     }
+
+    /**
+     * 点击发货
+     */
+    @RequestMapping("/delivery")
+    @RequiresPermissions("cellar:cellarorderdb:delivery")
+    public R delivery(@RequestBody Long[] orderIds){
+        /**
+         * 修改发货状态
+         */
+        CellarOrderDbEntity cellarOrderDbEntity = new CellarOrderDbEntity();
+        cellarOrderDbEntity.setOrderStatus(Constants.ORDERSTATUS.ONE.getKey());
+        cellarOrderDbService.update(cellarOrderDbEntity,new QueryWrapper<CellarOrderDbEntity>().lambda()
+                .in(CellarOrderDbEntity::getOrderId,orderIds)
+        );
+        return R.ok();
+    }
+
 
     /**
      * 删除

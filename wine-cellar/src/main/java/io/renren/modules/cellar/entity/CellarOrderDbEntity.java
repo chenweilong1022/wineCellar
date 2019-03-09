@@ -1,10 +1,15 @@
 package io.renren.modules.cellar.entity;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.cellar.service.CellarMemberAddressDbService;
+import io.renren.modules.cellar.service.CellarOrderDetailsDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 酒窖订单表
@@ -62,6 +68,12 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	@ApiModelProperty(required=false,value="支付方式")
 	private Integer methodPayment;
 	/**
+	 * 支付方式
+	 */
+	@ApiModelProperty(required=false,value="支付方式")
+	@TableField(exist = false)
+	private String methodPaymentStr;
+	/**
 	 * 支付时间
 	 */
 	@ApiModelProperty(required=false,value="支付时间")
@@ -82,10 +94,22 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	@ApiModelProperty(required=false,value="订单状态")
 	private Integer orderStatus;
 	/**
+	 * 订单状态
+	 */
+	@ApiModelProperty(required=false,value="订单状态")
+	@TableField(exist = false)
+	private String orderStatusStr;
+	/**
 	 * 订单类型
 	 */
 	@ApiModelProperty(required=false,value="订单类型")
 	private Integer orderType;
+	/**
+	 * 订单类型
+	 */
+	@ApiModelProperty(required=false,value="订单类型")
+	@TableField(exist = false)
+	private String orderTypeStr;
 	/**
 	 * 店铺满减金额
 	 */
@@ -156,6 +180,17 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	 */
 	@ApiModelProperty(required=false,value="详细地址")
 	private String detailedAddress;
+	/**
+	 * 订单下商品集合
+	 */
+	@ApiModelProperty(required=false,value="订单下商品集合")
+	@TableField(exist = false)
+	private List<CellarOrderDetailsDbEntity> cellarOrderDetailsDbEntities;
+	/**
+	 * 退货原因
+	 */
+	@ApiModelProperty(required=false,value="退货原因")
+	private String returnReason;
 
 	/**
 	 * 设置：订单id
@@ -166,8 +201,8 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	/**
 	 * 获取：订单id
 	 */
-	public Long getOrderId() {
-		return orderId;
+	public String getOrderId() {
+		return orderId.toString();
 	}
 	/**
 	 * 设置：状态
@@ -365,6 +400,7 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	 */
 	public void setStoreId(Long storeId) {
 		this.storeId = storeId;
+		super.setStoreName(this.storeId);
 	}
 	/**
 	 * 获取：店铺id
@@ -447,5 +483,64 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 
 	public void setDetailedAddress(String detailedAddress) {
 		this.detailedAddress = detailedAddress;
+	}
+	/**
+	 * 获取订单下商品信息
+	 * @return
+	 */
+	public List<CellarOrderDetailsDbEntity> getCellarOrderDetailsDbEntities() {
+		if (ObjectUtil.isNull(cellarOrderDetailsDbEntities) && ObjectUtil.isNotNull(this.orderId)) {
+			CellarOrderDetailsDbService cellarOrderDetailsDbService = SpringContextUtils.getBean(CellarOrderDetailsDbService.class);
+			List<CellarOrderDetailsDbEntity> cellarOrderDetailsDbEntities = cellarOrderDetailsDbService.list(new QueryWrapper<CellarOrderDetailsDbEntity>().lambda()
+					.eq(CellarOrderDetailsDbEntity::getOrderId, this.orderId)
+			);
+			this.cellarOrderDetailsDbEntities = cellarOrderDetailsDbEntities;
+		}
+		return cellarOrderDetailsDbEntities;
+	}
+
+	public void setCellarOrderDetailsDbEntities(List<CellarOrderDetailsDbEntity> cellarOrderDetailsDbEntities) {
+		this.cellarOrderDetailsDbEntities = cellarOrderDetailsDbEntities;
+	}
+
+	public String getReturnReason() {
+		return returnReason;
+	}
+
+	public void setReturnReason(String returnReason) {
+		this.returnReason = returnReason;
+	}
+
+	public String getMethodPaymentStr() {
+		if (this.methodPayment != null) {
+			this.methodPaymentStr = Constants.METHODPAYMENT.getValueByKey(this.methodPayment);
+		}
+		return methodPaymentStr;
+	}
+
+	public void setMethodPaymentStr(String methodPaymentStr) {
+		this.methodPaymentStr = methodPaymentStr;
+	}
+
+	public String getOrderStatusStr() {
+		if (this.orderStatus != null) {
+			this.orderStatusStr = Constants.ORDERSTATUS.getValueByKey(this.orderStatus);
+		}
+		return orderStatusStr;
+	}
+
+	public void setOrderStatusStr(String orderStatusStr) {
+		this.orderStatusStr = orderStatusStr;
+	}
+
+	public String getOrderTypeStr() {
+		if (this.orderType != null) {
+			this.orderTypeStr = Constants.CARTTYPE.getValueByKey(this.orderType);
+		}
+		return orderTypeStr;
+	}
+
+	public void setOrderTypeStr(String orderTypeStr) {
+		this.orderTypeStr = orderTypeStr;
 	}
 }

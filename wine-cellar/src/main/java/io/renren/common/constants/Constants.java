@@ -1,5 +1,7 @@
 package io.renren.common.constants;
 
+import java.util.List;
+
 public class Constants {
 
     /**
@@ -35,6 +37,10 @@ public class Constants {
         private Number(Integer key,String value) {
             this.key = key;
             this.value = value;
+        }
+
+        public static Number[] List() {
+            return Number.values();
         }
 
         public Integer getKey() {
@@ -260,10 +266,10 @@ public class Constants {
      */
     public enum CARTTYPE {
 
-        ZERO(0,"普通商品"),
-        ONE(1,"自提商品"),
-        TWO(2,"预约商品"),
-        THREE(3,"预售商品");
+        ZERO(0,"普通"),
+        ONE(1,"自提"),
+        TWO(2,"预约"),
+        THREE(3,"预售");
 
         private Integer key;
         private String value;
@@ -342,16 +348,18 @@ public class Constants {
     }
 
     /**
-     * 全局级别支付方式
+     * 全局级别订单状态
      */
     public enum ORDERSTATUS {
 
-        FUTWO(-2,"订单进入售后"),//订单刚生成用户还没有支付
+        FUFOUR(-4,"售后不通过"),//售后不通过
+        FUTHREE(-3,"售后通过"),//售后通过
+        FUTWO(-2,"订单进入售后"),//订单进入售后
         FUONE(-1,"待支付"),//订单刚生成用户还没有支付
         ZERO(0,"已支付"),//订单已经支付,等待发货
         ONE(1,"已发货"),//订单已经发货等待用户签收
         TWO(2,"已完成"),//用户签收订单完成
-        THREE(3,"已评价");
+        THREE(3,"已评价");//已评价
 
 
 

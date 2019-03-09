@@ -44,18 +44,23 @@ import java.util.Map;
 public class AppCellarCallbackController {
     @Autowired
     private CellarOrderDbService cellarOrderDbService;
-    @Autowired
-    private CellarOrderDetailsDbService cellarOrderDetailsDbService;
-    @Autowired
-    private CellarCartDbService cellarCartDbService;
-    @Autowired
-    private CellarStoreDbService cellarStoreDbService;
+
+    /**
+     * 手动调用支付
+     */
+    @RequestMapping("/paySuccessSd")
+    public PayOutMessage paySuccessSd(
+            String outtradeno
+    ){
+        cellarOrderDbService.paySuccessByCart(outtradeno);
+        return null;
+    }
 
 
     /**
      * 支付回调统一类
      */
-    @RequestMapping("/paySuccess{settlementtype}/${methodpayment}")
+    @RequestMapping("/paySuccess{settlementtype}/{methodpayment}")
     public PayOutMessage paySuccess(
             @PathVariable("settlementtype") Integer settlementtype,
             @PathVariable("methodpayment") Integer methodpayment,

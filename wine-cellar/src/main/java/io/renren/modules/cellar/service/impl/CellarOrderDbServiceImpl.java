@@ -2,10 +2,13 @@ package io.renren.modules.cellar.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import io.renren.common.constants.Constants;
+import io.renren.common.utils.ShiroUtils;
 import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
 import io.renren.modules.cellar.entity.CellarOrderDetailsDbEntity;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.cellar.service.CellarOrderDetailsDbService;
+import io.renren.modules.sys.entity.SysUserEntity;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +37,27 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
 
     @Override
     public PageUtils queryPage(CellarOrderDbEntity cellarOrderDb) {
+        /**
+         *
+         */
+        SysUserEntity userEntity = ShiroUtils.getUserEntity();
+        boolean flag = userEntity == null?false:ObjectUtil.isNotNull(userEntity.getStoreId())?true:false;
+        Long storeId = userEntity == null?null:ObjectUtil.isNotNull(userEntity.getStoreId())?userEntity.getStoreId():null;
+        /**
+         * 分页查询订单
+         */
         IPage<CellarOrderDbEntity> page = baseMapper.selectPage(
                 new Query<CellarOrderDbEntity>(cellarOrderDb).getPage(),
-                new QueryWrapper<CellarOrderDbEntity>()
+                new QueryWrapper<CellarOrderDbEntity>().lambda()
+                .notIn(CellarOrderDbEntity::getOrderStatus, Constants.ORDERSTATUS.FUONE.getKey())
+                .in(ObjectUtil.isNotNull(cellarOrderDb.getOrderType()),CellarOrderDbEntity::getOrderType,cellarOrderDb.getOrderType())
+                .eq(ObjectUtil.isNotNull(cellarOrderDb.getMemberId()),CellarOrderDbEntity::getMemberId,cellarOrderDb.getMemberId())
+                .eq(ObjectUtil.isNotNull(cellarOrderDb.getMethodPayment()),CellarOrderDbEntity::getMethodPayment,cellarOrderDb.getMethodPayment())
+                .eq(ObjectUtil.isNotNull(cellarOrderDb.getOrderType()),CellarOrderDbEntity::getOrderType,cellarOrderDb.getOrderType())
+                .eq(ObjectUtil.isNotNull(cellarOrderDb.getOrderStatus()),CellarOrderDbEntity::getOrderStatus,cellarOrderDb.getOrderStatus())
+                .eq(flag,CellarOrderDbEntity::getStoreId,storeId)
+                .like(StringUtils.isNotBlank(cellarOrderDb.getKey()),CellarOrderDbEntity::getOrderId,cellarOrderDb.getKey())
         );
-
         return new PageUtils(page);
     }
 
@@ -97,7 +116,7 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
                 CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarOrderDetailsDbEntity.getCommodityId());
                 cellarCommodityDbEntity.setMonthSales(cellarCommodityDbEntity.getMonthSales().add(cellarOrderDetailsDbEntity.getNumber()));
                 cellarCommodityDbEntity.setTotalSales(cellarCommodityDbEntity.getTotalSales().add(cellarOrderDetailsDbEntity.getNumber()));
-                cellarCommodityDbEntity.setTotalSales(cellarCommodityDbEntity.getInventory().subtract(cellarOrderDetailsDbEntity.getNumber()));
+                cellarCommodityDbEntity.setInventory(cellarCommodityDbEntity.getInventory().subtract(cellarOrderDetailsDbEntity.getNumber()));
                 cellarCommodityDbService.updateById(cellarCommodityDbEntity);
             }
         }

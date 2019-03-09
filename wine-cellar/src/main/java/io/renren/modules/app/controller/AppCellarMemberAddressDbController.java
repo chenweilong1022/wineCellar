@@ -83,6 +83,28 @@ public class AppCellarMemberAddressDbController {
     }
 
     /**
+     * 信息
+     */
+    @GetMapping("/isDefault")
+    @ApiOperation(value = "获取用户默认地址",notes = "获取用户默认地址",response = CellarMemberAddressDbEntity.class)
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="登录token",dataType="String",required=false,paramType="query"),
+    })
+    public R isDefault(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity
+    ){
+        /**
+         * 获取用户默认地址
+         */
+        CellarMemberAddressDbEntity addressDbEntity = cellarMemberAddressDbService.getOne(new QueryWrapper<CellarMemberAddressDbEntity>().lambda()
+                .eq(CellarMemberAddressDbEntity::getIsDefault, Constants.ISDEFAULT.YES.getKey())
+                .eq(CellarMemberAddressDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
+        );
+        return R.data(addressDbEntity);
+    }
+
+    /**
      * 保存
      */
     @PostMapping("/save")

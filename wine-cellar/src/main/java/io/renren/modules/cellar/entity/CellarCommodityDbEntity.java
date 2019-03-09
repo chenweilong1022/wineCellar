@@ -1,6 +1,7 @@
 package io.renren.modules.cellar.entity;
 
 import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -10,6 +11,7 @@ import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -110,6 +112,12 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 */
 	@ApiModelProperty(required=false,value="商品轮播图")
 	private String commodityRotationChart;
+	/**
+	 * 商品轮播图数组
+	 */
+	@ApiModelProperty(required=false,value="商品轮播图数组")
+	@TableField(exist = false)
+	private String[] commodityRotationChartList;
 	/**
 	 * 商品规格
 	 */
@@ -392,6 +400,22 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 		if (categoryPathList != null && categoryPathList.length > 0) {
 			this.categoryId = categoryPathList[categoryPathList.length - 1];
 			this.categoryPath = new JSONArray(categoryPathList).toString();
+		}
+	}
+
+	public String[] getCommodityRotationChartList() {
+			if (StringUtils.isNotBlank(commodityRotationChart) && JSONUtil.isJson(commodityRotationChart)) {
+				this.commodityRotationChartList = com.alibaba.fastjson.JSONArray.parseArray(commodityRotationChart).toJavaObject(String[].class);
+			}
+
+
+		return commodityRotationChartList;
+	}
+
+	public void setCommodityRotationChartList(String[] commodityRotationChartList) {
+		this.commodityRotationChartList = commodityRotationChartList;
+		if (commodityRotationChartList!= null) {
+			this.commodityRotationChart = new JSONArray(commodityRotationChartList).toString();
 		}
 	}
 }
