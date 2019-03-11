@@ -143,6 +143,7 @@
           children: 'cellarCategoryDbEntities'
         },
         options: [],
+        commodityRotationChartList: [],
         dynamicTags: [],
         inputVisible: false,
         inputValue: '',
@@ -164,7 +165,6 @@
           inventory: '',
           highPraise: '',
           commodityRotationChart: '',
-          commodityRotationChartList: [],
           productSpecifications: '',
           storeId: '',
           categoryId: ''
@@ -217,7 +217,10 @@
     },
     methods: {
       handleSuccess (response, file, fileList) {
-        this.dataForm.commodityRotationChartList.push(response.data)
+        let inputValues = response.data
+        if (inputValues) {
+          this.commodityRotationChartList.push(inputValues)
+        }
       },
       handleRemove (file, fileList) {
         console.log(file, fileList)
@@ -246,6 +249,7 @@
       init (id) {
         this.editFiles = []
         this.listOneLevel()
+        this.commodityRotationChartList = []
         this.dynamicTags = []
         this.dataForm.commodityId = id || 0
         this.url = this.$http.adornUrl(`/app/file/upload`)
@@ -278,18 +282,21 @@
                 this.dataForm.categoryId = data.cellarCommodityDb.categoryId
                 this.dynamicTags = data.cellarCommodityDb.labelList
                 this.selectedOptions3 = data.cellarCommodityDb.categoryPathList
-                this.dataForm.commodityRotationChartList = data.cellarCommodityDb.commodityRotationChartList
-                if (this.dataForm.commodityRotationChartList.length > 0) {
-                  for (let t = 0; t < this.dataForm.commodityRotationChartList.length; t++) {
-                    this.editFiles.push({name: 'name' + t, url: this.dataForm.commodityRotationChartList[t]})
-                    if (t === 0) {
-                      this.editForm.photo += this.dataForm.commodityRotationChartList[t]
-                    } else {
-                      this.editForm.photo += ',' + this.dataForm.commodityRotationChartList[t]
+                if (data.cellarCommodityDb.commodityRotationChartList) {
+                  this.commodityRotationChartList = data.cellarCommodityDb.commodityRotationChartList
+                  if (this.commodityRotationChartList.length > 0) {
+                    for (let t = 0; t < this.commodityRotationChartList.length; t++) {
+                      this.editFiles.push({name: 'name' + t, url: this.commodityRotationChartList[t]})
+                      if (t === 0) {
+                        this.editForm.photo += this.commodityRotationChartList[t]
+                      } else {
+                        this.editForm.photo += ',' + this.commodityRotationChartList[t]
+                      }
                     }
                   }
+                } else {
+                  this.commodityRotationChartList = []
                 }
-
               }
             })
           }
@@ -342,7 +349,7 @@
                 'categoryId': this.dataForm.categoryId,
                 'labelList': this.dynamicTags,
                 'categoryPathList': this.selectedOptions3,
-                'commodityRotationChartList': this.dataForm.commodityRotationChartList
+                'commodityRotationChartList': this.commodityRotationChartList
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

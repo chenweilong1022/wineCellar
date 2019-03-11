@@ -16,6 +16,7 @@ import io.renren.modules.cellar.service.CellarCartDbService;
 import io.renren.modules.cellar.service.CellarOrderDbService;
 import io.renren.modules.cellar.service.CellarOrderDetailsDbService;
 import io.renren.modules.cellar.service.CellarStoreDbService;
+import io.renren.modules.sys.controller.AbstractController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,7 +42,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("app/cellarcallback")
 @Api(value="APP酒窖支付回调",tags="APP酒窖支付回调")
-public class AppCellarCallbackController {
+public class AppCellarCallbackController extends AbstractController {
     @Autowired
     private CellarOrderDbService cellarOrderDbService;
 

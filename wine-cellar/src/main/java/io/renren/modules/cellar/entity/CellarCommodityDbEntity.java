@@ -108,6 +108,16 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@ApiModelProperty(required=false,value="好评数")
 	private BigDecimal highPraise;
 	/**
+	 * 平均星数
+	 */
+	@ApiModelProperty(required=false,value="评价星数")
+	private BigDecimal evaluationStarNumbers;
+	/**
+	 * 评价数量
+	 */
+	@ApiModelProperty(required=false,value="评价数量")
+	private BigDecimal evaluationNumbers;
+	/**
 	 * 商品轮播图
 	 */
 	@ApiModelProperty(required=false,value="商品轮播图")
@@ -417,5 +427,21 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 		if (commodityRotationChartList!= null) {
 			this.commodityRotationChart = new JSONArray(commodityRotationChartList).toString();
 		}
+	}
+
+	public BigDecimal getEvaluationStarNumbers() {
+		return evaluationStarNumbers;
+	}
+
+	public void setEvaluationStarNumbers(BigDecimal evaluationStarNumbers) {
+		this.evaluationStarNumbers = evaluationStarNumbers;
+	}
+
+	public BigDecimal getEvaluationNumbers() {
+		return evaluationNumbers;
+	}
+
+	public void setEvaluationNumbers(BigDecimal evaluationNumbers) {
+		this.evaluationNumbers = evaluationNumbers;
 	}
 }

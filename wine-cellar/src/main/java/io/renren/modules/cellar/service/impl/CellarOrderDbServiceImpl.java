@@ -3,12 +3,15 @@ package io.renren.modules.cellar.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.ShiroUtils;
+import io.renren.common.utils.pay.AliUtil;
 import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
 import io.renren.modules.cellar.entity.CellarOrderDetailsDbEntity;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.cellar.service.CellarOrderDetailsDbService;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,8 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
     private CellarOrderDetailsDbService cellarOrderDetailsDbService;
     @Autowired
     private CellarCommodityDbService cellarCommodityDbService;
+
+    protected static Logger logger = LoggerFactory.getLogger(AliUtil.class);
 
     @Override
     public PageUtils queryPage(CellarOrderDbEntity cellarOrderDb) {
@@ -64,12 +69,14 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
     @Override
     @Transactional
     public void paySuccessByCart(String outtradeno) {
+        logger.debug(outtradeno + "paySuccessByCart service");
         /**
          * 根据支付号查询订单列表
          */
         List<CellarOrderDbEntity> cellarOrderDbEntities = baseMapper.selectList(new QueryWrapper<CellarOrderDbEntity>().lambda()
                 .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
         );
+        logger.debug(cellarOrderDbEntities + "paySuccessByCart service");
 
         /**
          * 判断
@@ -77,11 +84,12 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
         if (ObjectUtil.isNull(cellarOrderDbEntities) && cellarOrderDbEntities.size() == 0) {
             return;
         }
-
+        logger.debug(cellarOrderDbEntities + "判断");
         /**
          * 循环
          */
         for (CellarOrderDbEntity cellarOrderDbEntity : cellarOrderDbEntities) {
+            logger.debug(cellarOrderDbEntities + "循环");
             /**
              * 判断是否支付
              */

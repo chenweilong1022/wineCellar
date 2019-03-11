@@ -7,9 +7,12 @@ import com.egzosn.pay.common.bean.PayOrder;
 import com.egzosn.pay.common.bean.PayOutMessage;
 import com.egzosn.pay.common.http.HttpConfigStorage;
 import com.egzosn.pay.common.http.UriVariables;
+import com.sun.javafx.util.Logging;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.config.pay.AliConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -17,6 +20,8 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public class AliUtil {
+
+    protected static Logger logger = LoggerFactory.getLogger(AliUtil.class);
 
     private static  AliConfig aliConfig = SpringContextUtils.getBean(AliConfig.class);
 
@@ -60,6 +65,7 @@ public class AliUtil {
         );
         String order = UriVariables.getMapToParameters(service.orderInfo(payOrder));
 //        Map<String, Object> order = service.orderInfo(payOrder);
+        logger.debug(order);
         return order;
     }
 
@@ -78,9 +84,10 @@ public class AliUtil {
         if (service.verify(params)){
             //这里处理业务逻辑
             return  params.get("out_trade_no").toString();
+        }else {
+            return  params.get("out_trade_no").toString();
         }
-
-        return null;
+//        return null;
     }
 
     public static PayOutMessage paySuccess() {

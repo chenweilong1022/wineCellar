@@ -29,6 +29,12 @@ public abstract class Assert {
         }
     }
 
+    public static<T> void isNullArray(T[] object, String message) {
+        if (object == null || object.length == 0) {
+            throw new RRException(message);
+        }
+    }
+
     public static void isPhone(String phone) {
         if (!Validator.isMobile(phone)) {
             throw new RRException("手机格式错误");

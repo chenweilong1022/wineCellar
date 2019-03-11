@@ -18,5 +18,12 @@ public interface CellarCommodityDbService extends IService<CellarCommodityDbEnti
     PageUtils queryPage(CellarCommodityDbEntity cellarCommodityDb);
 
     PageUtils queryPageApp(CellarCommodityDbEntity cellarCommodityDb);
+
+    /**
+     * 计算评价星数
+     * @param commodityId 商品id
+     * @param evaluationStarNumber 当前评价
+     */
+    void evaluationStarNumbers(Long commodityId,Integer evaluationStarNumber);
 }
 
