@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 /**
- * 地域信息表
+ * 全局配置
  *
  * @author chenweilong
  * @email 1433471850@qq.com
@@ -64,6 +64,15 @@ public class SysConstantsController {
     @RequestMapping("/orderstatuslist")
     public R orderstatuslist(){
         List<Map<String, Object>> maps = EnumUtil.enumToMaps(Constants.ORDERSTATUS.class);
+        return R.data(maps);
+    }
+
+    /**
+     * 订单状态
+     */
+    @RequestMapping("/coupontypelist")
+    public R coupontypelist(){
+        List<Map<String, Object>> maps = EnumUtil.enumToMaps(Constants.COUPONTYPE.class);
         return R.data(maps);
     }
 

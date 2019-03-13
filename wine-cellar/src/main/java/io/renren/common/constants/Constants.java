@@ -443,4 +443,95 @@ public class Constants {
         }
     }
 
+    /**
+     * 全局级别 优惠券类型
+     */
+    public enum COUPONTYPE {
+
+
+        ONE(1,"新人优惠券"),
+        TWO(2,"满减优惠券");
+
+
+
+        private Integer key;
+        private String value;
+
+        private COUPONTYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (COUPONTYPE value : COUPONTYPE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 全局级别 优惠券使用状态
+     */
+    public enum USINGSTATE {
+
+
+        ONE(0,"未使用"),
+        TWO(1,"已使用"),
+        THREE(2,"已过期");
+
+
+
+        private Integer key;
+        private String value;
+
+        private USINGSTATE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (USINGSTATE value : USINGSTATE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
 }

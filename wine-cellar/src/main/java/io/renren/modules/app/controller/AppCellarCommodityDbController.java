@@ -58,7 +58,7 @@ public class AppCellarCommodityDbController extends AbstractController {
          * 校验前端数据
          */
         Assert.isNull(cellarCommodityDb.getStoreId(),"店铺id不能为空");
-        Assert.isNull(cellarCommodityDb.getCategoryId(),"分类id不能为空");
+//        Assert.isNull(cellarCommodityDb.getCategoryId(),"分类id不能为空");
         /**
          * 查询
          */

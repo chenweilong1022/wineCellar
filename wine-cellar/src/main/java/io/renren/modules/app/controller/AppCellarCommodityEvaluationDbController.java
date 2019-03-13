@@ -12,8 +12,10 @@ import io.renren.modules.app.form.AppSubmitCellarCommodityEvaluationDbEntity;
 import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
 import io.renren.modules.cellar.entity.CellarCommodityEvaluationDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberDbEntity;
+import io.renren.modules.cellar.entity.CellarOrderDbEntity;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.cellar.service.CellarCommodityEvaluationDbService;
+import io.renren.modules.cellar.service.CellarOrderDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,6 +45,8 @@ public class AppCellarCommodityEvaluationDbController {
     private CellarCommodityEvaluationDbService cellarCommodityEvaluationDbService;
     @Autowired
     private CellarCommodityDbService cellarCommodityDbService;
+    @Autowired
+    private CellarOrderDbService cellarOrderDbService;
 
     /**
      * 列表
@@ -59,7 +63,7 @@ public class AppCellarCommodityEvaluationDbController {
     ){
         PageUtils page = cellarCommodityEvaluationDbService.queryPage(cellarCommodityEvaluationDb);
 
-        return R.ok().put("page", page);
+        return R.data(page);
     }
 //
 //
@@ -126,6 +130,15 @@ public class AppCellarCommodityEvaluationDbController {
              */
             cellarCommodityDbService.evaluationStarNumbers(commodityId,evaluationStarNumber);
         }
+
+        /**
+         * 修改状态
+         */
+        CellarOrderDbEntity c = new CellarOrderDbEntity();
+        c.setOrderStatus(Constants.ORDERSTATUS.THREE.getKey());
+        c.setOrderId(appSubmitCellarCommodityEvaluationDbEntity.getOrderId());
+        cellarOrderDbService.updateById(c);
+
         return R.ok();
     }
 
