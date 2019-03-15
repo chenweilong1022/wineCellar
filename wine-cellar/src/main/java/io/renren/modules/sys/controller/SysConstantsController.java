@@ -68,11 +68,20 @@ public class SysConstantsController {
     }
 
     /**
-     * 订单状态
+     * 优惠券类型
      */
     @RequestMapping("/coupontypelist")
     public R coupontypelist(){
         List<Map<String, Object>> maps = EnumUtil.enumToMaps(Constants.COUPONTYPE.class);
+        return R.data(maps);
+    }
+
+    /**
+     * 轮播图类型 点击跳转的路径
+     */
+    @RequestMapping("/shufflingtypelist")
+    public R shufflingtypelist(){
+        List<Map<String, Object>> maps = EnumUtil.enumToMaps(Constants.SHUFFLINGTYPE.class);
         return R.data(maps);
     }
 

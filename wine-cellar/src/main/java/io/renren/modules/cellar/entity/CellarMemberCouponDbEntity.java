@@ -43,6 +43,11 @@ public class CellarMemberCouponDbEntity extends AbstractEntity implements Serial
 	@ApiModelProperty(required=false,value="优惠券id")
 	private Long couponId;
 	/**
+	 * 店铺id
+	 */
+	@ApiModelProperty(required=false,value="店铺id")
+	private Long storeId;
+	/**
 	 * 状态
 	 */
 	@ApiModelProperty(required=false,value="状态")
@@ -161,4 +166,14 @@ public class CellarMemberCouponDbEntity extends AbstractEntity implements Serial
 		}
 		return cellarCouponDbEntity;
 	}
+
+	public Long getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
+	}
+
+
 }

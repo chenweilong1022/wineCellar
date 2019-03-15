@@ -94,3 +94,34 @@ CREATE TABLE `cellar_member_coupon_db` (
   `use_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '使用时间',
   PRIMARY KEY (`member_coupon_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员优惠券表';
+
+
+轮播图id
+轮播图
+状态
+创建时间
+类型
+h5路径
+店铺id
+商品id
+
+shuffling_photo_id
+shuffling_figure
+state
+create_time
+shuffling_type
+h5_path
+store_id
+commodity_id
+
+CREATE TABLE `cellar_shuffling_photo_db` (
+  `shuffling_photo_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '轮播图id',
+  `shuffling_figure` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '轮播图',
+  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
+  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
+  `shuffling_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '类型',
+  `h5_path` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'h5路径',
+  `store_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '店铺id',
+  `commodity_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '商品id',
+  PRIMARY KEY (`shuffling_photo_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='首页轮播图表';

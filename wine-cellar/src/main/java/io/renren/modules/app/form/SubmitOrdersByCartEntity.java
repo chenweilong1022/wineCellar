@@ -39,11 +39,7 @@ public class SubmitOrdersByCartEntity {
      */
     @ApiModelProperty(required=false,value="支付方式0:微信1:支付宝")
     private Integer methodPayment;
-    /**
-     * 优惠券id
-     */
-    @ApiModelProperty(required=false,value="优惠券id")
-    private Long couponsId;
+
 
     private List<SubmitOrdersStoreEntity> submitOrdersStoreEntities;
 
@@ -88,13 +84,6 @@ public class SubmitOrdersByCartEntity {
         this.methodPayment = methodPayment;
     }
 
-    public Long getCouponsId() {
-        return couponsId;
-    }
-
-    public void setCouponsId(Long couponsId) {
-        this.couponsId = couponsId;
-    }
 
     public List<SubmitOrdersStoreEntity> getSubmitOrdersStoreEntities() {
         return submitOrdersStoreEntities;

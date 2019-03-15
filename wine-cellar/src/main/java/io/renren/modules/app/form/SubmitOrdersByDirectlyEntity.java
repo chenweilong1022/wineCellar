@@ -44,10 +44,10 @@ public class SubmitOrdersByDirectlyEntity {
     @ApiModelProperty(required=false,value="支付方式0:微信1:支付宝")
     private Integer methodPayment;
     /**
-     * 优惠券id
+     * 会员优惠券id
      */
-    @ApiModelProperty(required=false,value="优惠券id")
-    private Long couponsId;
+    @ApiModelProperty(required=false,value="会员优惠券id")
+    private Long memberCouponId;
 
     /**
      * 门店id
@@ -114,13 +114,6 @@ public class SubmitOrdersByDirectlyEntity {
         this.methodPayment = methodPayment;
     }
 
-    public Long getCouponsId() {
-        return couponsId;
-    }
-
-    public void setCouponsId(Long couponsId) {
-        this.couponsId = couponsId;
-    }
 
     public Long getStoreId() {
         return storeId;
@@ -152,5 +145,13 @@ public class SubmitOrdersByDirectlyEntity {
 
     public void setNumber(BigDecimal[] number) {
         this.number = number;
+    }
+
+    public Long getMemberCouponId() {
+        return memberCouponId;
+    }
+
+    public void setMemberCouponId(Long memberCouponId) {
+        this.memberCouponId = memberCouponId;
     }
 }

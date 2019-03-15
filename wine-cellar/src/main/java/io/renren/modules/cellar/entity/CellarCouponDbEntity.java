@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
+import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.cellar.service.CellarMemberCouponDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -96,7 +99,18 @@ public class CellarCouponDbEntity extends AbstractEntity implements Serializable
 	 */
 	@ApiModelProperty(required=false,value="减")
 	private BigDecimal reductionOf;
-
+	/**
+	 *领取状态
+	 */
+	@ApiModelProperty(required=false,value="1 未领取 2 已领取")
+	@TableField(exist = false)
+	private Integer receiveState;
+	/**
+	 * 会员id
+	 */
+	@ApiModelProperty(required=false,value="会员id")
+	@TableField(exist = false)
+	private Long memberId;
 	/**
 	 * 设置：优惠券id
 	 */
@@ -251,5 +265,21 @@ public class CellarCouponDbEntity extends AbstractEntity implements Serializable
 
 	public void setEffectiveEndTimeLong(Long effectiveEndTimeLong) {
 		this.effectiveEndTimeLong = effectiveEndTimeLong;
+	}
+
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
+	}
+
+	public Integer getReceiveState() {
+		if (ObjectUtil.isNotNull(this.memberId)) {
+			CellarMemberCouponDbService cellarMemberCouponDbService = SpringContextUtils.getBean(CellarMemberCouponDbService.class);
+			CellarMemberCouponDbEntity cellarMemberCouponDbEntity = cellarMemberCouponDbService.getOne(new QueryWrapper<CellarMemberCouponDbEntity>().lambda()
+					.eq(CellarMemberCouponDbEntity::getMemberId, this.memberId)
+					.eq(CellarMemberCouponDbEntity::getCouponId, this.couponId)
+			);
+			return cellarMemberCouponDbEntity == null? Constants.RECEIVESTATE.ONE.getKey(): Constants.RECEIVESTATE.TWO.getKey();
+		}
+		return Constants.RECEIVESTATE.ONE.getKey();
 	}
 }

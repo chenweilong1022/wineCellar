@@ -25,6 +25,8 @@ public class CellarMemberCouponDbServiceImpl extends ServiceImpl<CellarMemberCou
                 new QueryWrapper<CellarMemberCouponDbEntity>().lambda()
                 .eq(ObjectUtil.isNotNull(cellarMemberCouponDb.getMemberId()),CellarMemberCouponDbEntity::getMemberId,cellarMemberCouponDb.getMemberId())
                 .eq(CellarMemberCouponDbEntity::getState, Constants.STATE.zero.getKey())
+                .eq(ObjectUtil.isNotNull(cellarMemberCouponDb.getUsingState()),CellarMemberCouponDbEntity::getUsingState,cellarMemberCouponDb.getUsingState())
+                .eq(ObjectUtil.isNotNull(cellarMemberCouponDb.getStoreId()),CellarMemberCouponDbEntity::getStoreId,cellarMemberCouponDb.getStoreId())
         );
 
         return new PageUtils(page);

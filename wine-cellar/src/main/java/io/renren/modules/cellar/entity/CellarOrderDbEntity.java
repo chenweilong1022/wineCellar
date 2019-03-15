@@ -191,6 +191,11 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	 */
 	@ApiModelProperty(required=false,value="退货原因")
 	private String returnReason;
+	/**
+	 * 会员优惠券id
+	 */
+	@ApiModelProperty(required=false,value="会员优惠券id")
+	private Long memberCouponId;
 
 	/**
 	 * 设置：订单id
@@ -542,5 +547,13 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 
 	public void setOrderTypeStr(String orderTypeStr) {
 		this.orderTypeStr = orderTypeStr;
+	}
+
+	public Long getMemberCouponId() {
+		return memberCouponId;
+	}
+
+	public void setMemberCouponId(Long memberCouponId) {
+		this.memberCouponId = memberCouponId;
 	}
 }

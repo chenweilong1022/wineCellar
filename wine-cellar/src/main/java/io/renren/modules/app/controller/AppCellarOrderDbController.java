@@ -1,5 +1,6 @@
 package io.renren.modules.app.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
@@ -50,6 +51,10 @@ public class AppCellarOrderDbController {
     private CellarStoreDbService cellarStoreDbService;
     @Autowired
     private CellarCommodityDbService cellarCommodityDbService;
+    @Autowired
+    private CellarMemberCouponDbService cellarMemberCouponDbService;
+    @Autowired
+    private CellarConfigDbService cellarConfigDbService;
 
     /**
      * 列表
@@ -171,13 +176,14 @@ public class AppCellarOrderDbController {
             SubmitOrdersByDirectlyEntity submitOrdersByDirectlyEntity
     ){
 
+        /**
+         * 酒窖系统配置
+         */
+        CellarConfigDbEntity cellarConfigDbEntity = cellarConfigDbService.getById(Constants.Number.one.getKey());
         Assert.isNull(submitOrdersByDirectlyEntity,"提交订单为空");
         Assert.isNull(submitOrdersByDirectlyEntity.getMethodPayment(),"支付方式不能为空");
         BigDecimal payOrderAmount = BigDecimal.ZERO;//订单支付金额
         String orderNo = IdGeneratorUtil.getOrderNo();//订单编号 用来记录一批订单
-
-
-
 
         /**
          * 查询店铺信息
@@ -237,17 +243,53 @@ public class AppCellarOrderDbController {
         /**
          * 判断是否满足店铺满减优惠
          */
-        if (totalOrderAmount.compareTo(cellarStoreDbEntity.getFull()) > Constants.Number.zero.getKey()) {
+        if (totalOrderAmount.compareTo(cellarStoreDbEntity.getFull()) >= Constants.Number.zero.getKey()) {
             actualOrderAmount = totalOrderAmount.subtract(cellarStoreDbEntity.getReductionOf());
             cellarOrderDbEntity.setStoreFullAmount(cellarStoreDbEntity.getReductionOf());//订单满减金额
         }
+
+        /**
+         * 查询会员优惠券
+         * 判断是否存在
+         */
+        Long memberCouponId = submitOrdersByDirectlyEntity.getMemberCouponId();
+        CellarMemberCouponDbEntity cellarMemberCouponDbEntity = cellarMemberCouponDbService.getById(memberCouponId);
+        /**
+         * 优惠券存在
+         */
+        if (ObjectUtil.isNotNull(memberCouponId) && ObjectUtil.isNotNull(cellarMemberCouponDbEntity)) {
+            //获取优惠券信息
+            CellarCouponDbEntity cellarCouponDbEntity = cellarMemberCouponDbEntity.getCellarCouponDbEntity();
+            //判断优惠券存在
+            Assert.isNull(cellarCouponDbEntity,"该优惠券已经下架了");
+            /**
+             * 判断是否满足使用条件
+             */
+            if (totalOrderAmount.compareTo(cellarCouponDbEntity.getFull()) >= Constants.Number.zero.getKey()) {
+                actualOrderAmount = actualOrderAmount.subtract(cellarCouponDbEntity.getReductionOf());
+                cellarOrderDbEntity.setDiscountAmount(cellarCouponDbEntity.getReductionOf());
+                cellarOrderDbEntity.setMemberCouponId(memberCouponId);
+            }else {
+                return R.error("优惠券不满足使用条件");
+            }
+        }
+
+        /**
+         * 判断系统配置是否为空
+         * 不为空则计算运费
+         */
+        if (ObjectUtil.isNotNull(cellarConfigDbEntity)) {
+            /**
+             * 获取运费
+             */
+            BigDecimal distributionAmount = cellarConfigDbEntity.getFreight() == null ? BigDecimal.ZERO : cellarConfigDbEntity.getFreight();
+            actualOrderAmount = actualOrderAmount.add(distributionAmount);
+            cellarOrderDbEntity.setDistributionAmount(distributionAmount);
+        }
+
         cellarOrderDbEntity.setTotalOrderAmount(totalOrderAmount);//订单总金额
         cellarOrderDbEntity.setActualOrderAmount(actualOrderAmount);//订单实际金额
         payOrderAmount = payOrderAmount.add(actualOrderAmount);
-
-
-
-
         /**
          * 保存订单
          */
@@ -257,13 +299,13 @@ public class AppCellarOrderDbController {
          * 微信
          */
         if (submitOrdersByDirectlyEntity.getMethodPayment().equals(Constants.METHODPAYMENT.WECHAT.getKey())) {
-            Map map = WechatPayUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.ONE);
+            Map map = WechatPayUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.TWO);
             return R.data(map);
             /**
              * 支付宝
              */
         }else if (submitOrdersByDirectlyEntity.getMethodPayment().equals(Constants.METHODPAYMENT.ALIPAY.getKey())) {
-            String order = AliUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.ONE);
+            String order = AliUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.TWO);
             return R.data(order);
         }
 
@@ -288,6 +330,10 @@ public class AppCellarOrderDbController {
         Assert.isNull(submitOrdersByCartEntity,"提交订单为空");
         Assert.isNull(submitOrdersByCartEntity.getMethodPayment(),"支付方式不能为空");
 
+        /**
+         * 酒窖系统配置
+         */
+        CellarConfigDbEntity cellarConfigDbEntity = cellarConfigDbService.getById(Constants.Number.one.getKey());
         BigDecimal payOrderAmount = BigDecimal.ZERO;//订单支付金额
         String orderNo = IdGeneratorUtil.getOrderNo();//订单编号 用来记录一批订单
         List<SubmitOrdersStoreEntity> submitOrdersStoreEntities = submitOrdersByCartEntity.getSubmitOrdersStoreEntities();
@@ -357,10 +403,51 @@ public class AppCellarOrderDbController {
             /**
              * 判断是否满足店铺满减优惠
              */
-            if (totalOrderAmount.compareTo(cellarStoreDbEntity.getFull()) > Constants.Number.zero.getKey()) {
+            if (totalOrderAmount.compareTo(cellarStoreDbEntity.getFull()) >= Constants.Number.zero.getKey()) {
                 actualOrderAmount = totalOrderAmount.subtract(cellarStoreDbEntity.getReductionOf());
                 cellarOrderDbEntity.setStoreFullAmount(cellarStoreDbEntity.getReductionOf());//订单满减金额
             }
+
+            /**
+             * 查询会员优惠券
+             * 判断是否存在
+             */
+            Long memberCouponId = submitOrdersStoreEntity.getMemberCouponId();
+            CellarMemberCouponDbEntity cellarMemberCouponDbEntity = cellarMemberCouponDbService.getById(memberCouponId);
+            /**
+             * 优惠券存在
+             */
+            if (ObjectUtil.isNotNull(memberCouponId) && ObjectUtil.isNotNull(cellarMemberCouponDbEntity)) {
+                //获取优惠券信息
+                CellarCouponDbEntity cellarCouponDbEntity = cellarMemberCouponDbEntity.getCellarCouponDbEntity();
+                //判断优惠券存在
+                Assert.isNull(cellarCouponDbEntity,"该优惠已经下架了");
+                /**
+                 * 判断是否满足使用条件
+                 */
+                if (totalOrderAmount.compareTo(cellarCouponDbEntity.getFull()) >= Constants.Number.zero.getKey()) {
+                    actualOrderAmount = actualOrderAmount.subtract(cellarCouponDbEntity.getReductionOf());
+                    cellarOrderDbEntity.setDiscountAmount(cellarCouponDbEntity.getReductionOf());
+                    cellarOrderDbEntity.setMemberCouponId(memberCouponId);
+                }else {
+                    return R.error("优惠券不满足使用条件");
+                }
+            }
+
+
+            /**
+             * 判断系统配置是否为空
+             * 不为空则计算运费
+             */
+            if (ObjectUtil.isNotNull(cellarConfigDbEntity)) {
+                /**
+                 * 获取运费
+                 */
+                BigDecimal distributionAmount = cellarConfigDbEntity.getFreight() == null ? BigDecimal.ZERO : cellarConfigDbEntity.getFreight();
+                actualOrderAmount = actualOrderAmount.add(distributionAmount);
+                cellarOrderDbEntity.setDistributionAmount(distributionAmount);
+            }
+
             cellarOrderDbEntity.setTotalOrderAmount(totalOrderAmount);//订单总金额
             cellarOrderDbEntity.setActualOrderAmount(actualOrderAmount);//订单实际金额
             payOrderAmount = payOrderAmount.add(actualOrderAmount);

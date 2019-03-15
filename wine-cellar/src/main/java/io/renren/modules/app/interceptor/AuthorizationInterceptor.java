@@ -36,6 +36,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         Login annotation;
         if(handler instanceof HandlerMethod) {
             annotation = ((HandlerMethod) handler).getMethodAnnotation(Login.class);
@@ -43,9 +44,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        if(annotation == null){
-            return true;
-        }
+
+
 
         //获取用户凭证
         String token = request.getHeader(jwtUtils.getHeader());
@@ -53,11 +53,27 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
             token = request.getParameter(jwtUtils.getHeader());
         }
 
+        if(annotation == null){
+            /**
+             * token不为null
+             */
+            if (StringUtils.isNotBlank(token)) {
+                check(token,request);
+            }
+            return true;
+        }
+
         //凭证为空
         if(StringUtils.isBlank(token)){
             throw new RRException(jwtUtils.getHeader() + "不能为空", HttpStatus.UNAUTHORIZED.value());
         }
 
+        check(token,request);
+
+        return true;
+    }
+
+    private void check(String token,HttpServletRequest request) {
         Claims claims = jwtUtils.getClaimByToken(token);
         if(claims == null || jwtUtils.isTokenExpired(claims.getExpiration())){
             throw new RRException(jwtUtils.getHeader() + "失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
@@ -71,10 +87,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (cellarMemberDbServiceOne == null) {
             throw new RRException(jwtUtils.getHeader() + "不存在,请重新登录", HttpStatus.UNAUTHORIZED.value());
         }
-
         //设置userId到request里，后续根据userId，获取用户信息
         request.setAttribute(USER_KEY, Long.parseLong(claims.getSubject()));
-
-        return true;
     }
 }

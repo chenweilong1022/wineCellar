@@ -9,6 +9,7 @@ import java.util.*;
 public class EnumUtil {
 
 
+
     public static <E extends Enum<E>> List<Map<String,Object>> enumToMaps(final Class<E> enumClass) {
 
         List<Map<String,Object>> list = new ArrayList<>();
@@ -25,4 +26,22 @@ public class EnumUtil {
         }
         return list;
     }
+
+    public static <E extends Enum<E>> String enumToString(final Class<E> enumClass) {
+
+       final StringJoiner stringJoiner = new StringJoiner("");
+        E[] enumConstants = enumClass.getEnumConstants();
+
+        for (E enumConstant : enumConstants) {
+            Map<String,Object> map = new HashMap<>();
+//            String name = enumConstant.name();
+            Object key = ReflectUtil.getFieldValue(enumConstant, "key");
+            Object value = ReflectUtil.getFieldValue(enumConstant, "value");
+            stringJoiner.add(String.valueOf(key));
+            stringJoiner.add(String.valueOf(":"));
+            stringJoiner.add(String.valueOf(value));
+        }
+        return stringJoiner.toString();
+    }
+
 }

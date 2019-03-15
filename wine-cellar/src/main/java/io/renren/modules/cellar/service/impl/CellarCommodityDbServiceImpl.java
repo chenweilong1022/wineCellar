@@ -36,6 +36,7 @@ public class CellarCommodityDbServiceImpl extends ServiceImpl<CellarCommodityDbD
                 new QueryWrapper<CellarCommodityDbEntity>().lambda()
                         .eq(ObjectUtil.isNotNull(userEntity.getStoreId()),CellarCommodityDbEntity::getStoreId,userEntity.getStoreId())
                         .like(StringUtils.isNotBlank(cellarCommodityDb.getKey()),CellarCommodityDbEntity::getCommodityName,cellarCommodityDb.getKey())
+                        .eq(CellarCommodityDbEntity::getState, Constants.STATE.zero.getKey())
         );
         return new PageUtils(page);
     }

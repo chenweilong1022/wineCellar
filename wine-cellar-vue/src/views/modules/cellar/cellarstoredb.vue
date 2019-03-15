@@ -112,7 +112,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="disOrModHandle(scope.row.storeId)">分配账号</el-button>
+          <el-button type="text" v-if="isAuth('sys:user:save')" size="small" @click="disOrModHandle(scope.row.storeId)">分配账号</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.storeId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.storeId)">删除</el-button>
         </template>

@@ -1,5 +1,7 @@
 package io.renren.modules.cellar.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import io.renren.common.utils.ShiroUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
@@ -23,8 +25,8 @@ public class CellarStoreDbServiceImpl extends ServiceImpl<CellarStoreDbDao, Cell
                 new Query<CellarStoreDbEntity>(cellarStoreDb).getPage(),
                 new QueryWrapper<CellarStoreDbEntity>().lambda()
                         .like(StringUtils.isNotBlank(cellarStoreDb.getKey()),CellarStoreDbEntity::getStoreName,cellarStoreDb.getKey())
+                        .eq(ObjectUtil.isNotNull(cellarStoreDb.getStoreId()),CellarStoreDbEntity::getStoreId,cellarStoreDb.getStoreId())
         );
-
         return new PageUtils(page);
     }
 

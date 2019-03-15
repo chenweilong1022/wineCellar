@@ -53,7 +53,7 @@ public class AppCellarCallbackController extends AbstractController {
     public PayOutMessage paySuccessSd(
             String outtradeno
     ){
-        cellarOrderDbService.paySuccessByCart(outtradeno);
+        cellarOrderDbService.paySuccess(outtradeno);
         return null;
     }
 
@@ -85,12 +85,16 @@ public class AppCellarCallbackController extends AbstractController {
             payOutMessage = AliUtil.paySuccess();
         }
         Assert.isNull(outtradeno,"订单号回调失败");
-
         /**
          * 购物车结算
          */
         if (settlementtype.equals(Constants.SETTLEMENTTYPE.ONE.getKey())) {
-            cellarOrderDbService.paySuccessByCart(outtradeno);
+            cellarOrderDbService.paySuccess(outtradeno);
+        /**
+         * 直接购买
+         */
+        }else if (settlementtype.equals(Constants.SETTLEMENTTYPE.TWO.getKey())) {
+            cellarOrderDbService.paySuccess(outtradeno);
         }
         return payOutMessage;
     }

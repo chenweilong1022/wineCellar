@@ -404,7 +404,7 @@ public class Constants {
 
 
         ONE(1,"购物车结算"),//订单已经发货等待用户签收
-        TWO(2,"已完成"),//用户签收订单完成
+        TWO(2,"直接购买结算"),//用户签收订单完成
         THREE(3,"已评价");
 
 
@@ -526,6 +526,94 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (USINGSTATE value : USINGSTATE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+    /**
+     * 全局级别 优惠券领取状态
+     */
+    public enum RECEIVESTATE {
+
+
+        ONE(1,"未领取"),
+        TWO(2,"已领取");
+
+
+
+        private Integer key;
+        private String value;
+
+        private RECEIVESTATE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (RECEIVESTATE value : RECEIVESTATE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 轮播图类型 点击跳转的路径
+     */
+    public enum SHUFFLINGTYPE {
+
+        ONE(1,"h5"),
+        TWO(2,"店铺"),
+        three(3,"商品");
+
+
+        private Integer key;
+        private String value;
+
+        private SHUFFLINGTYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (SHUFFLINGTYPE value : SHUFFLINGTYPE.values()) {
                 if (value.getKey() == key) {
                     return value.value;
                 }

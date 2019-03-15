@@ -5,8 +5,10 @@ import io.renren.common.constants.Constants;
 import io.renren.common.utils.ShiroUtils;
 import io.renren.common.utils.pay.AliUtil;
 import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
+import io.renren.modules.cellar.entity.CellarMemberCouponDbEntity;
 import io.renren.modules.cellar.entity.CellarOrderDetailsDbEntity;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
+import io.renren.modules.cellar.service.CellarMemberCouponDbService;
 import io.renren.modules.cellar.service.CellarOrderDetailsDbService;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.StringUtils;
@@ -37,8 +39,8 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
     private CellarOrderDetailsDbService cellarOrderDetailsDbService;
     @Autowired
     private CellarCommodityDbService cellarCommodityDbService;
-
-    protected static Logger logger = LoggerFactory.getLogger(AliUtil.class);
+    @Autowired
+    private CellarMemberCouponDbService cellarMemberCouponDbService;
 
     @Override
     public PageUtils queryPage(CellarOrderDbEntity cellarOrderDb) {
@@ -68,15 +70,13 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
 
     @Override
     @Transactional
-    public void paySuccessByCart(String outtradeno) {
-        logger.debug(outtradeno + "paySuccessByCart service");
+    public void paySuccess(String outtradeno) {
         /**
          * 根据支付号查询订单列表
          */
         List<CellarOrderDbEntity> cellarOrderDbEntities = baseMapper.selectList(new QueryWrapper<CellarOrderDbEntity>().lambda()
                 .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
         );
-        logger.debug(cellarOrderDbEntities + "paySuccessByCart service");
 
         /**
          * 判断
@@ -84,12 +84,10 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
         if (ObjectUtil.isNull(cellarOrderDbEntities) && cellarOrderDbEntities.size() == 0) {
             return;
         }
-        logger.debug(cellarOrderDbEntities + "判断");
         /**
          * 循环
          */
         for (CellarOrderDbEntity cellarOrderDbEntity : cellarOrderDbEntities) {
-            logger.debug(cellarOrderDbEntities + "循环");
             /**
              * 判断是否支付
              */
@@ -103,14 +101,26 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
             cellarOrderDbEntity.setPaymentTime(new Date());
             cellarOrderDbEntity.setOrderStatus(Constants.ORDERSTATUS.ZERO.getKey());
             baseMapper.updateById(cellarOrderDbEntity);
-
+            /**
+             * 获取订单优惠券
+             */
+            Long memberCouponId = cellarOrderDbEntity.getMemberCouponId();
+            CellarMemberCouponDbEntity cellarMemberCouponDbEntity = cellarMemberCouponDbService.getById(memberCouponId);
+            /**
+             * 使用了
+             * 优惠券
+             */
+            if (ObjectUtil.isNotNull(memberCouponId) && ObjectUtil.isNotNull(cellarMemberCouponDbEntity)) {
+                cellarMemberCouponDbEntity.setUseTime(new Date());
+                cellarMemberCouponDbEntity.setUsingState(Constants.USINGSTATE.TWO.getKey());
+                cellarMemberCouponDbService.updateById(cellarMemberCouponDbEntity);
+            }
 
             /**
              * 查询订单下商品信息
              */
             List<CellarOrderDetailsDbEntity> cellarOrderDetailsDbEntities = cellarOrderDetailsDbService.list(new QueryWrapper<CellarOrderDetailsDbEntity>().lambda()
                     .eq(CellarOrderDetailsDbEntity::getOrderId, cellarOrderDbEntity.getOrderId())
-
             );
 
             /**

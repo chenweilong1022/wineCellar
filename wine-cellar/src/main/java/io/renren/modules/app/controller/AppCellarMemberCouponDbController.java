@@ -49,6 +49,8 @@ public class AppCellarMemberCouponDbController {
     @ApiOperation(value = "会员优惠券列表",notes = "会员优惠券列表",response = CellarMemberCouponDbEntity.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="storeId",value="店铺id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="usingState",value="使用状态 0未使用 1已使用 2已过期",dataType="String",required=false,paramType="query"),
     })
     public R list(
             @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
@@ -93,6 +95,7 @@ public class AppCellarMemberCouponDbController {
         cellarMemberCouponDb.setState(Constants.STATE.zero.getKey());
         cellarMemberCouponDb.setCreateTime(new Date());
         cellarMemberCouponDb.setUsingState(Constants.USINGSTATE.ONE.getKey());
+        cellarMemberCouponDb.setStoreId(cellarCouponDbEntity.getStoreId());
         cellarMemberCouponDbService.save(cellarMemberCouponDb);
 
         /**

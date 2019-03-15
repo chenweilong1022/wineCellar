@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.common.constants.Constants;
+import io.renren.common.utils.EnumUtil;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.cellar.service.CellarStoreDbService;
@@ -38,7 +39,7 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 	/**
 	 * 状态
 	 */
-	@ApiModelProperty(required=false,value="状态")
+	@ApiModelProperty(required=false,value= "状态")
 	private Integer state;
 	/**
 	 * 创建时间
@@ -50,6 +51,18 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="店铺id")
 	private Long storeId;
+	/**
+	 * 满
+	 */
+	@ApiModelProperty(required=false,value="满")
+	@TableField(exist = false)
+	private BigDecimal full;
+	/**
+	 * 减
+	 */
+	@ApiModelProperty(required=false,value="减")
+	@TableField(exist = false)
+	private BigDecimal reductionOf;
 	/**
 	 * 店铺名称
 	 */
@@ -272,5 +285,19 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 
 	public void setCellarCartDbEntities(List<CellarCartDbEntity> cellarCartDbEntities) {
 		this.cellarCartDbEntities = cellarCartDbEntities;
+	}
+
+	public BigDecimal getFull() {
+		if (this.storeId != null) {
+			CellarStoreDbService cellarStoreDbService = SpringContextUtils.getBean(CellarStoreDbService.class);
+			CellarStoreDbEntity cellarStoreDbEntity = cellarStoreDbService.getById(this.storeId);
+			this.full = cellarStoreDbEntity == null ? null:cellarStoreDbEntity.getFull();
+			this.reductionOf = cellarStoreDbEntity == null ? null:cellarStoreDbEntity.getReductionOf();
+		}
+		return full;
+	}
+
+	public BigDecimal getReductionOf() {
+		return reductionOf;
 	}
 }

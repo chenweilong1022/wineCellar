@@ -20,7 +20,7 @@ public interface CellarOrderDbService extends IService<CellarOrderDbEntity> {
     /**
      * 购物车支付成功
      */
-    void paySuccessByCart(String outtradeno);
+    void paySuccess(String outtradeno);
 
 
 }

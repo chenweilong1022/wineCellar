@@ -23,12 +23,16 @@ public class SubmitOrdersStoreEntity {
      */
     @ApiModelProperty(required=false,value="订单备注")
     private String orderNote;
-
     /**
      * 门店下购物车id
      */
     @ApiModelProperty(required=false,value="门店下购物车id")
     private List<Long> cartIds;
+    /**
+     * 优惠券id
+     */
+    @ApiModelProperty(required=false,value="优惠券id")
+    private Long memberCouponId;
 
     public Long getStoreId() {
         return storeId;
@@ -52,5 +56,13 @@ public class SubmitOrdersStoreEntity {
 
     public void setCartIds(List<Long> cartIds) {
         this.cartIds = cartIds;
+    }
+
+    public Long getMemberCouponId() {
+        return memberCouponId;
+    }
+
+    public void setMemberCouponId(Long memberCouponId) {
+        this.memberCouponId = memberCouponId;
     }
 }
