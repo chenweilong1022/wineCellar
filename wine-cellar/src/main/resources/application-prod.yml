@@ -43,7 +43,7 @@ file:
         saveurl: /home/upload/image/
 project:
     host:
-        name: vmyri7.natappfree.cc
+        name: tongcheng.xiaoyuancms.cn
 
 #支付宝支付参数配置
 ali:

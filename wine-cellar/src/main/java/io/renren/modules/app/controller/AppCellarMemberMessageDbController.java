@@ -1,5 +1,6 @@
 package io.renren.modules.app.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
@@ -54,6 +55,7 @@ public class AppCellarMemberMessageDbController {
         int count = cellarMemberMessageDbService.count(new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
                 .eq(CellarMemberMessageDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
                 .eq(CellarMemberMessageDbEntity::getHaveRead, Constants.HAVEREAD.UNREAD.getKey())
+                .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
         );
         return R.data(count);
     }
@@ -89,6 +91,7 @@ public class AppCellarMemberMessageDbController {
             int allCount = cellarMemberMessageDbService.count(new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
                 .eq(CellarMemberMessageDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
                 .eq(CellarMemberMessageDbEntity::getMessageType,value.getKey())
+                .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
             );
             /**
              * 查询未读数量
@@ -97,6 +100,7 @@ public class AppCellarMemberMessageDbController {
                     .eq(CellarMemberMessageDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
                     .eq(CellarMemberMessageDbEntity::getMessageType,value.getKey())
                     .eq(CellarMemberMessageDbEntity::getHaveRead, Constants.HAVEREAD.UNREAD)
+                    .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
             );
 
             /**
@@ -108,6 +112,7 @@ public class AppCellarMemberMessageDbController {
                     .eq(CellarMemberMessageDbEntity::getHaveRead, Constants.HAVEREAD.UNREAD)
                     .orderByDesc(CellarMemberMessageDbEntity::getCreateTime)
                     .last(" limit 0,1")
+                    .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
             );
 
             messageTypeEntity.setAllCount(allCount);
@@ -131,7 +136,7 @@ public class AppCellarMemberMessageDbController {
     })
     public R list(
             @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
-            CellarMemberMessageDbEntity cellarMemberMessageDbEntity
+            @ApiIgnore CellarMemberMessageDbEntity cellarMemberMessageDbEntity
     ){
 
         Assert.isNull(cellarMemberMessageDbEntity,"消息类型不能为空");
@@ -141,6 +146,7 @@ public class AppCellarMemberMessageDbController {
                 .eq(CellarMemberMessageDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
                 .eq(CellarMemberMessageDbEntity::getMessageType, cellarMemberMessageDbEntity.getMessageType())
                 .orderByDesc(CellarMemberMessageDbEntity::getCreateTime)
+                .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
         );
         return R.data(list);
     }
@@ -148,7 +154,7 @@ public class AppCellarMemberMessageDbController {
     /**
      * 设置已读
      */
-    @GetMapping("/setRead")
+    @PostMapping("/setRead")
     @ApiOperation(value = "设置已读",notes = "设置已读",response = CellarMemberMessageDbEntity.class)
     @Login
     @ApiImplicitParams({
@@ -169,6 +175,63 @@ public class AppCellarMemberMessageDbController {
         cellarMemberMessageDbService.update(cellarMemberMessageDbEntity,new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
                 .in(CellarMemberMessageDbEntity::getMemberMessageId,memberMessageIds)
                 .eq(CellarMemberMessageDbEntity::getMemberId,cellarMemberDbEntity.getMemberId())
+        );
+        return R.ok();
+    }
+
+    /**
+     * 全部已读
+     */
+    @PostMapping("/allRead")
+    @ApiOperation(value = "全部已读",notes = "全部已读",response = CellarMemberMessageDbEntity.class)
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="messageType",value="消息类型",dataType="String",required=false,paramType="query"),
+    })
+    public R allRead(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
+            @ApiIgnore CellarMemberMessageDbEntity cellarMemberMessageDbEntity
+    ){
+
+
+        /**
+         * 设置消息已读
+         */
+        CellarMemberMessageDbEntity messageDbEntity = new CellarMemberMessageDbEntity();
+        messageDbEntity.setHaveRead(Constants.HAVEREAD.READ.getKey());
+
+        cellarMemberMessageDbService.update(cellarMemberMessageDbEntity,new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
+                .eq(CellarMemberMessageDbEntity::getMemberId,cellarMemberDbEntity.getMemberId())
+                .eq(ObjectUtil.isNotNull(cellarMemberMessageDbEntity.getMessageType()),CellarMemberMessageDbEntity::getMessageType,cellarMemberMessageDbEntity.getMessageType())
+        );
+        return R.ok();
+    }
+
+    /**
+     * 清空消息
+     */
+    @PostMapping("/setEmpty")
+    @ApiOperation(value = "清空消息",notes = "清空消息",response = CellarMemberMessageDbEntity.class)
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="messageType",value="消息类型",dataType="String",required=false,paramType="query"),
+    })
+    public R setEmpty(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
+            @ApiIgnore CellarMemberMessageDbEntity cellarMemberMessageDbEntity
+    ){
+
+        /**
+         * 清空消息
+         */
+        CellarMemberMessageDbEntity messageDbEntity = new CellarMemberMessageDbEntity();
+        messageDbEntity.setState(Constants.STATE.funine.getKey());
+
+        cellarMemberMessageDbService.update(cellarMemberMessageDbEntity,new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
+                .eq(CellarMemberMessageDbEntity::getMemberId,cellarMemberDbEntity.getMemberId())
+                .eq(ObjectUtil.isNotNull(cellarMemberMessageDbEntity.getMessageType()),CellarMemberMessageDbEntity::getMessageType,cellarMemberMessageDbEntity.getMessageType())
         );
         return R.ok();
     }
