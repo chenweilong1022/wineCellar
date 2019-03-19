@@ -3,9 +3,12 @@ package io.renren.modules.app.controller;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
+import io.renren.common.validator.Assert;
 import io.renren.modules.app.annotation.Login;
+import io.renren.modules.cellar.entity.CellarConfigDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberDbEntity;
 import io.renren.modules.cellar.entity.CellarStoreDbEntity;
+import io.renren.modules.cellar.service.CellarConfigDbService;
 import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -33,6 +36,8 @@ import java.util.Date;
 public class AppCellarStoreDbController {
     @Autowired
     private CellarStoreDbService cellarStoreDbService;
+    @Autowired
+    private CellarConfigDbService cellarConfigDbService;
 
     /**
      * 列表
@@ -43,10 +48,38 @@ public class AppCellarStoreDbController {
             @ApiImplicitParam(name="key",value="搜索条件",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
-    })
+            @ApiImplicitParam(name="longitude",value="经度",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="latitude",value="纬度",dataType="String",required=false,paramType="query"),
+   })
     public R list(@ApiIgnore CellarStoreDbEntity cellarStoreDb){
-        PageUtils page = cellarStoreDbService.queryPage(cellarStoreDb);
+//        PageUtils page = cellarStoreDbService.queryPage(cellarStoreDb);
 
+        CellarConfigDbEntity cellarConfigDb = cellarConfigDbService.getById(Constants.Number.one.getKey());
+        Assert.isNull(cellarStoreDb.getLongitude(),"经度不能为空");
+        Assert.isNull(cellarStoreDb.getLatitude(),"纬度不能为空");
+        cellarStoreDb.setDistance(cellarConfigDb.getDistance());
+        PageUtils page = cellarStoreDbService.nearStoreList(cellarStoreDb);
+        return R.data(page);
+    }
+
+    /**
+     * 列表
+     */
+    @GetMapping("/nearStoreList")
+    @ApiOperation(value = "附近店铺",notes = "附近店铺",response = CellarStoreDbEntity.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="key",value="搜索条件",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="longitude",value="经度",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="latitude",value="纬度",dataType="String",required=false,paramType="query"),
+    })
+    public R nearStoreList(@ApiIgnore CellarStoreDbEntity cellarStoreDb){
+        CellarConfigDbEntity cellarConfigDb = cellarConfigDbService.getById(Constants.Number.one.getKey());
+        Assert.isNull(cellarStoreDb.getLongitude(),"经度不能为空");
+        Assert.isNull(cellarStoreDb.getLatitude(),"纬度不能为空");
+        cellarStoreDb.setDistance(cellarConfigDb.getDistance());
+        PageUtils page = cellarStoreDbService.nearStoreList(cellarStoreDb);
         return R.data(page);
     }
 

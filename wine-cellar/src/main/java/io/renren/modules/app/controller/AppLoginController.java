@@ -1,6 +1,7 @@
 package io.renren.modules.app.controller;
 
 
+import io.renren.common.annotation.MemberMessage;
 import io.renren.common.utils.R;
 import io.renren.common.validator.Assert;
 import io.renren.common.validator.ValidatorUtils;

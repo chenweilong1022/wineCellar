@@ -104,6 +104,11 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 	@ApiModelProperty(required=false,value="类型")
 	private Integer type;
 	/**
+	 * 订单编号
+	 */
+	@ApiModelProperty(required=false,value="订单编号")
+	private String orderNo;
+	/**
 	 * 类型
 	 */
 	@ApiModelProperty(required=false,value="店铺下商品列表")
@@ -299,5 +304,13 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 
 	public BigDecimal getReductionOf() {
 		return reductionOf;
+	}
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

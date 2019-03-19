@@ -16,6 +16,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 
 /**
@@ -135,7 +137,12 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	 */
 	@ApiModelProperty(required=false,value="状态")
 	private Integer state;
-
+	/**
+	 * 距离
+	 */
+	@ApiModelProperty(required=false,value="距离")
+	@TableField(exist = false)
+	private BigDecimal distance;
 	/**
 	 * 设置：店铺id
 	 */
@@ -387,5 +394,13 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 
 	public void setSupportTheirOwnStr(String supportTheirOwnStr) {
 		this.supportTheirOwnStr = supportTheirOwnStr;
+	}
+
+	public BigDecimal getDistance() {
+		return distance;
+	}
+
+	public void setDistance(BigDecimal distance) {
+		this.distance = distance;
 	}
 }

@@ -1,6 +1,7 @@
 package io.renren.modules.cellar.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.modules.sys.entity.AbstractEntity;
@@ -34,6 +35,11 @@ public class CellarConfigDbEntity extends AbstractEntity implements Serializable
 	 */
 	@ApiModelProperty(required=false,value="运费配置")
 	private BigDecimal freight;
+	/**
+	 * 距离
+	 */
+	@ApiModelProperty(required=false,value="距离")
+	private BigDecimal distance;
 
 	/**
 	 * 设置：配置id
@@ -58,5 +64,13 @@ public class CellarConfigDbEntity extends AbstractEntity implements Serializable
 	 */
 	public BigDecimal getFreight() {
 		return freight;
+	}
+
+	public BigDecimal getDistance() {
+		return distance;
+	}
+
+	public void setDistance(BigDecimal distance) {
+		this.distance = distance;
 	}
 }

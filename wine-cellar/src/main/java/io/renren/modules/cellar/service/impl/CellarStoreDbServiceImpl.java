@@ -30,4 +30,14 @@ public class CellarStoreDbServiceImpl extends ServiceImpl<CellarStoreDbDao, Cell
         return new PageUtils(page);
     }
 
+    @Override
+    public PageUtils nearStoreList(CellarStoreDbEntity cellarStoreDb) {
+
+        IPage<CellarStoreDbEntity> page = baseMapper.nearStoreList(
+                new Query<CellarStoreDbEntity>(cellarStoreDb).getPage(),
+                cellarStoreDb
+        );
+        return new PageUtils(page);
+    }
+
 }

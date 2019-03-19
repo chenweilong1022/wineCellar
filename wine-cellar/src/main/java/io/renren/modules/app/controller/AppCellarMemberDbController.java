@@ -1,6 +1,8 @@
 package io.renren.modules.app.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.annotation.MemberMessage;
+import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.validator.Assert;

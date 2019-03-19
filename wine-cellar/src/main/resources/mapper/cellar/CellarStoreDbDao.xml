@@ -21,7 +21,35 @@
         <result property="latitude" column="latitude"/>
         <result property="createTime" column="create_time"/>
         <result property="state" column="state"/>
+        <result property="distance" column="distance"/>
     </resultMap>
+
+
+    <select id="nearStoreList" parameterType="io.renren.modules.cellar.entity.CellarStoreDbEntity" resultMap="cellarStoreDbMap">
+        SELECT
+        a.*
+        ,(
+            6371 * acos(
+              cos( radians( a.latitude ) ) * cos( radians( #{ew.latitude} ) ) * cos( radians( #{ew.longitude} ) - radians( a.longitude ) ) + sin( radians( a.latitude ) ) * sin( radians( #{ew.latitude} ) )
+            )
+        ) AS distance
+        FROM
+        cellar_store_db a
+        WHERE
+          1 = 1
+        <if test="ew.state != null and ew.state != ''">
+          AND  a.state = #{ew.state}
+        </if>
+        <if test="ew.key != null and ew.key != ''">
+          AND  a.store_name like CONCAT('%','#{ew.key}','%')
+        </if>
+        <if test="ew.storeId != null and ew.storeId != ''">
+          AND a.store_id = #{ew.storeId}
+        </if>
+        having distance &lt; #{ew.distance}
+        ORDER BY
+            distance
+    </select>
 
 
 </mapper>

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.annotation.MemberMessage;
 import io.renren.common.constants.Constants;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysUserEntity;
@@ -85,6 +86,7 @@ public class CellarOrderDbController extends AbstractController {
      * 点击发货
      */
     @RequestMapping("/delivery")
+    @MemberMessage(MESSAGEHEAD = "点击发货",MESSAGETYPE = Constants.MESSAGETYPE.ORDER,MESSAGECONTENT = "您的订单已经发货,请您耐心等待")
     @RequiresPermissions("cellar:cellarorderdb:delivery")
     public R delivery(@RequestBody Long[] orderIds){
         /**

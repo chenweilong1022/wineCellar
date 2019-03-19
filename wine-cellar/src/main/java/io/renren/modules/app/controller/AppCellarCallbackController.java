@@ -1,9 +1,11 @@
 package io.renren.modules.app.controller;
 
 import com.egzosn.pay.common.bean.PayOutMessage;
+import io.renren.common.annotation.MemberMessage;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.R;
 import io.renren.common.utils.pay.AliUtil;
+import io.renren.common.utils.pay.CallbackUtil;
 import io.renren.common.utils.pay.WechatPayUtil;
 import io.renren.common.validator.Assert;
 import io.renren.modules.app.annotation.Login;
@@ -30,6 +32,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 
 /**
@@ -57,7 +60,6 @@ public class AppCellarCallbackController extends AbstractController {
         return null;
     }
 
-
     /**
      * 支付回调统一类
      */
@@ -67,34 +69,20 @@ public class AppCellarCallbackController extends AbstractController {
             @PathVariable("methodpayment") Integer methodpayment,
             HttpServletRequest request
     ){
-        Assert.isNull(settlementtype,"支付异常");
-        Assert.isNull(methodpayment,"支付异常");
-        String outtradeno = null;
-        PayOutMessage payOutMessage = null;
-        /**
-         * 微信
-         */
-        if (methodpayment.equals(Constants.METHODPAYMENT.WECHAT.getKey())) {
-            outtradeno = WechatPayUtil.payBack(request);
-            payOutMessage = WechatPayUtil.paySuccess();
-        /**
-         * 支付宝
-         */
-        }else if (methodpayment.equals(Constants.METHODPAYMENT.ALIPAY.getKey())) {
-            outtradeno = AliUtil.payBack(request);
-            payOutMessage = AliUtil.paySuccess();
-        }
-        Assert.isNull(outtradeno,"订单号回调失败");
+
+        StringJoiner outtradeno = new StringJoiner("");
+        PayOutMessage payOutMessage = WechatPayUtil.paySuccess();
+        CallbackUtil.callback(settlementtype,methodpayment,request,outtradeno,payOutMessage);
         /**
          * 购物车结算
          */
         if (settlementtype.equals(Constants.SETTLEMENTTYPE.ONE.getKey())) {
-            cellarOrderDbService.paySuccess(outtradeno);
+            cellarOrderDbService.paySuccess(outtradeno.toString());
         /**
          * 直接购买
          */
         }else if (settlementtype.equals(Constants.SETTLEMENTTYPE.TWO.getKey())) {
-            cellarOrderDbService.paySuccess(outtradeno);
+            cellarOrderDbService.paySuccess(outtradeno.toString());
         }
         return payOutMessage;
     }

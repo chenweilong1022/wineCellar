@@ -1,15 +1,12 @@
 package io.renren.modules.cellar.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import io.renren.common.annotation.MemberMessage;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.ShiroUtils;
 import io.renren.common.utils.pay.AliUtil;
-import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
-import io.renren.modules.cellar.entity.CellarMemberCouponDbEntity;
-import io.renren.modules.cellar.entity.CellarOrderDetailsDbEntity;
-import io.renren.modules.cellar.service.CellarCommodityDbService;
-import io.renren.modules.cellar.service.CellarMemberCouponDbService;
-import io.renren.modules.cellar.service.CellarOrderDetailsDbService;
+import io.renren.modules.cellar.entity.*;
+import io.renren.modules.cellar.service.*;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -27,8 +24,6 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.cellar.dao.CellarOrderDbDao;
-import io.renren.modules.cellar.entity.CellarOrderDbEntity;
-import io.renren.modules.cellar.service.CellarOrderDbService;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -41,6 +36,8 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
     private CellarCommodityDbService cellarCommodityDbService;
     @Autowired
     private CellarMemberCouponDbService cellarMemberCouponDbService;
+    @Autowired
+    private CellarCartDbService cellarCartDbService;
 
     @Override
     public PageUtils queryPage(CellarOrderDbEntity cellarOrderDb) {
@@ -70,6 +67,7 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
 
     @Override
     @Transactional
+    @MemberMessage(MESSAGEHEAD = "支付成功",MESSAGETYPE = Constants.MESSAGETYPE.ORDER,MESSAGECONTENT = "您的订单支付成功,等待平台发货")
     public void paySuccess(String outtradeno) {
         /**
          * 根据支付号查询订单列表
@@ -138,7 +136,14 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
                 cellarCommodityDbService.updateById(cellarCommodityDbEntity);
             }
         }
-
+        /**
+         * 删除购物车
+         */
+        CellarCartDbEntity cellarCartDbEntity = new CellarCartDbEntity();
+        cellarCartDbEntity.setState(Constants.STATE.funine.getKey());
+        cellarCartDbService.update(cellarCartDbEntity,new QueryWrapper<CellarCartDbEntity>().lambda()
+                .eq(CellarCartDbEntity::getOrderNo,outtradeno)
+        );
     }
 
 }

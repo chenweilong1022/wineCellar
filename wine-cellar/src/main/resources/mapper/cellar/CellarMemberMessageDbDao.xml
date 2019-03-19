@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarMemberMessageDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarMemberMessageDbEntity" id="cellarMemberMessageDbMap">
+        <result property="memberMessageId" column="member_message_id"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="memberId" column="member_id"/>
+        <result property="messageContent" column="message_content"/>
+        <result property="messageHead" column="message_head"/>
+        <result property="messageType" column="message_type"/>
+        <result property="haveRead" column="have_read"/>
+    </resultMap>
+
+
+</mapper>

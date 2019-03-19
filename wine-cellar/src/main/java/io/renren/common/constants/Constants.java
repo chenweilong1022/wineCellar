@@ -622,4 +622,90 @@ public class Constants {
         }
     }
 
+    /**
+     * 会员消息类型
+     */
+    public enum MESSAGETYPE {
+
+        SYSTEM(1,"系统消息"),
+        ORDER(2,"订单消息");
+
+
+        private Integer key;
+        private String value;
+
+        private MESSAGETYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (MESSAGETYPE value : MESSAGETYPE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 是否已读
+     */
+    public enum HAVEREAD {
+
+        UNREAD(1,"未读"),
+        READ(2,"已读");
+
+
+        private Integer key;
+        private String value;
+
+        private HAVEREAD(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (HAVEREAD value : HAVEREAD.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
 }

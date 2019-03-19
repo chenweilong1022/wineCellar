@@ -2,6 +2,7 @@ package io.renren.modules.app.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.annotation.MemberMessage;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
@@ -116,6 +117,7 @@ public class AppCellarOrderDbController {
      * 确认收货
      */
     @PostMapping("/receipt")
+    @MemberMessage(MESSAGEHEAD = "确认收货",MESSAGETYPE = Constants.MESSAGETYPE.ORDER,MESSAGECONTENT = "您的订单已经确认收货")
     @ApiOperation(value = "确认收货",notes = "确认收货",response = CellarOrderDbEntity.class)
     @Login
     @ApiImplicitParams({
@@ -142,6 +144,7 @@ public class AppCellarOrderDbController {
      * 申请售后
      */
     @PostMapping("/applyAfterSales")
+    @MemberMessage(MESSAGEHEAD = "申请售后",MESSAGETYPE = Constants.MESSAGETYPE.ORDER,MESSAGECONTENT = "您的订单已经申请售后,请等待服务人员处理")
     @ApiOperation(value = "申请售后",notes = "申请售后",response = CellarOrderDbEntity.class)
     @Login
     @ApiImplicitParams({
@@ -379,6 +382,13 @@ public class AppCellarOrderDbController {
                  */
                 CellarCartDbEntity cellarCartDbEntity = cellarCartDbService.getById(cartId);
                 Assert.isNull(cellarCartDbEntity,"购物车id不存在");
+                /**
+                 * 购物车设置订单编号
+                 * 支付之后删除购物车
+                 */
+                cellarCartDbEntity.setOrderNo(orderNo);
+                cellarCartDbService.updateById(cellarCartDbEntity);
+
 
                 /**
                  * 订单明细表设置数据
