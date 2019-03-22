@@ -49,7 +49,11 @@ public class CellarCommodityDbServiceImpl extends ServiceImpl<CellarCommodityDbD
                         .eq(CellarCommodityDbEntity::getState, Constants.STATE.zero.getKey())
                         .eq(ObjectUtil.isNotNull(cellarCommodityDb.getStoreId()),CellarCommodityDbEntity::getStoreId,cellarCommodityDb.getStoreId())
                         .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryId()),CellarCommodityDbEntity::getCategoryId,cellarCommodityDb.getCategoryId())
+                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getHaveHandpick()),CellarCommodityDbEntity::getHaveHandpick,cellarCommodityDb.getHaveHandpick())
                         .like(StringUtils.isNotBlank(cellarCommodityDb.getKey()),CellarCommodityDbEntity::getCommodityName,cellarCommodityDb.getKey())
+                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryActivityId()),CellarCommodityDbEntity::getCategoryActivityId,cellarCommodityDb.getCategoryActivityId())
+                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryActivityId()),CellarCommodityDbEntity::getHaveCategoryActivity, Constants.HAVECATEGORYACTIVITY.YES.getKey())
+
         );
         return new PageUtils(page);
     }

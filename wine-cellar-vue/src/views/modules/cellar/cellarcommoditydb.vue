@@ -94,12 +94,26 @@
         label="店铺">
       </el-table-column>
       <el-table-column
+        prop="haveHandpickStr"
+        header-align="center"
+        align="center"
+        label="是否精选">
+      </el-table-column>
+      <el-table-column
+        prop="haveCategoryActivityStr"
+        header-align="center"
+        align="center"
+        label="是否分类活动">
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button v-if="scope.row.haveHandpick == 1 || scope.row.haveHandpick == null" type="text" size="small" @click="handpickHandle(scope.row.commodityId)">申请精选商品</el-button>
+          <el-button v-if="scope.row.haveCategoryActivity == 1  || scope.row.haveCategoryActivity == null" type="text" size="small" @click="categoryOrActivityHandle(scope.row.commodityId)">参加分类活动</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.commodityId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.commodityId)">删除</el-button>
         </template>
@@ -115,12 +129,14 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
+    <category-or-activity v-if="categoryOrActivityVisible" ref="categoryOrActivity" @refreshDataList="getDataList"></category-or-activity>
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
 <script>
   import AddOrUpdate from './cellarcommoditydb-add-or-update'
+  import CategoryOrActivity from './cellarcommoditydb-category-or-activity'
   export default {
     data () {
       return {
@@ -133,11 +149,13 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        categoryOrActivityVisible: false
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      CategoryOrActivity
     },
     activated () {
       this.getDataList()
@@ -223,6 +241,42 @@
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init(id)
+        })
+      },
+      // 分类活动
+      categoryOrActivityHandle (id) {
+        this.categoryOrActivityVisible = true
+        this.$nextTick(() => {
+          this.$refs.categoryOrActivity.init(id)
+        })
+      },
+      handpickHandle (id) {
+        var ids = id ? [id] : this.dataListSelections.map(item => {
+          return item.commodityId
+        })
+        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '精选商品审核' : '批量精选商品审核'}]操作?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/cellar/cellarhandpickcommodityreviewdb/handpick'),
+            method: 'post',
+            data: this.$http.adornData(ids, false)
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
         })
       },
       // 删除

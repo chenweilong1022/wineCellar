@@ -23,6 +23,12 @@ public abstract class Assert {
         }
     }
 
+    public static void isTrue(boolean flag, String message) {
+        if (flag) {
+            throw new RRException(message);
+        }
+    }
+
     public static void isNull(Object object, String message) {
         if (object == null) {
             throw new RRException(message);

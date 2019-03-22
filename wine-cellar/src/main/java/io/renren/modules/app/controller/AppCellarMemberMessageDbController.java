@@ -99,7 +99,7 @@ public class AppCellarMemberMessageDbController {
             int unReadCount = cellarMemberMessageDbService.count(new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
                     .eq(CellarMemberMessageDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
                     .eq(CellarMemberMessageDbEntity::getMessageType,value.getKey())
-                    .eq(CellarMemberMessageDbEntity::getHaveRead, Constants.HAVEREAD.UNREAD)
+                    .eq(CellarMemberMessageDbEntity::getHaveRead, Constants.HAVEREAD.UNREAD.getKey())
                     .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
             );
 
@@ -109,7 +109,7 @@ public class AppCellarMemberMessageDbController {
             CellarMemberMessageDbEntity memberMessageDbEntity = cellarMemberMessageDbService.getOne(new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
                     .eq(CellarMemberMessageDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
                     .eq(CellarMemberMessageDbEntity::getMessageType, value.getKey())
-                    .eq(CellarMemberMessageDbEntity::getHaveRead, Constants.HAVEREAD.UNREAD)
+                    .eq(CellarMemberMessageDbEntity::getHaveRead, Constants.HAVEREAD.UNREAD.getKey())
                     .orderByDesc(CellarMemberMessageDbEntity::getCreateTime)
                     .last(" limit 0,1")
                     .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
@@ -133,6 +133,8 @@ public class AppCellarMemberMessageDbController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="messageType",value="消息类型",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
     })
     public R list(
             @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
@@ -141,14 +143,9 @@ public class AppCellarMemberMessageDbController {
 
         Assert.isNull(cellarMemberMessageDbEntity,"消息类型不能为空");
         Assert.isNull(cellarMemberMessageDbEntity.getMessageType(),"消息类型不能为空");
-
-        List<CellarMemberMessageDbEntity> list = cellarMemberMessageDbService.list(new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
-                .eq(CellarMemberMessageDbEntity::getMemberId, cellarMemberDbEntity.getMemberId())
-                .eq(CellarMemberMessageDbEntity::getMessageType, cellarMemberMessageDbEntity.getMessageType())
-                .orderByDesc(CellarMemberMessageDbEntity::getCreateTime)
-                .eq(CellarMemberMessageDbEntity::getState, Constants.STATE.zero.getKey())
-        );
-        return R.data(list);
+        cellarMemberMessageDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
+        PageUtils pageUtils = cellarMemberMessageDbService.queryPage(cellarMemberMessageDbEntity);
+        return R.data(pageUtils);
     }
 
     /**
@@ -194,6 +191,7 @@ public class AppCellarMemberMessageDbController {
             @ApiIgnore CellarMemberMessageDbEntity cellarMemberMessageDbEntity
     ){
 
+        cellarMemberMessageDbEntity = cellarMemberMessageDbEntity == null ? new CellarMemberMessageDbEntity() : cellarMemberMessageDbEntity ;
 
         /**
          * 设置消息已读
@@ -201,7 +199,7 @@ public class AppCellarMemberMessageDbController {
         CellarMemberMessageDbEntity messageDbEntity = new CellarMemberMessageDbEntity();
         messageDbEntity.setHaveRead(Constants.HAVEREAD.READ.getKey());
 
-        cellarMemberMessageDbService.update(cellarMemberMessageDbEntity,new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
+        cellarMemberMessageDbService.update(messageDbEntity,new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
                 .eq(CellarMemberMessageDbEntity::getMemberId,cellarMemberDbEntity.getMemberId())
                 .eq(ObjectUtil.isNotNull(cellarMemberMessageDbEntity.getMessageType()),CellarMemberMessageDbEntity::getMessageType,cellarMemberMessageDbEntity.getMessageType())
         );
@@ -223,13 +221,14 @@ public class AppCellarMemberMessageDbController {
             @ApiIgnore CellarMemberMessageDbEntity cellarMemberMessageDbEntity
     ){
 
+        cellarMemberMessageDbEntity = cellarMemberMessageDbEntity == null ? new CellarMemberMessageDbEntity() :cellarMemberMessageDbEntity;
         /**
          * 清空消息
          */
         CellarMemberMessageDbEntity messageDbEntity = new CellarMemberMessageDbEntity();
         messageDbEntity.setState(Constants.STATE.funine.getKey());
 
-        cellarMemberMessageDbService.update(cellarMemberMessageDbEntity,new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
+        cellarMemberMessageDbService.update(messageDbEntity,new QueryWrapper<CellarMemberMessageDbEntity>().lambda()
                 .eq(CellarMemberMessageDbEntity::getMemberId,cellarMemberDbEntity.getMemberId())
                 .eq(ObjectUtil.isNotNull(cellarMemberMessageDbEntity.getMessageType()),CellarMemberMessageDbEntity::getMessageType,cellarMemberMessageDbEntity.getMessageType())
         );

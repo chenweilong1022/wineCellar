@@ -50,6 +50,8 @@ public class AppCellarCommodityDbController extends AbstractController {
             @ApiImplicitParam(name="key",value="搜索条件",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="haveHandpick",value="精选商品",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="categoryActivityId",value="分类活动id",dataType="String",required=false,paramType="query"),
     })
     public R list(
             @ApiIgnore CellarCommodityDbEntity cellarCommodityDb
@@ -57,7 +59,7 @@ public class AppCellarCommodityDbController extends AbstractController {
         /**
          * 校验前端数据
          */
-        Assert.isNull(cellarCommodityDb.getStoreId(),"店铺id不能为空");
+//        Assert.isNull(cellarCommodityDb.getStoreId(),"店铺id不能为空");
 //        Assert.isNull(cellarCommodityDb.getCategoryId(),"分类id不能为空");
         /**
          * 查询

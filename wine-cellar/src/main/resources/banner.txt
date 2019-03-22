@@ -29,132 +29,13 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-
-优惠券id
-店铺id
-创建时间
-状态
-优惠券数量
-优惠券类型
-有效开始时间
-有效结束时间
-满
-减
-
-coupon_id
-store_id
-create_time
-state
-coupon_numbers
-coupon_type
-effective_start_time
-effective_end_time
-full
-reduction_of
-
-
-
-CREATE TABLE `cellar_coupon_db` (
-  `coupon_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '优惠券id',
-  `store_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '店铺id',
-  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
-  `coupon_numbers` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '优惠券数量',
-  `coupon_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '优惠券类型',
-  `effective_start_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '有效开始时间',
-  `effective_end_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '有效结束时间',
-  `full` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '满',
-  `reduction_of` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '减',
-  PRIMARY KEY (`coupon_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='优惠券表';
-
-会员优惠券id
-会员id
-优惠券id
-状态
-创建时间
-使用状态
-使用时间
-
-member_coupon_id
-member_id
-coupon_id
-state
-create_time
-using_state
-use_time
-
-CREATE TABLE `cellar_member_coupon_db` (
-  `member_coupon_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员优惠券id',
-  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
-  `coupon_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '优惠券id',
-  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
-  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `using_state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '使用状态',
-  `use_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '使用时间',
-  PRIMARY KEY (`member_coupon_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员优惠券表';
-
-
-轮播图id
-轮播图
-状态
-创建时间
-类型
-h5路径
-店铺id
-商品id
-
-shuffling_photo_id
-shuffling_figure
-state
-create_time
-shuffling_type
-h5_path
-store_id
-commodity_id
-
-CREATE TABLE `cellar_shuffling_photo_db` (
-  `shuffling_photo_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '轮播图id',
-  `shuffling_figure` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '轮播图',
-  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
-  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `shuffling_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '类型',
-  `h5_path` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'h5路径',
-  `store_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '店铺id',
+CREATE TABLE `cellar_category_activity_db` (
+  `category_activity_commodity_review_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '分类活动商品审核id',
   `commodity_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '商品id',
-  PRIMARY KEY (`shuffling_photo_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='首页轮播图表';
-
-
-消息id
-状态
-创建时间
-会员id
-消息内容
-消息标题
-消息类型
-是否已读
-
-
-message_id
-state
-create_time
-member_id
-message_content
-message_head
-message_type
-have_read
-
-
-CREATE TABLE `cellar_member_message_db` (
-  `member_message_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员消息id',
   `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
+  `review_status` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '审核状态',
   `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
-  `message_content` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '消息内容',
-  `message_head` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '消息标题',
-  `message_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '消息类型',
-  `have_read` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '是否已读',
-  PRIMARY KEY (`member_message_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员消息';
+  `category_activity_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '分类活动id',
+  PRIMARY KEY (`category_activity_commodity_review_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='分类活动商品审核表';
+

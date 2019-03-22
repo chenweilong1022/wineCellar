@@ -1,11 +1,13 @@
 package io.renren.modules.cellar.entity;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
@@ -154,6 +156,33 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@ApiModelProperty(required=false,value="分类路径")
 	@TableField(exist = false)
 	private Long[] categoryPathList;
+	/**
+	 * 是否精选
+	 */
+	@ApiModelProperty(required=false,value="是否精选")
+	private Integer haveHandpick;
+	/**
+	 * 是否精选
+	 */
+	@ApiModelProperty(required=false,value="是否精选")
+	@TableField(exist = false)
+	private String haveHandpickStr;
+	/**
+	 * 分类活动id
+	 */
+	@ApiModelProperty(required=false,value="分类活动id")
+	private Long categoryActivityId;
+	/**
+	 * 是否分类活动商品
+	 */
+	@ApiModelProperty(required=false,value="是否分类活动商品")
+	private Integer haveCategoryActivity;
+	/**
+	 * 是否分类活动商品
+	 */
+	@ApiModelProperty(required=false,value="是否分类活动商品")
+	@TableField(exist = false)
+	private String haveCategoryActivityStr;
 
 	/**
 	 * 设置：商品id
@@ -443,5 +472,43 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 
 	public void setEvaluationNumbers(BigDecimal evaluationNumbers) {
 		this.evaluationNumbers = evaluationNumbers;
+	}
+
+	public Integer getHaveHandpick() {
+		return haveHandpick;
+	}
+
+	public void setHaveHandpick(Integer haveHandpick) {
+		this.haveHandpick = haveHandpick;
+	}
+
+	public Long getCategoryActivityId() {
+		return categoryActivityId;
+	}
+
+	public void setCategoryActivityId(Long categoryActivityId) {
+		this.categoryActivityId = categoryActivityId;
+	}
+
+	public Integer getHaveCategoryActivity() {
+		return haveCategoryActivity;
+	}
+
+	public void setHaveCategoryActivity(Integer haveCategoryActivity) {
+		this.haveCategoryActivity = haveCategoryActivity;
+	}
+
+	public String getHaveHandpickStr() {
+		if (ObjectUtil.isNotNull(haveHandpick)) {
+			this.haveHandpickStr = Constants.HAVEHANDPICK.getValueByKey(this.haveHandpick);
+		}
+		return haveHandpickStr;
+	}
+
+	public String getHaveCategoryActivityStr() {
+		if (ObjectUtil.isNotNull(haveCategoryActivity)) {
+			this.haveCategoryActivityStr = Constants.HAVEHANDPICK.getValueByKey(this.haveCategoryActivity);
+		}
+		return haveCategoryActivityStr;
 	}
 }

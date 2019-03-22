@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarCategoryActivityCommodityReviewDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarCategoryActivityCommodityReviewDbEntity" id="cellarCategoryActivityCommodityReviewDbMap">
+        <result property="categoryActivityCommodityReviewId" column="category_activity_commodity_review_id"/>
+        <result property="commodityId" column="commodity_id"/>
+        <result property="state" column="state"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="categoryActivityId" column="category_activity_id"/>
+    </resultMap>
+
+
+</mapper>

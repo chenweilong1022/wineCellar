@@ -708,4 +708,133 @@ public class Constants {
         }
     }
 
+    /**
+     * 是否精选
+     */
+    public enum HAVEHANDPICK {
+
+        NO(1,"否"),
+        YES(2,"是"),
+        REVIEW(3,"审核中");
+
+
+        private Integer key;
+        private String value;
+
+        private HAVEHANDPICK(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (HAVEHANDPICK value : HAVEHANDPICK.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 审核状态
+     */
+    public enum REVIEWSTATUS {
+
+        fuone(-1,"审核不通过"),
+        zero(0,"待审核"),
+        one(1,"审核通过");
+
+        private Integer key;
+        private String value;
+
+        private REVIEWSTATUS(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (REVIEWSTATUS value : REVIEWSTATUS.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+    /**
+     * 是否分类活动商品
+     */
+    public enum HAVECATEGORYACTIVITY {
+
+        NO(1,"否"),
+        YES(2,"是"),
+        REVIEW(3,"审核中");
+
+        private Integer key;
+        private String value;
+
+        private HAVECATEGORYACTIVITY(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (HAVECATEGORYACTIVITY value : HAVECATEGORYACTIVITY.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
 }

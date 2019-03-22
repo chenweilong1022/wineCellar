@@ -15,6 +15,7 @@ import io.renren.common.validator.Assert;
 import io.renren.modules.cellar.entity.CellarMemberDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberMessageDbEntity;
 import io.renren.modules.cellar.entity.CellarOrderDbEntity;
+import io.renren.modules.cellar.service.CellarMemberDbService;
 import io.renren.modules.cellar.service.CellarMemberMessageDbService;
 import io.renren.modules.cellar.service.CellarOrderDbService;
 import io.renren.modules.sys.entity.SysLogEntity;
@@ -33,6 +34,8 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -49,6 +52,8 @@ public class MemberMessageAspect {
 	private CellarMemberMessageDbService cellarMemberMessageDbService;
 	@Autowired
 	private CellarOrderDbService cellarOrderDbService;
+	@Autowired
+	private CellarMemberDbService cellarMemberDbService;
 	
 	@Pointcut("@annotation(io.renren.common.annotation.MemberMessage)")
 	public void logPointCut() {
@@ -72,10 +77,12 @@ public class MemberMessageAspect {
 	}
 
 	private void saveMemberMessage(ProceedingJoinPoint joinPoint, long time) {
+		ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
 		String methodName = signature.getName();//方法名称
 		CellarMemberMessageDbEntity messageDbEntity = new CellarMemberMessageDbEntity();
+
 
 		/**
 		 * 获取方法上的注解
@@ -115,6 +122,9 @@ public class MemberMessageAspect {
 						.eq(CellarOrderDbEntity::getOrderNo, outtradeno)
 				);
 				cellarOrderDbEntities.forEach( cellarOrderDbEntity -> messageDbEntity.setMemberId(cellarOrderDbEntity.getMemberId()));
+			}else if (arg instanceof CellarMemberMessageDbEntity) {
+				CellarMemberMessageDbEntity cellarMemberMessageDbEntity = (CellarMemberMessageDbEntity)arg;
+				messageDbEntity.setMessageContent(cellarMemberMessageDbEntity.getMessageContent());
 			}
 		}
 
@@ -139,11 +149,33 @@ public class MemberMessageAspect {
 //			cellarOrderDbEntities.forEach( cellarOrderDbEntity -> messageDbEntity.setMemberId(cellarOrderDbEntity.getMemberId()));
 //
 //		}
-
-
 		messageDbEntity.setState(Constants.STATE.zero.getKey());
 		messageDbEntity.setCreateTime(new Date());
 		messageDbEntity.setHaveRead(Constants.HAVEREAD.UNREAD.getKey());
+
+
+		/**
+		 * 给会员批量发送消息
+		 */
+		if (methodName.equals("batch")) {
+			/**
+			 * 新起一个线程批量发送消息,及时响应
+			 */
+			cachedThreadPool.execute(new Runnable() {
+				@Override
+				public void run() {
+					List<CellarMemberDbEntity> list = cellarMemberDbService.list(new QueryWrapper<CellarMemberDbEntity>().lambda()
+							.eq(CellarMemberDbEntity::getState, Constants.STATE.zero.getKey())
+					);
+					list.forEach( cellarMemberDbEntity -> {
+						CellarMemberMessageDbEntity clone = messageDbEntity.clone();
+						clone.setMemberId(cellarMemberDbEntity.getMemberId());
+						cellarMemberMessageDbService.save(clone);
+					});
+				}
+			});
+			return;
+		}
 		cellarMemberMessageDbService.save(messageDbEntity);
 	}
 

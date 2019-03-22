@@ -72,7 +72,7 @@ public class CellarCommodityDbController extends AbstractController {
         cellarCommodityDb.setTotalSales(BigDecimal.ZERO);
         cellarCommodityDb.setHighPraise(BigDecimal.ZERO);
         cellarCommodityDb.setStoreId(getUser().getStoreId());
-
+        cellarCommodityDb.setHaveHandpick(Constants.HAVEHANDPICK.NO.getKey());
         cellarCommodityDbService.save(cellarCommodityDb);
 
         return R.ok();
