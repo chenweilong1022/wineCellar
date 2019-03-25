@@ -29,30 +29,41 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-CREATE TABLE `cellar_member_collection_db` (
-  `member_collection_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员收藏id',
+CREATE TABLE `cellar_member_balance_change_record_db` (
+  `member_balance_change_record_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员余额变动记录id',
   `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
+  `change_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动金额',
+  `before_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动前金额',
+  `after_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动后金额',
+  `change_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动类型',
+  `change_desc` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动描述',
+  `order_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '订单id',
+  `order_no` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '订单编号',
   `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
   `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `collection_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '收藏类型',
-  `commodity_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '商品id',
-  `store_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '店铺id',
-  PRIMARY KEY (`member_collection_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员收藏表';
+  PRIMARY KEY (`member_balance_change_record_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员余额变动记录表';
 
-member_collection_id
-member_id
-state
-create_time
-collection_type
-commodity_id
-store_id
-
-会员收藏id
+会员余额变动记录id
 会员id
+变动金额
+变动前金额
+变动后金额
+变动类型
+变动描述
+订单id
+订单编号
 状态
 创建时间
-收藏类型
-商品id
-店铺id
 
+member_balance_change_record_id
+member_id
+change_balance
+before_balance
+after_balance
+change_type
+change_desc
+order_id
+order_no
+state
+create_time

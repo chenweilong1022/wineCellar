@@ -1,5 +1,6 @@
 package io.renren.modules.cellar.entity;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.cellar.service.CellarMemberCollectionDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.renren.modules.sys.entity.SysAreaEntity;
 import io.renren.modules.sys.service.SysAreaService;
@@ -156,6 +158,18 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	@ApiModelProperty(required=false,value="店铺下商品")
 	@TableField(exist = false)
 	private List<CellarCommodityDbEntity> cellarCommodityDbEntities;
+	/**
+	 * 是否收藏
+	 */
+	@ApiModelProperty(required=false,value="是否收藏")
+	@TableField(exist = false)
+	private Integer haveCollection;
+	/**
+	 * 用户id
+	 */
+	@ApiModelProperty(required=false,value="用户id")
+	@TableField(exist = false)
+	private Long memberId;
 
 	/**
 	 * 设置：店铺id
@@ -432,5 +446,23 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+
+	public Integer getHaveCollection() {
+		this.haveCollection = Constants.Number.zero.getKey();
+		if (ObjectUtil.isNotNull(this.storeId)) {
+			CellarMemberCollectionDbService cellarMemberCollectionDbService = SpringContextUtils.getBean(CellarMemberCollectionDbService.class);
+			this.haveCollection = cellarMemberCollectionDbService.count(new QueryWrapper<CellarMemberCollectionDbEntity>().lambda()
+					.eq(CellarMemberCollectionDbEntity::getState, Constants.STATE.zero.getKey())
+					.eq(CellarMemberCollectionDbEntity::getStoreId, this.storeId)
+					.eq(CellarMemberCollectionDbEntity::getMemberId, this.memberId)
+					.eq(CellarMemberCollectionDbEntity::getCollectionType, Constants.COLLECTIONTYPE.TWO.getKey())
+			);
+		}
+		return haveCollection;
+	}
+
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
 	}
 }

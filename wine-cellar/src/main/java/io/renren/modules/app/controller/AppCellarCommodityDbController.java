@@ -7,8 +7,10 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.validator.Assert;
 import io.renren.modules.app.annotation.Login;
+import io.renren.modules.app.annotation.LoginUser;
 import io.renren.modules.cellar.entity.CellarCommodityDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberAddressDbEntity;
+import io.renren.modules.cellar.entity.CellarMemberDbEntity;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.sys.controller.AbstractController;
 import io.swagger.annotations.Api;
@@ -83,6 +85,7 @@ public class AppCellarCommodityDbController extends AbstractController {
             @ApiImplicitParam(name="commodityId",value="商品id",dataType="String",required=false,paramType="query"),
     })
     public R info(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
             @ApiIgnore CellarCommodityDbEntity cellarCommodityDb
     ){
         /**
@@ -99,7 +102,10 @@ public class AppCellarCommodityDbController extends AbstractController {
                 .eq(CellarCommodityDbEntity::getStoreId,cellarCommodityDb.getStoreId())
                 .eq(CellarCommodityDbEntity::getCommodityId, cellarCommodityDb.getCommodityId())
         );
-
+        /**
+         * 判断用户是否收藏商品
+         */
+        cellarCommodityDbEntityOne.setMemberId(cellarMemberDbEntity == null ? null : cellarMemberDbEntity.getMemberId());
         return R.data(cellarCommodityDbEntityOne);
     }
 

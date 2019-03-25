@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.cellar.service.CellarMemberCollectionDbService;
 import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
@@ -189,6 +191,18 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@ApiModelProperty(required=false,value="商品排序")
 	@TableField(exist = false)
 	private Integer sort;
+	/**
+	 * 是否收藏
+	 */
+	@ApiModelProperty(required=false,value="是否收藏")
+	@TableField(exist = false)
+	private Integer haveCollection;
+	/**
+	 * 用户id
+	 */
+	@ApiModelProperty(required=false,value="用户id")
+	@TableField(exist = false)
+	private Long memberId;
 
 	/**
 	 * 设置：商品id
@@ -527,5 +541,23 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+
+	public Integer getHaveCollection() {
+		this.haveCollection = Constants.Number.zero.getKey();
+		if (ObjectUtil.isNotNull(this.commodityId)) {
+			CellarMemberCollectionDbService cellarMemberCollectionDbService = SpringContextUtils.getBean(CellarMemberCollectionDbService.class);
+			this.haveCollection = cellarMemberCollectionDbService.count(new QueryWrapper<CellarMemberCollectionDbEntity>().lambda()
+					.eq(CellarMemberCollectionDbEntity::getState, Constants.STATE.zero.getKey())
+					.eq(CellarMemberCollectionDbEntity::getCommodityId, this.commodityId)
+					.eq(CellarMemberCollectionDbEntity::getMemberId, this.memberId)
+					.eq(CellarMemberCollectionDbEntity::getCollectionType, Constants.COLLECTIONTYPE.ONE.getKey())
+			);
+		}
+		return haveCollection;
+	}
+
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
 	}
 }

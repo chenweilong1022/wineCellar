@@ -403,9 +403,9 @@ public class Constants {
     public enum SETTLEMENTTYPE {
 
 
-        ONE(1,"购物车结算"),//订单已经发货等待用户签收
-        TWO(2,"直接购买结算"),//用户签收订单完成
-        THREE(3,"已评价");
+        ONE(1,"购物车结算"),
+        TWO(2,"直接购买结算"),
+        THREE(3,"余额充值");
 
 
 
@@ -957,6 +957,90 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (COLLECTIONTYPE value : COLLECTIONTYPE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+    /**
+     * 变动类型
+     * 余额充值变动类型
+     */
+    public enum CHANGETYPE {
+
+        ONE(1,"余额充值"),
+        TWO(2,"订单消费");
+
+        private Integer key;
+        private String value;
+
+        private CHANGETYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (CHANGETYPE value : CHANGETYPE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+    /**
+     * 记录状态
+     * 余额充值记录状态
+     */
+    public enum RECORDSTATUS {
+
+        ONE(1,"用户创建充值订单"),
+        TWO(2,"已经充值");
+
+        private Integer key;
+        private String value;
+
+        private RECORDSTATUS(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (RECORDSTATUS value : RECORDSTATUS.values()) {
                 if (value.getKey() == key) {
                     return value.value;
                 }

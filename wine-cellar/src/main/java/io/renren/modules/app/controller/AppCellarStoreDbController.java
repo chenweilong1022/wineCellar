@@ -7,6 +7,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.validator.Assert;
 import io.renren.modules.app.annotation.Login;
+import io.renren.modules.app.annotation.LoginUser;
 import io.renren.modules.cellar.entity.CellarConfigDbEntity;
 import io.renren.modules.cellar.entity.CellarHomePageSearchRecordDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberDbEntity;
@@ -143,8 +144,12 @@ public class AppCellarStoreDbController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="storeId",value="店铺id",dataType="String",required=false,paramType="query"),
     })
-    public R info(@ApiIgnore CellarStoreDbEntity cellarStoreDbEntity){
+    public R info(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
+            @ApiIgnore CellarStoreDbEntity cellarStoreDbEntity
+    ){
         CellarStoreDbEntity cellarStoreDb = cellarStoreDbService.getById(cellarStoreDbEntity.getStoreId());
+        cellarStoreDb.setMemberId(cellarMemberDbEntity == null ? null : cellarMemberDbEntity.getMemberId());
         return R.data(cellarStoreDb);
     }
 

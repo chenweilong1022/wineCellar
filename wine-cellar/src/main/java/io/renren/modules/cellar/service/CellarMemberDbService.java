@@ -23,5 +23,11 @@ public interface CellarMemberDbService extends IService<CellarMemberDbEntity> {
      * @return
      */
     CellarMemberDbEntity login(CellarMemberDbEntity cellarMemberDbEntity);
+
+    /**
+     * 余额充值成功
+     * @param outtradeno
+     */
+    void rechargeBalanceSuccess(String outtradeno);
 }
 
