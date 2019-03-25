@@ -87,6 +87,7 @@ public class AppCellarCategoryDbController extends AbstractController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="storeId",value="店铺id",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="categoryId",value="一级类别id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="sort",value="排序 1按销量 2按时间 3按价格升序 4按价格倒序 5好评",dataType="String",required=false,paramType="query"),
     })
     public R listAllLevel(
             @ApiIgnore CellarCategoryDbEntity cellarCategoryDbEntity

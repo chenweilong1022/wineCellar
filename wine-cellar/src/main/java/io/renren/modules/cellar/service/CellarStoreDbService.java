@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.cellar.entity.CellarStoreDbEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,6 @@ public interface CellarStoreDbService extends IService<CellarStoreDbEntity> {
 
     PageUtils nearStoreList(CellarStoreDbEntity cellarStoreDb);
 
+    PageUtils indexList(CellarStoreDbEntity cellarStoreDb);
 }
 

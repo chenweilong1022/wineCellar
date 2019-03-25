@@ -4,6 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 import io.renren.common.utils.ShiroUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -34,6 +36,15 @@ public class CellarStoreDbServiceImpl extends ServiceImpl<CellarStoreDbDao, Cell
     public PageUtils nearStoreList(CellarStoreDbEntity cellarStoreDb) {
 
         IPage<CellarStoreDbEntity> page = baseMapper.nearStoreList(
+                new Query<CellarStoreDbEntity>(cellarStoreDb).getPage(),
+                cellarStoreDb
+        );
+        return new PageUtils(page);
+    }
+
+    @Override
+    public PageUtils indexList(CellarStoreDbEntity cellarStoreDb) {
+        IPage<CellarStoreDbEntity> page = baseMapper.indexList(
                 new Query<CellarStoreDbEntity>(cellarStoreDb).getPage(),
                 cellarStoreDb
         );

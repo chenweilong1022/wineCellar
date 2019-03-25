@@ -29,13 +29,30 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-CREATE TABLE `cellar_category_activity_db` (
-  `category_activity_commodity_review_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '分类活动商品审核id',
-  `commodity_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '商品id',
+CREATE TABLE `cellar_member_collection_db` (
+  `member_collection_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员收藏id',
+  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
   `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
-  `review_status` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '审核状态',
   `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `category_activity_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '分类活动id',
-  PRIMARY KEY (`category_activity_commodity_review_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='分类活动商品审核表';
+  `collection_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '收藏类型',
+  `commodity_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '商品id',
+  `store_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '店铺id',
+  PRIMARY KEY (`member_collection_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员收藏表';
+
+member_collection_id
+member_id
+state
+create_time
+collection_type
+commodity_id
+store_id
+
+会员收藏id
+会员id
+状态
+创建时间
+收藏类型
+商品id
+店铺id
 

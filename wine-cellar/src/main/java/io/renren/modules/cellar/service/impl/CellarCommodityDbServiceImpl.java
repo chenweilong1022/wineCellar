@@ -53,7 +53,11 @@ public class CellarCommodityDbServiceImpl extends ServiceImpl<CellarCommodityDbD
                         .like(StringUtils.isNotBlank(cellarCommodityDb.getKey()),CellarCommodityDbEntity::getCommodityName,cellarCommodityDb.getKey())
                         .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryActivityId()),CellarCommodityDbEntity::getCategoryActivityId,cellarCommodityDb.getCategoryActivityId())
                         .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryActivityId()),CellarCommodityDbEntity::getHaveCategoryActivity, Constants.HAVECATEGORYACTIVITY.YES.getKey())
-
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.ONE.getKey()),CellarCommodityDbEntity::getTotalSales)
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.TWO.getKey()),CellarCommodityDbEntity::getCreationTime)
+                        .orderByAsc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.THREE.getKey()),CellarCommodityDbEntity::getPresentPrice)
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.FOUR.getKey()),CellarCommodityDbEntity::getPresentPrice)
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.FIVE.getKey()),CellarCommodityDbEntity::getHighPraise)
         );
         return new PageUtils(page);
     }

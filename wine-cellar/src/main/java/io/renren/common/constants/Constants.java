@@ -837,4 +837,132 @@ public class Constants {
         }
     }
 
+    /**
+     * 是否分类活动商品
+     */
+    public enum COMMODITYSORT {
+
+        ONE(1,"按销量"),
+        TWO(2,"按时间"),
+        THREE(3,"按价格升序"),
+        FOUR(4,"按价格倒序"),
+        FIVE(5,"好评");
+
+        private Integer key;
+        private String value;
+
+        private COMMODITYSORT(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (COMMODITYSORT value : COMMODITYSORT.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 店铺排序
+     */
+    public enum STORESORT {
+
+        ONE(1,"按距离"),
+        TWO(2,"按好评");
+
+        private Integer key;
+        private String value;
+
+        private STORESORT(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (STORESORT value : STORESORT.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+    /**
+     * 收藏类型
+     */
+    public enum COLLECTIONTYPE {
+
+        ONE(1,"商品"),
+        TWO(2,"店铺");
+
+        private Integer key;
+        private String value;
+
+        private COLLECTIONTYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (COLLECTIONTYPE value : COLLECTIONTYPE.values()) {
+                if (value.getKey() == key) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
 }

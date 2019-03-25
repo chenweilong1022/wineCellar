@@ -43,7 +43,7 @@ file:
         saveurl: /home/upload/image/
 project:
     host:
-        name: tongcheng.xiaoyuancms.cn
+        name: 127.0.0.1:8080
 
 #支付宝支付参数配置
 ali:

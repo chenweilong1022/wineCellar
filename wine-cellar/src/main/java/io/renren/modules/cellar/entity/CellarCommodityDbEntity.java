@@ -183,6 +183,12 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@ApiModelProperty(required=false,value="是否分类活动商品")
 	@TableField(exist = false)
 	private String haveCategoryActivityStr;
+	/**
+	 * 商品排序
+	 */
+	@ApiModelProperty(required=false,value="商品排序")
+	@TableField(exist = false)
+	private Integer sort;
 
 	/**
 	 * 设置：商品id
@@ -510,5 +516,16 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 			this.haveCategoryActivityStr = Constants.HAVEHANDPICK.getValueByKey(this.haveCategoryActivity);
 		}
 		return haveCategoryActivityStr;
+	}
+
+	public Integer getSort() {
+		if (ObjectUtil.isNull(this.sort)) {
+			this.sort = Constants.COMMODITYSORT.ONE.getKey();
+		}
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 }

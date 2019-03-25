@@ -1,5 +1,6 @@
 package io.renren.modules.app.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
@@ -52,6 +53,7 @@ public class AppCellarCommodityDbController extends AbstractController {
             @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="haveHandpick",value="精选商品",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="categoryActivityId",value="分类活动id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="sort",value="排序 1按销量 2按时间 3按价格升序 4按价格倒序 5好评",dataType="String",required=false,paramType="query"),
     })
     public R list(
             @ApiIgnore CellarCommodityDbEntity cellarCommodityDb
@@ -61,6 +63,7 @@ public class AppCellarCommodityDbController extends AbstractController {
          */
 //        Assert.isNull(cellarCommodityDb.getStoreId(),"店铺id不能为空");
 //        Assert.isNull(cellarCommodityDb.getCategoryId(),"分类id不能为空");
+
         /**
          * 查询
          */

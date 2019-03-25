@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 酒窖店铺表
@@ -143,6 +144,19 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	@ApiModelProperty(required=false,value="距离")
 	@TableField(exist = false)
 	private BigDecimal distance;
+	/**
+	 * 排序
+	 */
+	@ApiModelProperty(required=false,value="排序")
+	@TableField(exist = false)
+	private Integer sort;
+	/**
+	 * 店铺下商品
+	 */
+	@ApiModelProperty(required=false,value="店铺下商品")
+	@TableField(exist = false)
+	private List<CellarCommodityDbEntity> cellarCommodityDbEntities;
+
 	/**
 	 * 设置：店铺id
 	 */
@@ -402,5 +416,21 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 
 	public void setDistance(BigDecimal distance) {
 		this.distance = distance;
+	}
+
+	public List<CellarCommodityDbEntity> getCellarCommodityDbEntities() {
+		return cellarCommodityDbEntities;
+	}
+
+	public void setCellarCommodityDbEntities(List<CellarCommodityDbEntity> cellarCommodityDbEntities) {
+		this.cellarCommodityDbEntities = cellarCommodityDbEntities;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 }

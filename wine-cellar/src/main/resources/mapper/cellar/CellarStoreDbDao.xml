@@ -22,7 +22,70 @@
         <result property="createTime" column="create_time"/>
         <result property="state" column="state"/>
         <result property="distance" column="distance"/>
+        <collection property="cellarCommodityDbEntities" javaType="list" ofType="io.renren.modules.cellar.entity.CellarCommodityDbEntity">
+            <id property="commodityId" column="commodity_id"/>
+            <result property="commodityName" column="commodity_name"/>
+            <result property="originalPrice" column="original_price"/>
+            <result property="presentPrice" column="present_price"/>
+            <result property="graphicDetails" column="graphic_details"/>
+            <result property="picture" column="picture"/>
+            <result property="label" column="label"/>
+            <result property="creationTime" column="creation_time"/>
+            <result property="state" column="state"/>
+            <result property="monthSales" column="month_sales"/>
+            <result property="totalSales" column="total_sales"/>
+            <result property="inventory" column="inventory"/>
+            <result property="highPraise" column="high_praise"/>
+            <result property="commodityRotationChart" column="commodity_rotation_chart"/>
+            <result property="productSpecifications" column="product_specifications"/>
+            <result property="storeId" column="store_id"/>
+            <result property="categoryId" column="category_id"/>
+            <result property="categoryPath" column="category_path"/>
+        </collection>
     </resultMap>
+
+
+    <select id="indexList"  parameterType="io.renren.modules.cellar.entity.CellarStoreDbEntity" resultMap="cellarStoreDbMap">
+        SELECT
+            cs.*,
+            cc.commodity_id,
+            cc.commodity_name,
+            cc.original_price,
+            cc.present_price,
+            cc.graphic_details,
+            cc.picture,
+            cc.label,
+            cc.creation_time,
+            cc.month_sales,
+            cc.total_sales,
+            cc.inventory,
+            cc.high_praise,
+            cc.commodity_rotation_chart,
+            cc.product_specifications,
+            cc.category_id,
+            cc.category_path,
+            (
+                6371 * acos(
+                  cos( radians( cs.latitude ) ) * cos( radians( #{ew.latitude} ) ) * cos( radians( #{ew.longitude} ) - radians( cs.longitude ) ) + sin( radians( cs.latitude ) ) * sin( radians( #{ew.latitude} ) )
+                )
+            ) AS distance
+        FROM
+            cellar_store_db cs
+            LEFT JOIN cellar_commodity_db cc ON cc.store_id = cs.store_id
+            WHERE
+              cs.state = 0
+              <if test="ew.key != null and ew.key != ''">
+                  AND CONCAT(cs.store_name,',',cc.commodity_name) LIKE CONCAT('%',#{ew.key},'%')
+              </if>
+        <if test="ew.sort != null and ew.sort != '' and ew.sort == 1">
+            ORDER BY
+              distance
+        </if>
+        <if test="ew.sort != null and ew.sort != '' and ew.sort == 2">
+            ORDER BY
+                cc.high_praise desc
+        </if>
+    </select>
 
 
     <select id="nearStoreList" parameterType="io.renren.modules.cellar.entity.CellarStoreDbEntity" resultMap="cellarStoreDbMap">

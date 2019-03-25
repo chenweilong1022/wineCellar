@@ -25,5 +25,7 @@ public interface CellarStoreDbDao extends BaseMapper<CellarStoreDbEntity> {
      * 查询
      */
     IPage<CellarStoreDbEntity> nearStoreList(IPage<CellarStoreDbEntity> page, @Param(Constants.WRAPPER)CellarStoreDbEntity cellarStoreDbEntity);
+
+    IPage<CellarStoreDbEntity> indexList(IPage<CellarStoreDbEntity> page,@Param(Constants.WRAPPER)CellarStoreDbEntity cellarStoreDb);
 	
 }
