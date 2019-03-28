@@ -57,11 +57,12 @@ public class AppCellarCallbackController extends AbstractController {
     public PayOutMessage paySuccessSd(
             String outtradeno
     ){
-        cellarOrderDbService.paySuccess(outtradeno);
-        /**
-         * 用户余额充值
-         */
+//        cellarOrderDbService.paySuccess(outtradeno);
+//        /**
+//         * 用户余额充值
+//         */
 //        cellarMemberDbService.rechargeBalanceSuccess(outtradeno.toString());
+        cellarMemberDbService.rechargeCardBalanceSuccess(outtradeno.toString());
         return null;
     }
 
@@ -78,8 +79,8 @@ public class AppCellarCallbackController extends AbstractController {
         PayOutMessage payOutMessage = WechatPayUtil.paySuccess();
         CallbackUtil.callback(settlementtype,methodpayment,request,outtradeno,payOutMessage);
         if (settlementtype.equals(Constants.SETTLEMENTTYPE.ONE.getKey())) {
-            /**
-             * 根据支付号查询订单列表
+            /**根据支付号查询订单列表
+             *
              */
             List<CellarOrderDbEntity> cellarOrderDbEntities = cellarOrderDbService.list(new QueryWrapper<CellarOrderDbEntity>().lambda()
                     .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
@@ -118,6 +119,11 @@ public class AppCellarCallbackController extends AbstractController {
              * 用户余额充值
              */
             cellarMemberDbService.rechargeBalanceSuccess(outtradeno.toString());
+        }else if (settlementtype.equals(Constants.SETTLEMENTTYPE.FOUR.getKey())) {
+            /**
+             * 用户储值卡充值
+             */
+            cellarMemberDbService.rechargeCardBalanceSuccess(outtradeno.toString());
         }
         return payOutMessage;
     }

@@ -11,12 +11,12 @@ import io.renren.common.validator.Assert;
 import io.renren.modules.app.annotation.Login;
 import io.renren.modules.app.annotation.LoginUser;
 import io.renren.modules.app.entity.MemberBalanceRechargeEntity;
+import io.renren.modules.app.entity.MemberCardBalanceRechargeEntity;
 import io.renren.modules.app.utils.IdGeneratorUtil;
-import io.renren.modules.cellar.entity.CellarMemberBalanceChangeRecordDbEntity;
-import io.renren.modules.cellar.entity.CellarMemberCaptchaEntity;
-import io.renren.modules.cellar.entity.CellarMemberDbEntity;
+import io.renren.modules.cellar.entity.*;
 import io.renren.modules.cellar.service.CellarMemberBalanceChangeRecordDbService;
 import io.renren.modules.cellar.service.CellarMemberCaptchaService;
+import io.renren.modules.cellar.service.CellarMemberCardBalanceChangeRecordDbService;
 import io.renren.modules.cellar.service.CellarMemberDbService;
 import io.renren.modules.sys.entity.SysJwtEntity;
 import io.swagger.annotations.Api;
@@ -52,6 +52,8 @@ public class AppCellarMemberDbController {
     private CellarMemberCaptchaService cellarMemberCaptchaService;
     @Autowired
     private CellarMemberBalanceChangeRecordDbService cellarMemberBalanceChangeRecordDbService;
+    @Autowired
+    private CellarMemberCardBalanceChangeRecordDbService cellarMemberCardBalanceChangeRecordDbService;
 
     /**
      * 登录
@@ -147,6 +149,56 @@ public class AppCellarMemberDbController {
         }
         return R.ok();
     }
+
+
+    /**
+     * 用户余额充值
+     */
+    @PostMapping("rechargeCardBalance")
+    @ApiOperation("用户余额充值")
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="memberCardId",value="储值卡id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="methodPayment",value="支付方式0:微信1:支付宝",dataType="String",required=false,paramType="query"),
+    })
+    public R rechargeCardBalance(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,//登录用户
+            @ApiIgnore MemberCardBalanceRechargeEntity memberCardBalanceRechargeEntity
+            ){
+
+        Assert.isNull(memberCardBalanceRechargeEntity,"充值信息不能为空");
+        Assert.isNull(memberCardBalanceRechargeEntity.getCellarMemberCardDbEntity(),"储值卡不存在");
+        Assert.isNull(memberCardBalanceRechargeEntity.getMethodPayment(),"支付方式不能为空");
+        String orderNo = IdGeneratorUtil.getOrderNo();//订单编号 用来记录一批订单
+        CellarMemberCardDbEntity cellarMemberCardDbEntity = memberCardBalanceRechargeEntity.getCellarMemberCardDbEntity();
+        /**
+         * 保存余额变动记录
+         * 用于支付成功之后给用户增加余额
+         */
+        CellarMemberCardBalanceChangeRecordDbEntity cellarMemberCardBalanceChangeRecordDbEntity = new CellarMemberCardBalanceChangeRecordDbEntity();
+        cellarMemberCardBalanceChangeRecordDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
+        cellarMemberCardBalanceChangeRecordDbEntity.setChangeCardBalance(cellarMemberCardDbEntity.getCardBalance());
+        cellarMemberCardBalanceChangeRecordDbEntity.setCreateTime(new Date());
+        cellarMemberCardBalanceChangeRecordDbEntity.setState(Constants.STATE.zero.getKey());
+        cellarMemberCardBalanceChangeRecordDbEntity.setChangeType(Constants.CHANGETYPE.ONE.getKey());
+        cellarMemberCardBalanceChangeRecordDbEntity.setChangeDesc(Constants.CHANGETYPE.ONE.getValue());
+        cellarMemberCardBalanceChangeRecordDbEntity.setRecordStatus(Constants.RECORDSTATUS.ONE.getKey());
+        cellarMemberCardBalanceChangeRecordDbEntity.setOrderNo(orderNo);
+        cellarMemberCardBalanceChangeRecordDbEntity.setMethodPayment(memberCardBalanceRechargeEntity.getMethodPayment());
+        cellarMemberCardBalanceChangeRecordDbService.save(cellarMemberCardBalanceChangeRecordDbEntity);
+
+
+        if (memberCardBalanceRechargeEntity.getMethodPayment().equals(Constants.METHODPAYMENT.WECHAT.getKey())) {
+            Map map = WechatPayUtil.appOrder("储值卡充值", orderNo, cellarMemberCardDbEntity.getCardBalance(), Constants.SETTLEMENTTYPE.FOUR);
+            return R.data(map);
+        }else if (memberCardBalanceRechargeEntity.getMethodPayment().equals(Constants.METHODPAYMENT.ALIPAY.getKey())) {
+            String order = AliUtil.appOrder("储值卡充值", orderNo, cellarMemberCardDbEntity.getCardBalance(), Constants.SETTLEMENTTYPE.FOUR);
+            return R.data(order);
+        }
+        return R.ok();
+    }
+
 
     /**
      * 用户手机号该绑

@@ -406,7 +406,8 @@ public class Constants {
 
         ONE(1,"购物车结算"),
         TWO(2,"直接购买结算"),
-        THREE(3,"余额充值");
+        THREE(3,"余额充值"),
+        FOUR(4,"储值卡充值");
 
 
 

@@ -37,7 +37,7 @@ public class AppCellarMemberCardDbController {
      * 列表
      */
     @GetMapping("/list")
-    @ApiOperation(value = "APP会员储值卡列表",notes = "APP会员储值卡列表")
+    @ApiOperation(value = "APP会员储值卡列表",notes = "APP会员储值卡列表",response = CellarMemberCardDbEntity.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name="key",value="搜索条件",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),

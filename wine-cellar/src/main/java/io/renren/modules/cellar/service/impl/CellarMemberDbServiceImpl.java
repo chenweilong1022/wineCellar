@@ -7,6 +7,9 @@ import io.renren.common.constants.Constants;
 import io.renren.common.exception.RRException;
 import io.renren.common.validator.Assert;
 import io.renren.modules.cellar.entity.CellarMemberBalanceChangeRecordDbEntity;
+import io.renren.modules.cellar.entity.CellarMemberCardBalanceChangeRecordDbEntity;
+import io.renren.modules.cellar.service.CellarMemberBalanceChangeRecordDbService;
+import io.renren.modules.cellar.service.CellarMemberCardBalanceChangeRecordDbService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -30,8 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("cellarMemberDbService")
 public class CellarMemberDbServiceImpl extends ServiceImpl<CellarMemberDbDao, CellarMemberDbEntity> implements CellarMemberDbService {
+
     @Autowired
-    private CellarMemberBalanceChangeRecordDbServiceImpl cellarMemberBalanceChangeRecordDbService;
+    private CellarMemberBalanceChangeRecordDbService cellarMemberBalanceChangeRecordDbService;
+    @Autowired
+    private CellarMemberCardBalanceChangeRecordDbService cellarMemberCardBalanceChangeRecordDbService;
 
     @Override
     public PageUtils queryPage(CellarMemberDbEntity cellarMemberDbEntity) {
@@ -99,6 +105,46 @@ public class CellarMemberDbServiceImpl extends ServiceImpl<CellarMemberDbDao, Ce
          * 修改用户金额
          */
         cellarMemberDbEntity.setBalance(afterBalance);
+        baseMapper.updateById(cellarMemberDbEntity);
+    }
+
+    @Override
+    public void rechargeCardBalanceSuccess(String outtradeno) {
+        /**
+         * 查询充值记录
+         */
+        CellarMemberCardBalanceChangeRecordDbEntity memberCardBalanceChangeRecordDbEntity = cellarMemberCardBalanceChangeRecordDbService.getOne(new QueryWrapper<CellarMemberCardBalanceChangeRecordDbEntity>().lambda()
+                .eq(CellarMemberCardBalanceChangeRecordDbEntity::getState, Constants.STATE.zero.getKey())
+                .eq(CellarMemberCardBalanceChangeRecordDbEntity::getOrderNo, outtradeno)
+        );
+        /**
+         *判断是否重复支付
+         */
+        Assert.isNull(memberCardBalanceChangeRecordDbEntity,"支付异常");
+        Assert.isTrue(memberCardBalanceChangeRecordDbEntity.getRecordStatus().equals(Constants.RECORDSTATUS.TWO.getKey()),"重复调用");
+        /**
+         * 充值用户
+         */
+        CellarMemberDbEntity cellarMemberDbEntity = baseMapper.selectOne(new QueryWrapper<CellarMemberDbEntity>().lambda()
+                .eq(CellarMemberDbEntity::getMemberId, memberCardBalanceChangeRecordDbEntity.getMemberId())
+                .eq(CellarMemberDbEntity::getState, Constants.STATE.zero.getKey())
+        );
+        Assert.isNull(cellarMemberDbEntity,"该用户不存在");
+        BigDecimal changeCardBalance = memberCardBalanceChangeRecordDbEntity.getChangeCardBalance();//充值金额
+        BigDecimal beforeCardBalance = cellarMemberDbEntity.getCardBalance();//当前金额
+        BigDecimal afterCardBalance = beforeCardBalance.add(changeCardBalance);//充值之后金额
+        /**
+         * 修改充值记录
+         */
+        memberCardBalanceChangeRecordDbEntity.setBeforeCardBalance(beforeCardBalance);
+        memberCardBalanceChangeRecordDbEntity.setAfterCardBalance(afterCardBalance);
+        memberCardBalanceChangeRecordDbEntity.setPaymentTime(new Date());
+        memberCardBalanceChangeRecordDbEntity.setRecordStatus(Constants.RECORDSTATUS.TWO.getKey());
+        cellarMemberCardBalanceChangeRecordDbService.updateById(memberCardBalanceChangeRecordDbEntity);
+        /**
+         * 修改用户金额
+         */
+        cellarMemberDbEntity.setCardBalance(afterCardBalance);
         baseMapper.updateById(cellarMemberDbEntity);
     }
 
