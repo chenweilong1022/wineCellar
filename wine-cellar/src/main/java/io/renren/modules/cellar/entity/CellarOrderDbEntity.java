@@ -196,6 +196,11 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	 */
 	@ApiModelProperty(required=false,value="会员优惠券id")
 	private Long memberCouponId;
+	/**
+	 * 订单积分
+	 */
+	@ApiModelProperty(required=false,value="订单积分")
+	private BigDecimal integral;
 
 	/**
 	 * 设置：订单id
@@ -555,5 +560,13 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 
 	public void setMemberCouponId(Long memberCouponId) {
 		this.memberCouponId = memberCouponId;
+	}
+
+	public BigDecimal getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(BigDecimal integral) {
+		this.integral = integral;
 	}
 }

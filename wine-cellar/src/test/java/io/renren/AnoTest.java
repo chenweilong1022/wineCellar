@@ -1,9 +1,7 @@
 package io.renren;
 
 import cn.hutool.core.annotation.AnnotationUtil;
-import io.renren.modules.cellar.entity.CellarCartDbEntity;
-import io.renren.modules.cellar.entity.CellarMemberAddressDbEntity;
-import io.renren.modules.cellar.entity.CellarOrderDbEntity;
+import io.renren.modules.cellar.entity.*;
 import io.swagger.annotations.ApiModelProperty;
 import org.junit.Test;
 
@@ -20,7 +18,7 @@ public class AnoTest {
             System.out.println(annotation);
         }
 
-        Field[] declaredFields = CellarOrderDbEntity.class.getDeclaredFields();
+        Field[] declaredFields = CellarCommodityEntryDbEntity.class.getDeclaredFields();
         for (Field field : declaredFields) {
             ApiModelProperty annotation = field.getAnnotation(ApiModelProperty.class);
             if (annotation == null)

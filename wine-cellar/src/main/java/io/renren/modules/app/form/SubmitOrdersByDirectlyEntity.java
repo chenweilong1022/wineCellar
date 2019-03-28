@@ -60,6 +60,11 @@ public class SubmitOrdersByDirectlyEntity {
     @ApiModelProperty(required=false,value="订单备注")
     private String orderNote;
     /**
+     * 支付密码
+     */
+    @ApiModelProperty(required=false,value="支付密码")
+    private String payPassword;
+    /**
      * 商品id
      */
     @ApiModelProperty(required=false,value="商品id")
@@ -153,5 +158,13 @@ public class SubmitOrdersByDirectlyEntity {
 
     public void setMemberCouponId(Long memberCouponId) {
         this.memberCouponId = memberCouponId;
+    }
+
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
     }
 }

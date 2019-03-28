@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarFranchiseDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarFranchiseDbEntity" id="cellarFranchiseDbMap">
+        <result property="franchiseId" column="franchise_id"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="companyName" column="company_name"/>
+        <result property="commodityBrand" column="commodity_brand"/>
+        <result property="contact" column="contact"/>
+        <result property="contactMobilePhone" column="contact_mobile_phone"/>
+        <result property="shopFrontPhoto" column="shop_front_photo"/>
+        <result property="shopSizePhoto" column="shop_size_photo"/>
+        <result property="shopDecorationPhotos" column="shop_decoration_photos"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="memberId" column="member_id"/>
+    </resultMap>
+
+
+</mapper>

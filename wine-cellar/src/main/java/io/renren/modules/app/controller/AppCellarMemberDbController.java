@@ -23,6 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -195,6 +196,59 @@ public class AppCellarMemberDbController {
         cellarMemberDbEntityBind.setMobilePhone(cellarMemberCaptchaEntity.getMemberMobile());
         cellarMemberDbService.updateById(cellarMemberDbEntityBind);
 
+        return R.ok();
+    }
+
+    /**
+     * 密码修改
+     * @param cellarMemberDbEntity
+     * @param cellarMemberDbEntityUpdate
+     * @return
+     */
+    @PostMapping("resetPassword")
+    @ApiOperation("密码修改")
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="password",value="密码",dataType="String",required=false,paramType="query"),
+    })
+    public R resetPassword(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
+            @ApiIgnore CellarMemberDbEntity cellarMemberDbEntityUpdate
+    ){
+
+        Assert.isBlank(cellarMemberDbEntityUpdate.getPassword(),"密码不能为空");
+        cellarMemberDbEntity.setPassword(DigestUtils.sha256Hex(cellarMemberDbEntityUpdate.getPassword()));
+        cellarMemberDbService.updateById(cellarMemberDbEntity);
+        return R.ok();
+    }
+
+    /**
+     * 密码修改
+     * @param cellarMemberDbEntity
+     * @param cellarMemberDbEntityUpdate
+     * @return
+     */
+    @PostMapping("resetPayPassword")
+    @ApiOperation("重置支付密码")
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="payPassword",value="支付密码",dataType="String",required=false,paramType="query"),
+    })
+    public R resetPayPassword(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
+            @ApiIgnore CellarMemberDbEntity cellarMemberDbEntityUpdate
+    ){
+        /**
+         * 校验表单
+         */
+        Assert.isBlank(cellarMemberDbEntityUpdate.getPayPassword(),"支付密码不能为空");
+        /**
+         * 校验验证码
+         */
+        cellarMemberDbEntity.setPayPassword(DigestUtils.sha256Hex(cellarMemberDbEntityUpdate.getPayPassword()));
+        cellarMemberDbService.updateById(cellarMemberDbEntity);
         return R.ok();
     }
 

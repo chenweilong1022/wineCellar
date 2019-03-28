@@ -29,41 +29,21 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-CREATE TABLE `cellar_member_balance_change_record_db` (
-  `member_balance_change_record_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员余额变动记录id',
-  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
-  `change_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动金额',
-  `before_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动前金额',
-  `after_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动后金额',
-  `change_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动类型',
-  `change_desc` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '变动描述',
-  `order_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '订单id',
-  `order_no` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '订单编号',
+CREATE TABLE `cellar_member_card_db` (
+  `member_card_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员储值卡id',
   `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
   `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`member_balance_change_record_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员余额变动记录表';
+  `card_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '储值卡金额',
+  PRIMARY KEY (`member_card_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员储值卡表';
 
-会员余额变动记录id
-会员id
-变动金额
-变动前金额
-变动后金额
-变动类型
-变动描述
-订单id
-订单编号
+
+会员储值卡id
 状态
 创建时间
+储值卡金额
 
-member_balance_change_record_id
-member_id
-change_balance
-before_balance
-after_balance
-change_type
-change_desc
-order_id
-order_no
+member_card_id
 state
 create_time
+card_balance

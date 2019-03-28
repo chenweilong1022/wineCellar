@@ -39,6 +39,11 @@ public class SubmitOrdersByCartEntity {
      */
     @ApiModelProperty(required=false,value="支付方式0:微信1:支付宝")
     private Integer methodPayment;
+    /**
+     * 支付密码
+     */
+    @ApiModelProperty(required=false,value="支付密码")
+    private String payPassword;
 
 
     private List<SubmitOrdersStoreEntity> submitOrdersStoreEntities;
@@ -91,5 +96,13 @@ public class SubmitOrdersByCartEntity {
 
     public void setSubmitOrdersStoreEntities(List<SubmitOrdersStoreEntity> submitOrdersStoreEntities) {
         this.submitOrdersStoreEntities = submitOrdersStoreEntities;
+    }
+
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
     }
 }

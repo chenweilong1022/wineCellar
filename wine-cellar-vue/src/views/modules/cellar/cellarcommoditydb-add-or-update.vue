@@ -75,6 +75,9 @@
     <el-form-item label="现价" prop="presentPrice">
       <el-input v-model="dataForm.presentPrice" placeholder="现价"></el-input>
     </el-form-item>
+    <el-form-item label="酒币" prop="integral">
+      <el-input v-model="dataForm.integral" placeholder="酒币"></el-input>
+    </el-form-item>
     <el-form-item label="图文详情" prop="graphicDetails">
       <el-input v-model="dataForm.graphicDetailsStr" placeholder="图文详情"></el-input>
     </el-form-item>
@@ -163,6 +166,7 @@
           monthSales: '',
           totalSales: '',
           inventory: '',
+          integral: '',
           highPraise: '',
           commodityRotationChart: '',
           productSpecifications: '',
@@ -199,6 +203,9 @@
           ],
           inventory: [
             { required: true, message: '库存量不能为空', trigger: 'blur' }
+          ],
+          integral: [
+            { required: true, message: '酒币不能为空', trigger: 'blur' }
           ],
           highPraise: [
             { required: true, message: '好评数不能为空', trigger: 'blur' }
@@ -275,6 +282,7 @@
                 this.dataForm.totalSales = data.cellarCommodityDb.totalSales
                 this.dataForm.inventory = data.cellarCommodityDb.inventory
                 this.dataForm.highPraise = data.cellarCommodityDb.highPraise
+                this.dataForm.integral = data.cellarCommodityDb.integral
                 this.dataForm.commodityRotationChart = data.cellarCommodityDb.commodityRotationChart
                 this.dataForm.commodityRotationChartList = data.cellarCommodityDb.commodityRotationChartList
                 this.dataForm.productSpecifications = data.cellarCommodityDb.productSpecifications
@@ -343,6 +351,7 @@
                 'totalSales': this.dataForm.totalSales,
                 'inventory': this.dataForm.inventory,
                 'highPraise': this.dataForm.highPraise,
+                'integral': this.dataForm.integral,
                 'commodityRotationChart': this.dataForm.commodityRotationChart,
                 'productSpecifications': this.dataForm.productSpecifications,
                 'storeId': this.dataForm.storeId,

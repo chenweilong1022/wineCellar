@@ -1,6 +1,7 @@
 package io.renren.modules.cellar.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import io.renren.common.annotation.MemberIntegral;
 import io.renren.common.annotation.MemberMessage;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.ShiroUtils;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,7 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
     @Override
     @Transactional
     @MemberMessage(MESSAGEHEAD = "支付成功",MESSAGETYPE = Constants.MESSAGETYPE.ORDER,MESSAGECONTENT = "您的订单支付成功,等待平台发货")
+    @MemberIntegral(CHANGETYPE = Constants.CHANGETYPE.TWO)//用户积分注解拦截
     public void paySuccess(String outtradeno) {
         /**
          * 根据支付号查询订单列表
@@ -75,7 +78,6 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
         List<CellarOrderDbEntity> cellarOrderDbEntities = baseMapper.selectList(new QueryWrapper<CellarOrderDbEntity>().lambda()
                 .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
         );
-
         /**
          * 判断
          */
@@ -92,7 +94,6 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
             if (!cellarOrderDbEntity.getOrderStatus().equals(Constants.ORDERSTATUS.FUONE.getKey())) {
                 return;
             }
-
             /**
              * 修改支付时间 支付状态
              */
@@ -113,19 +114,16 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
                 cellarMemberCouponDbEntity.setUsingState(Constants.USINGSTATE.TWO.getKey());
                 cellarMemberCouponDbService.updateById(cellarMemberCouponDbEntity);
             }
-
             /**
              * 查询订单下商品信息
              */
             List<CellarOrderDetailsDbEntity> cellarOrderDetailsDbEntities = cellarOrderDetailsDbService.list(new QueryWrapper<CellarOrderDetailsDbEntity>().lambda()
                     .eq(CellarOrderDetailsDbEntity::getOrderId, cellarOrderDbEntity.getOrderId())
             );
-
             /**
              * 遍历商品信息
              */
             for (CellarOrderDetailsDbEntity cellarOrderDetailsDbEntity : cellarOrderDetailsDbEntities) {
-
                 /**
                  * 修改库存
                  */

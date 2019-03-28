@@ -311,7 +311,8 @@ public class Constants {
     public enum METHODPAYMENT {
 
         WECHAT(0,"微信"),
-        ALIPAY(1,"支付宝");
+        ALIPAY(1,"支付宝"),
+        BALANCE(2,"余额");
 
         private Integer key;
         private String value;
@@ -966,12 +967,12 @@ public class Constants {
     }
     /**
      * 变动类型
-     * 余额充值变动类型
+     * 余额/积分变动类型
      */
     public enum CHANGETYPE {
 
-        ONE(1,"余额充值"),
-        TWO(2,"订单消费");
+        ONE(1,"充值"),
+        TWO(2,"消费");
 
         private Integer key;
         private String value;

@@ -2,6 +2,7 @@ package io.renren.modules.app.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.annotation.MemberFootprint;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
@@ -79,8 +80,10 @@ public class AppCellarCommodityDbController extends AbstractController {
      * 信息
      */
     @GetMapping("/info")
+    @MemberFootprint//会员足迹注解
     @ApiOperation(value = "店铺商品详情",notes = "店铺商品详情",response = CellarCommodityDbEntity.class)
     @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="storeId",value="店铺id",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="commodityId",value="商品id",dataType="String",required=false,paramType="query"),
     })

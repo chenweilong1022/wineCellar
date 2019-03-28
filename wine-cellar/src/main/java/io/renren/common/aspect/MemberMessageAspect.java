@@ -95,23 +95,29 @@ public class MemberMessageAspect {
 			messageDbEntity.setMessageContent(annotation.MESSAGECONTENT());//设置消息内容
 		}
 
+		messageDbEntity.setState(Constants.STATE.zero.getKey());
+		messageDbEntity.setCreateTime(new Date());
+		messageDbEntity.setHaveRead(Constants.HAVEREAD.UNREAD.getKey());
 		//请求的参数
 		Object[] args = joinPoint.getArgs();
 		for (Object arg : args) {
-			if (arg instanceof CellarMemberDbEntity) {
-				/**
+/*			if (arg instanceof CellarMemberDbEntity) {
+				*//**
 				 * 获取消息上的参数
-				 */
+				 *//*
 				CellarMemberDbEntity member = (CellarMemberDbEntity) arg;
 				messageDbEntity.setMemberId(member.getMemberId());
-			}else if (arg instanceof Long[]){
+			}else*/
+			if (arg instanceof Long[]){
 				/**
 				 * 获取所有订单
 				 */
 				Long[] orderIds = (Long[]) arg;
 				for (Long orderId : orderIds) {
 					CellarOrderDbEntity cellarOrderDbEntity = cellarOrderDbService.getById(orderId);
-					messageDbEntity.setMemberId(cellarOrderDbEntity.getMemberId());
+					CellarMemberMessageDbEntity clone = messageDbEntity.clone();
+					clone.setMemberId(cellarOrderDbEntity.getMemberId());
+					cellarMemberMessageDbService.save(clone);
 				}
 			}else if (arg instanceof String) {
 				String outtradeno = (String) arg;
@@ -121,37 +127,21 @@ public class MemberMessageAspect {
 				List<CellarOrderDbEntity> cellarOrderDbEntities = cellarOrderDbService.list(new QueryWrapper<CellarOrderDbEntity>().lambda()
 						.eq(CellarOrderDbEntity::getOrderNo, outtradeno)
 				);
-				cellarOrderDbEntities.forEach( cellarOrderDbEntity -> messageDbEntity.setMemberId(cellarOrderDbEntity.getMemberId()));
+				cellarOrderDbEntities.forEach( cellarOrderDbEntity -> {
+					CellarMemberMessageDbEntity clone = messageDbEntity.clone();
+					clone.setMemberId(cellarOrderDbEntity.getMemberId());
+					cellarMemberMessageDbService.save(clone);
+				});
+				return;
 			}else if (arg instanceof CellarMemberMessageDbEntity) {
 				CellarMemberMessageDbEntity cellarMemberMessageDbEntity = (CellarMemberMessageDbEntity)arg;
 				messageDbEntity.setMessageContent(cellarMemberMessageDbEntity.getMessageContent());
+			}else if (arg instanceof CellarOrderDbEntity) {
+				CellarOrderDbEntity cellarOrderDbEntity = (CellarOrderDbEntity)arg;
+				CellarOrderDbEntity cellarOrderDbEntity1 = cellarOrderDbService.getById(Long.valueOf(cellarOrderDbEntity.getOrderId()));
+				messageDbEntity.setMemberId(cellarOrderDbEntity1.getMemberId());
 			}
 		}
-
-//		/**
-//		 * 支付成功方法 拦截
-//		 */
-//		if(methodName.equals("paySuccess")) {
-//
-//			Integer settlementtype = (Integer) args[0];
-//			Integer methodpayment = (Integer) args[1];
-//			HttpServletRequest request = (HttpServletRequest) args[2];
-//			String outtradeno = null;
-//			PayOutMessage payOutMessage = null;
-//			CallbackUtil.callback(settlementtype,methodpayment,request,outtradeno,payOutMessage);
-//
-//			/**
-//			 * 根据支付号查询订单列表
-//			 */
-//			List<CellarOrderDbEntity> cellarOrderDbEntities = cellarOrderDbService.list(new QueryWrapper<CellarOrderDbEntity>().lambda()
-//					.eq(CellarOrderDbEntity::getOrderNo, outtradeno)
-//			);
-//			cellarOrderDbEntities.forEach( cellarOrderDbEntity -> messageDbEntity.setMemberId(cellarOrderDbEntity.getMemberId()));
-//
-//		}
-		messageDbEntity.setState(Constants.STATE.zero.getKey());
-		messageDbEntity.setCreateTime(new Date());
-		messageDbEntity.setHaveRead(Constants.HAVEREAD.UNREAD.getKey());
 
 
 		/**

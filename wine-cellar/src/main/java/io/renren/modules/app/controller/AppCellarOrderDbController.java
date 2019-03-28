@@ -21,6 +21,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -56,6 +58,10 @@ public class AppCellarOrderDbController {
     private CellarMemberCouponDbService cellarMemberCouponDbService;
     @Autowired
     private CellarConfigDbService cellarConfigDbService;
+    @Autowired
+    private CellarMemberDbService cellarMemberDbService;
+    @Autowired
+    private CellarMemberBalanceChangeRecordDbService cellarMemberBalanceChangeRecordDbService;
 
     /**
      * 列表
@@ -196,6 +202,7 @@ public class AppCellarOrderDbController {
 
         Long orderId = IdGeneratorUtil.getOrderId();//订单id
         BigDecimal totalOrderAmount = BigDecimal.ZERO;//订单总金额
+        BigDecimal totalOrderIntegral = BigDecimal.ZERO;//订单总积分
         BigDecimal actualOrderAmount = BigDecimal.ZERO;//订单实际金额
         /**
          * 设置订单数据
@@ -235,11 +242,14 @@ public class AppCellarOrderDbController {
             cellarOrderDetailsDbEntity.setNumber(numbers[i]);//数量
             cellarOrderDetailsDbEntity.setAmountGoods(cellarCommodityDbEntity.getPresentPrice());//商品价格
             cellarOrderDetailsDbEntity.setTotalAmountGoods(cellarOrderDetailsDbEntity.getAmountGoods().multiply(cellarOrderDetailsDbEntity.getNumber()));//商品总价格
+            cellarOrderDetailsDbEntity.setIntegral(cellarCommodityDbEntity.getIntegral());//积分
+            cellarOrderDetailsDbEntity.setTotalIntegral(cellarOrderDetailsDbEntity.getIntegral().multiply(cellarOrderDetailsDbEntity.getNumber()));
             /**
              * 订单明细保存
              */
             cellarOrderDetailsDbService.save(cellarOrderDetailsDbEntity);
             totalOrderAmount = totalOrderAmount.add(cellarOrderDetailsDbEntity.getTotalAmountGoods());
+            totalOrderIntegral = totalOrderIntegral.add(cellarOrderDetailsDbEntity.getTotalIntegral());
         }
 
         actualOrderAmount = totalOrderAmount;
@@ -292,6 +302,7 @@ public class AppCellarOrderDbController {
 
         cellarOrderDbEntity.setTotalOrderAmount(totalOrderAmount);//订单总金额
         cellarOrderDbEntity.setActualOrderAmount(actualOrderAmount);//订单实际金额
+        cellarOrderDbEntity.setIntegral(totalOrderIntegral);//订单总积分
         payOrderAmount = payOrderAmount.add(actualOrderAmount);
         /**
          * 保存订单
@@ -310,6 +321,8 @@ public class AppCellarOrderDbController {
         }else if (submitOrdersByDirectlyEntity.getMethodPayment().equals(Constants.METHODPAYMENT.ALIPAY.getKey())) {
             String order = AliUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.TWO);
             return R.data(order);
+        }else if (submitOrdersByDirectlyEntity.getMethodPayment().equals(Constants.METHODPAYMENT.BALANCE.getKey())) {
+            balancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByDirectlyEntity.getPayPassword());
         }
 
         return R.ok();
@@ -353,6 +366,7 @@ public class AppCellarOrderDbController {
             Assert.isNull(cellarStoreDbEntity,"店铺id不能为空");
             Long orderId = IdGeneratorUtil.getOrderId();//订单id
             BigDecimal totalOrderAmount = BigDecimal.ZERO;//订单总金额
+            BigDecimal totalOrderIntegral = BigDecimal.ZERO;//订单总积分
             BigDecimal actualOrderAmount = BigDecimal.ZERO;//订单实际金额
             /**
              * 设置订单数据
@@ -389,6 +403,7 @@ public class AppCellarOrderDbController {
                 cellarCartDbEntity.setOrderNo(orderNo);
                 cellarCartDbService.updateById(cellarCartDbEntity);
 
+                CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarCartDbEntity.getCommodityId());
 
                 /**
                  * 订单明细表设置数据
@@ -402,11 +417,14 @@ public class AppCellarOrderDbController {
                 cellarOrderDetailsDbEntity.setNumber(cellarCartDbEntity.getNumber());//数量
                 cellarOrderDetailsDbEntity.setAmountGoods(cellarCartDbEntity.getPrices());//商品价格
                 cellarOrderDetailsDbEntity.setTotalAmountGoods(cellarCartDbEntity.getPrices().multiply(cellarCartDbEntity.getNumber()));//商品总价格
+                cellarOrderDetailsDbEntity.setIntegral(cellarCommodityDbEntity.getIntegral());
+                cellarOrderDetailsDbEntity.setTotalIntegral(cellarOrderDetailsDbEntity.getIntegral() == null ? null : cellarOrderDetailsDbEntity.getIntegral().multiply(cellarOrderDetailsDbEntity.getNumber()));
                 /**
                  * 订单明细保存
                  */
                 cellarOrderDetailsDbService.save(cellarOrderDetailsDbEntity);
                 totalOrderAmount = totalOrderAmount.add(cellarOrderDetailsDbEntity.getTotalAmountGoods());
+                totalOrderIntegral = totalOrderIntegral.add(cellarOrderDetailsDbEntity.getTotalIntegral() == null ? BigDecimal.ZERO : cellarOrderDetailsDbEntity.getTotalIntegral());
             }
 
             actualOrderAmount = totalOrderAmount;
@@ -460,6 +478,7 @@ public class AppCellarOrderDbController {
 
             cellarOrderDbEntity.setTotalOrderAmount(totalOrderAmount);//订单总金额
             cellarOrderDbEntity.setActualOrderAmount(actualOrderAmount);//订单实际金额
+            cellarOrderDbEntity.setIntegral(totalOrderIntegral);
             payOrderAmount = payOrderAmount.add(actualOrderAmount);
             /**
              * 保存订单
@@ -480,8 +499,57 @@ public class AppCellarOrderDbController {
         }else if (submitOrdersByCartEntity.getMethodPayment().equals(Constants.METHODPAYMENT.ALIPAY.getKey())) {
             String order = AliUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.ONE);
             return R.data(order);
+        }else if (submitOrdersByCartEntity.getMethodPayment().equals(Constants.METHODPAYMENT.BALANCE.getKey())) {
+            balancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByCartEntity.getPayPassword());
         }
         return R.ok();
+    }
+
+    /**
+     * 余额支付
+     * @param cellarMemberDbEntity
+     * @param payOrderAmount
+     * @param orderNo
+     */
+    private void balancePay(
+            CellarMemberDbEntity cellarMemberDbEntity,
+            BigDecimal payOrderAmount,
+            String orderNo,
+            String payPassword
+    ) {
+        /**
+         * 判断余额
+         */
+
+        Assert.isNull(StringUtils.isBlank(payPassword),"支付密码不能为空");
+        Assert.isTrue(payOrderAmount.compareTo(cellarMemberDbEntity.getBalance()) > 0,"余额不足");
+        Assert.isTrue(!DigestUtils.sha256Hex(payPassword).equals(cellarMemberDbEntity.getPayPassword()),"支付密码错误");
+        BigDecimal changeBalance = payOrderAmount.multiply(BigDecimal.valueOf(-1));//变动金额
+        BigDecimal beforeBalance = cellarMemberDbEntity.getBalance();//当前金额
+        BigDecimal afterBalance = beforeBalance.add(changeBalance);//充值之后金额
+        /**
+         *修改用户余额
+         */
+        cellarMemberDbEntity.setBalance(afterBalance);
+        cellarMemberDbService.updateById(cellarMemberDbEntity);
+        /**
+         * 增加余额记录
+         */
+        CellarMemberBalanceChangeRecordDbEntity cellarMemberBalanceChangeRecordDbEntity = new CellarMemberBalanceChangeRecordDbEntity();
+        cellarMemberBalanceChangeRecordDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
+        cellarMemberBalanceChangeRecordDbEntity.setChangeBalance(changeBalance);
+        cellarMemberBalanceChangeRecordDbEntity.setBeforeBalance(beforeBalance);
+        cellarMemberBalanceChangeRecordDbEntity.setAfterBalance(afterBalance);
+        cellarMemberBalanceChangeRecordDbEntity.setCreateTime(new Date());
+        cellarMemberBalanceChangeRecordDbEntity.setState(Constants.STATE.zero.getKey());
+        cellarMemberBalanceChangeRecordDbEntity.setChangeType(Constants.CHANGETYPE.TWO.getKey());
+        cellarMemberBalanceChangeRecordDbEntity.setChangeDesc(Constants.CHANGETYPE.TWO.getValue());
+        cellarMemberBalanceChangeRecordDbEntity.setPaymentTime(new Date());
+        cellarMemberBalanceChangeRecordDbEntity.setRecordStatus(Constants.RECORDSTATUS.TWO.getKey());
+        cellarMemberBalanceChangeRecordDbEntity.setOrderNo(orderNo);
+        cellarMemberBalanceChangeRecordDbEntity.setMethodPayment(Constants.METHODPAYMENT.BALANCE.getKey());
+        cellarMemberBalanceChangeRecordDbService.save(cellarMemberBalanceChangeRecordDbEntity);
+        cellarOrderDbService.paySuccess(orderNo);
     }
 
 }

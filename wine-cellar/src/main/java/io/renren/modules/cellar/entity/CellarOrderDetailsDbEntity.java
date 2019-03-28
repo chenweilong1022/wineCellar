@@ -71,6 +71,16 @@ public class CellarOrderDetailsDbEntity extends AbstractEntity implements Serial
 	 */
 	@ApiModelProperty(required=false,value="商品总金额")
 	private BigDecimal totalAmountGoods;
+	/**
+	 * 商品金额
+	 */
+	@ApiModelProperty(required=false,value="商品金额")
+	private BigDecimal integral;
+	/**
+	 * 商品总金额
+	 */
+	@ApiModelProperty(required=false,value="商品总金额")
+	private BigDecimal totalIntegral;
 
 	/**
 	 * 商品名称
@@ -212,5 +222,21 @@ public class CellarOrderDetailsDbEntity extends AbstractEntity implements Serial
 
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+
+	public BigDecimal getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(BigDecimal integral) {
+		this.integral = integral;
+	}
+
+	public BigDecimal getTotalIntegral() {
+		return totalIntegral;
+	}
+
+	public void setTotalIntegral(BigDecimal totalIntegral) {
+		this.totalIntegral = totalIntegral;
 	}
 }

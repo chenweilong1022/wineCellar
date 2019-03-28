@@ -1,5 +1,7 @@
 package io.renren.modules.app.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.egzosn.pay.common.bean.PayOutMessage;
 import io.renren.common.annotation.MemberMessage;
 import io.renren.common.constants.Constants;
@@ -55,11 +57,11 @@ public class AppCellarCallbackController extends AbstractController {
     public PayOutMessage paySuccessSd(
             String outtradeno
     ){
-//        cellarOrderDbService.paySuccess(outtradeno);
+        cellarOrderDbService.paySuccess(outtradeno);
         /**
          * 用户余额充值
          */
-        cellarMemberDbService.rechargeBalanceSuccess(outtradeno.toString());
+//        cellarMemberDbService.rechargeBalanceSuccess(outtradeno.toString());
         return null;
     }
 
@@ -77,10 +79,36 @@ public class AppCellarCallbackController extends AbstractController {
         CallbackUtil.callback(settlementtype,methodpayment,request,outtradeno,payOutMessage);
         if (settlementtype.equals(Constants.SETTLEMENTTYPE.ONE.getKey())) {
             /**
+             * 根据支付号查询订单列表
+             */
+            List<CellarOrderDbEntity> cellarOrderDbEntities = cellarOrderDbService.list(new QueryWrapper<CellarOrderDbEntity>().lambda()
+                    .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
+                    .eq(CellarOrderDbEntity::getOrderStatus,Constants.ORDERSTATUS.FUONE.getKey())
+            );
+            /**
+             * 判断
+             */
+            if (ObjectUtil.isNull(cellarOrderDbEntities) && cellarOrderDbEntities.size() == 0) {
+                return null;
+            }
+            /**
              * 购物车结算
              */
             cellarOrderDbService.paySuccess(outtradeno.toString());
         }else if (settlementtype.equals(Constants.SETTLEMENTTYPE.TWO.getKey())) {
+            /**
+             * 根据支付号查询订单列表
+             */
+            List<CellarOrderDbEntity> cellarOrderDbEntities = cellarOrderDbService.list(new QueryWrapper<CellarOrderDbEntity>().lambda()
+                    .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
+                    .eq(CellarOrderDbEntity::getOrderStatus,Constants.ORDERSTATUS.FUONE.getKey())
+            );
+            /**
+             * 判断
+             */
+            if (ObjectUtil.isNull(cellarOrderDbEntities) && cellarOrderDbEntities.size() == 0) {
+                return null;
+            }
             /**
              * 直接购买
              */

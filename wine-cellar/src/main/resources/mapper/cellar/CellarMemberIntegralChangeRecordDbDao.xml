@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarMemberIntegralChangeRecordDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarMemberIntegralChangeRecordDbEntity" id="cellarMemberIntegralChangeRecordDbMap">
+        <result property="memberIntegralChangeRecordId" column="member_integral_change_record_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="changeIntegral" column="change_integral"/>
+        <result property="beforeChange" column="before_change"/>
+        <result property="afterIntegral" column="after_integral"/>
+        <result property="changeType" column="change_type"/>
+        <result property="changeDesc" column="change_desc"/>
+        <result property="orderId" column="order_id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+
+</mapper>

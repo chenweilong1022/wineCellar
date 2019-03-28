@@ -55,6 +55,11 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@ApiModelProperty(required=false,value="现价")
 	private BigDecimal presentPrice;
 	/**
+	 * 积分
+	 */
+	@ApiModelProperty(required=false,value="积分")
+	private BigDecimal integral;
+	/**
 	 * 图文详情
 	 */
 	@ApiModelProperty(required=false,value="图文详情")
@@ -559,5 +564,13 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
+	}
+
+	public BigDecimal getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(BigDecimal integral) {
+		this.integral = integral;
 	}
 }
