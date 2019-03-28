@@ -312,8 +312,8 @@ public class Constants {
 
         WECHAT(0,"微信"),
         ALIPAY(1,"支付宝"),
-        BALANCE(2,"余额");
-
+        BALANCE(2,"余额"),
+        CARDBALANCE(3,"储值卡余额");
         private Integer key;
         private String value;
 
