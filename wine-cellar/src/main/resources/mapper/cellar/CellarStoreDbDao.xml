@@ -95,7 +95,10 @@
             6371 * acos(
               cos( radians( a.latitude ) ) * cos( radians( #{ew.latitude} ) ) * cos( radians( #{ew.longitude} ) - radians( a.longitude ) ) + sin( radians( a.latitude ) ) * sin( radians( #{ew.latitude} ) )
             )
-        ) AS distance
+        ) AS distance,
+        (SELECT COUNT(1) FROM cellar_kill_activity_db WHERE store_id = a.store_id) count,
+        (SELECT COUNT(1) FROM cellar_group_activity_db WHERE store_id = a.store_id) groupCount,
+        (SELECT COUNT(1) FROM cellar_bargaining_activity_db WHERE store_id = a.store_id) bargainingCount
         FROM
         cellar_store_db a
         WHERE
@@ -110,6 +113,15 @@
           AND a.store_id = #{ew.storeId}
         </if>
         having distance &lt; #{ew.distance}
+        <if test="ew.storeType != null and ew.storeType == 5">
+            AND count > 0
+        </if>
+        <if test="ew.storeType != null and ew.storeType == 4">
+            AND groupCount > 0
+        </if>
+        <if test="ew.storeType != null and ew.storeType == 6">
+            AND bargainingCount > 0
+        </if>
         ORDER BY
             distance
     </select>

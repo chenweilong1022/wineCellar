@@ -54,7 +54,7 @@ ali:
     keyPrivateCertPwd: cth/UVKp3WGP0MBG6PTbqA==
 #微信支付参数配置
 wechat:
-    appid: wx18d7dfac27c65f01
-    mchId: 1522621471
-    secretKey: c2fc7e2b7d244812KKd4d731f29ce157
+    appid: wx0c49da4788b737ac
+    mchId: 1323577401
+    secretKey: tcjj1234tcjj1234tcjj1234tcjj1234
     notifyUrl: http://${project.host.name}/app/cellarcallback/paySuccess${settlementtype}/${methodpayment}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarGroupActivityDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarGroupActivityDbEntity" id="cellarGroupActivityDbMap">
+        <result property="groupActivityId" column="group_activity_id"/>
+        <result property="commodityId" column="commodity_id"/>
+        <result property="groupStartTime" column="group_start_time"/>
+        <result property="groupEndTime" column="group_end_time"/>
+        <result property="groupPrice" column="group_price"/>
+        <result property="groupTotalNumber" column="group_total_number"/>
+        <result property="hasGroupNumber" column="has_group_number"/>
+        <result property="stayGroupNumber" column="stay_group_number"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="storeId" column="store_id"/>
+    </resultMap>
+
+
+</mapper>

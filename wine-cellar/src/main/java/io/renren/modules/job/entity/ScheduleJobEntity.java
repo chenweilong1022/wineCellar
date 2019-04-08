@@ -18,6 +18,8 @@ package io.renren.modules.job.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -42,6 +44,7 @@ public class ScheduleJobEntity implements Serializable {
 	 * 任务id
 	 */
 	@TableId
+	@JsonSerialize(using= ToStringSerializer.class)
 	private Long jobId;
 
 	/**

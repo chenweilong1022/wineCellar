@@ -5,6 +5,7 @@ import com.egzosn.pay.ali.api.AliPayService;
 import com.egzosn.pay.ali.bean.AliTransactionType;
 import com.egzosn.pay.common.bean.PayOrder;
 import com.egzosn.pay.common.bean.PayOutMessage;
+import com.egzosn.pay.common.bean.RefundOrder;
 import com.egzosn.pay.common.http.HttpConfigStorage;
 import com.egzosn.pay.common.http.UriVariables;
 import com.sun.javafx.util.Logging;
@@ -67,6 +68,14 @@ public class AliUtil {
 //        Map<String, Object> order = service.orderInfo(payOrder);
         logger.debug(order);
         return order;
+    }
+
+    public static void refund(String orderId, BigDecimal price) {
+        RefundOrder order = new RefundOrder();
+        order.setRefundNo(orderId);
+        order.setRefundAmount(price);
+        order.setOutTradeNo(orderId);
+        Map result = service.refund(order);
     }
 
     public static String payBack(HttpServletRequest request) {

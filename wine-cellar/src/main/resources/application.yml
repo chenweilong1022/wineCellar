@@ -41,7 +41,17 @@ spring:
     static-path-pattern: /static/**
   resources:
     add-mappings: false
-
+  devtools:
+    restart:
+      enabled: true
+      exclude: WEB-INF/**
+      additional-paths: src/main/java
+#热部署生效
+#spring.devtools.restart.enabled: true
+#设置重启的目录
+#spring.devtools.restart.additional-paths: src/main/java
+#classpath目录下的WEB-INF文件夹内容修改不重启
+#spring.devtools.restart.exclude: WEB-INF/**
 #mybatis
 mybatis-plus:
   mapper-locations: classpath:mapper/**/*.xml
@@ -96,7 +106,8 @@ logging:
 #235短信配置
 sms:
   charset: utf-8
-  account: N665411_N5027997
-  pswd: vZTN8D0ifzd6e5
+  account: N5455055
+  pswd: B6iyA5YJMGc67a
   smsSingleRequestServerUrl: http://smssh1.253.com/msg/send/json
-  msg: 【很好赔】验证码：${code}，请勿泄露。您正在授权手机绑定很好赔平台，验证码将在10分钟后过期，请尽快验证。如非本人操作请忽略。
+  msg: 【同城酒窖】您正在注册同城酒窖会员，验证码${code}请于5分钟内使用，工作人员不会向您索取，请勿泄漏。
+  msg1: 【同城酒窖】您正在修改支付密码，验证码${code}请于5分钟内使用，工作人员不会向您索取，请勿泄漏。

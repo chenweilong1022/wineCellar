@@ -18,6 +18,8 @@ public class SmsConfig {
     private String smsSingleRequestServerUrl;
     // 设置您要发送的内容：其中“【】”中括号为运营商签名符号，多签名内容前置添加提交
     private String msg;
+    // 设置您要发送的内容：其中“【】”中括号为运营商签名符号，多签名内容前置添加提交
+    private String msg1;
 
     public String getCharset() {
         return charset;
@@ -57,5 +59,13 @@ public class SmsConfig {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getMsg1() {
+        return msg1;
+    }
+
+    public void setMsg1(String msg1) {
+        this.msg1 = msg1;
     }
 }

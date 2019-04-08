@@ -3,10 +3,7 @@ package io.renren.modules.cellar.entity;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
@@ -208,6 +205,12 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@ApiModelProperty(required=false,value="用户id")
 	@TableField(exist = false)
 	private Long memberId;
+	/**
+	 * 预售时间
+	 */
+	@TableField(strategy = FieldStrategy.IGNORED)
+	@ApiModelProperty(required=false,value="预售时间")
+	private Date presellTime;
 
 	/**
 	 * 设置：商品id
@@ -572,5 +575,13 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 
 	public void setIntegral(BigDecimal integral) {
 		this.integral = integral;
+	}
+
+	public Date getPresellTime() {
+		return presellTime;
+	}
+
+	public void setPresellTime(Date presellTime) {
+		this.presellTime = presellTime;
 	}
 }

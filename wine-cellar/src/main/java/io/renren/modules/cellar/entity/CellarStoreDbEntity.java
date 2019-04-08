@@ -170,6 +170,12 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 	@ApiModelProperty(required=false,value="用户id")
 	@TableField(exist = false)
 	private Long memberId;
+	/**
+	 * 店铺类型
+	 */
+	@ApiModelProperty(required=false,value="店铺类型")
+	@TableField(exist = false)
+	private Integer storeType;
 
 	/**
 	 * 设置：店铺id
@@ -464,5 +470,13 @@ public class CellarStoreDbEntity extends AbstractEntity implements Serializable 
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
+	}
+
+	public Integer getStoreType() {
+		return storeType;
+	}
+
+	public void setStoreType(Integer storeType) {
+		this.storeType = storeType;
 	}
 }

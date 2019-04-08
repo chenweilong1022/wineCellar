@@ -48,7 +48,7 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, Schedule
 	public void init(){
 		List<ScheduleJobEntity> scheduleJobList = baseMapper.selectList(null);
 		for(ScheduleJobEntity scheduleJob : scheduleJobList){
-			CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, scheduleJob.getJobId());
+			CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, Long.valueOf(scheduleJob.getJobId()));
             //如果不存在，则创建
             if(cronTrigger == null) {
                 ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
@@ -76,7 +76,8 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, Schedule
 	public boolean save(ScheduleJobEntity scheduleJob) {
 		scheduleJob.setCreateTime(new Date());
 		scheduleJob.setStatus(Constant.ScheduleStatus.NORMAL.getValue());
-        this.save(scheduleJob);
+//        this.save(scheduleJob);
+        baseMapper.insert(scheduleJob);
         
         ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
 		return true;

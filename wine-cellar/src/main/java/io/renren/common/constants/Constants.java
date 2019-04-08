@@ -269,7 +269,11 @@ public class Constants {
         ZERO(0,"普通"),
         ONE(1,"自提"),
         TWO(2,"预约"),
-        THREE(3,"预售");
+        THREE(3,"预售"),
+        FOUR(4,"拼团"),
+        FIVE(5,"秒杀"),
+        SIX(6,"砍价");
+//        seven(7,"");
 
         private Integer key;
         private String value;
@@ -352,7 +356,7 @@ public class Constants {
      * 全局级别订单状态
      */
     public enum ORDERSTATUS {
-
+        FUNINE(-9,"已退款"),//售后不通过
         FUFOUR(-4,"售后不通过"),//售后不通过
         FUTHREE(-3,"售后通过"),//售后通过
         FUTWO(-2,"订单进入售后"),//订单进入售后
@@ -407,7 +411,9 @@ public class Constants {
         ONE(1,"购物车结算"),
         TWO(2,"直接购买结算"),
         THREE(3,"余额充值"),
-        FOUR(4,"储值卡充值");
+        FOUR(4,"储值卡充值"),
+        FIVE(5,"秒杀结算"),
+        SIX(6,"拼团结算");
 
 
 
@@ -973,7 +979,8 @@ public class Constants {
     public enum CHANGETYPE {
 
         ONE(1,"充值"),
-        TWO(2,"消费");
+        TWO(2,"消费"),
+        THREE(3,"退款");
 
         private Integer key;
         private String value;

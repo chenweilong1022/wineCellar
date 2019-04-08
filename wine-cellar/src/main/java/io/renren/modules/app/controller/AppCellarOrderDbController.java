@@ -218,6 +218,7 @@ public class AppCellarOrderDbController {
         cellarOrderDbEntity.setMethodPayment(submitOrdersByDirectlyEntity.getMethodPayment());//支付方式
         cellarOrderDbEntity.setOrderNote(submitOrdersByDirectlyEntity.getOrderNote());//订单备注
         cellarOrderDbEntity.setOrderNo(orderNo);//订单编号
+        cellarOrderDbEntity.setIsHave(submitOrdersByDirectlyEntity.getIsHave());
         cellarOrderDbEntity.setStoreId(submitOrdersByDirectlyEntity.getStoreId());//店铺id
         cellarOrderDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());//会员id
         cellarOrderDbEntity.setPickUpPhone(submitOrdersByDirectlyEntity.getPickUpPhone());//自提人手机号
@@ -243,6 +244,7 @@ public class AppCellarOrderDbController {
             cellarOrderDetailsDbEntity.setCommodityId(cellarCommodityDbEntity.getCommodityId());//商品id
             cellarOrderDetailsDbEntity.setNumber(numbers[i]);//数量
             cellarOrderDetailsDbEntity.setAmountGoods(cellarCommodityDbEntity.getPresentPrice());//商品价格
+            cellarOrderDetailsDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
             cellarOrderDetailsDbEntity.setTotalAmountGoods(cellarOrderDetailsDbEntity.getAmountGoods().multiply(cellarOrderDetailsDbEntity.getNumber()));//商品总价格
             cellarOrderDetailsDbEntity.setIntegral(cellarCommodityDbEntity.getIntegral());//积分
             cellarOrderDetailsDbEntity.setTotalIntegral(cellarOrderDetailsDbEntity.getIntegral().multiply(cellarOrderDetailsDbEntity.getNumber()));
@@ -324,9 +326,9 @@ public class AppCellarOrderDbController {
             String order = AliUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.TWO);
             return R.data(order);
         }else if (submitOrdersByDirectlyEntity.getMethodPayment().equals(Constants.METHODPAYMENT.BALANCE.getKey())) {
-            balancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByDirectlyEntity.getPayPassword());
+            cellarMemberBalanceChangeRecordDbService.balancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByDirectlyEntity.getPayPassword());
         }else if (submitOrdersByDirectlyEntity.getMethodPayment().equals(Constants.METHODPAYMENT.CARDBALANCE.getKey())) {
-            cardBalancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByDirectlyEntity.getPayPassword());
+            cellarMemberCardBalanceChangeRecordDbService.cardBalancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByDirectlyEntity.getPayPassword());
         }
 
         return R.ok();
@@ -384,6 +386,7 @@ public class AppCellarOrderDbController {
             cellarOrderDbEntity.setMethodPayment(submitOrdersByCartEntity.getMethodPayment());//支付方式
             cellarOrderDbEntity.setOrderNote(submitOrdersStoreEntity.getOrderNote());//订单备注
             cellarOrderDbEntity.setOrderNo(orderNo);//订单编号
+            cellarOrderDbEntity.setIsHave(submitOrdersByCartEntity.getIsHave());
             cellarOrderDbEntity.setStoreId(submitOrdersStoreEntity.getStoreId());//店铺id
             cellarOrderDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());//会员id
             cellarOrderDbEntity.setPickUpPhone(submitOrdersByCartEntity.getPickUpPhone());//自提人手机号
@@ -420,6 +423,7 @@ public class AppCellarOrderDbController {
                 cellarOrderDetailsDbEntity.setCommodityId(cellarCartDbEntity.getCommodityId());//商品id
                 cellarOrderDetailsDbEntity.setNumber(cellarCartDbEntity.getNumber());//数量
                 cellarOrderDetailsDbEntity.setAmountGoods(cellarCartDbEntity.getPrices());//商品价格
+                cellarOrderDetailsDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
                 cellarOrderDetailsDbEntity.setTotalAmountGoods(cellarCartDbEntity.getPrices().multiply(cellarCartDbEntity.getNumber()));//商品总价格
                 cellarOrderDetailsDbEntity.setIntegral(cellarCommodityDbEntity.getIntegral());
                 cellarOrderDetailsDbEntity.setTotalIntegral(cellarOrderDetailsDbEntity.getIntegral() == null ? null : cellarOrderDetailsDbEntity.getIntegral().multiply(cellarOrderDetailsDbEntity.getNumber()));
@@ -504,105 +508,11 @@ public class AppCellarOrderDbController {
             String order = AliUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.ONE);
             return R.data(order);
         }else if (submitOrdersByCartEntity.getMethodPayment().equals(Constants.METHODPAYMENT.BALANCE.getKey())) {
-            balancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByCartEntity.getPayPassword());
+            cellarMemberBalanceChangeRecordDbService.balancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByCartEntity.getPayPassword());
         }else if (submitOrdersByCartEntity.getMethodPayment().equals(Constants.METHODPAYMENT.CARDBALANCE.getKey())) {
-            cardBalancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByCartEntity.getPayPassword());
+            cellarMemberCardBalanceChangeRecordDbService.cardBalancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByCartEntity.getPayPassword());
         }
         return R.ok();
-    }
-
-    /**
-     * 余额支付
-     * @param cellarMemberDbEntity
-     * @param payOrderAmount
-     * @param orderNo
-     */
-    private void balancePay(
-            CellarMemberDbEntity cellarMemberDbEntity,
-            BigDecimal payOrderAmount,
-            String orderNo,
-            String payPassword
-    ) {
-        /**
-         * 判断余额
-         */
-
-        Assert.isNull(StringUtils.isBlank(payPassword),"支付密码不能为空");
-        Assert.isTrue(payOrderAmount.compareTo(cellarMemberDbEntity.getBalance()) > 0,"余额不足");
-        Assert.isTrue(!DigestUtils.sha256Hex(payPassword).equals(cellarMemberDbEntity.getPayPassword()),"支付密码错误");
-        BigDecimal changeBalance = payOrderAmount.multiply(BigDecimal.valueOf(-1));//变动金额
-        BigDecimal beforeBalance = cellarMemberDbEntity.getBalance();//当前金额
-        BigDecimal afterBalance = beforeBalance.add(changeBalance);//充值之后金额
-        /**
-         *修改用户余额
-         */
-        cellarMemberDbEntity.setBalance(afterBalance);
-        cellarMemberDbService.updateById(cellarMemberDbEntity);
-        /**
-         * 增加余额记录
-         */
-        CellarMemberBalanceChangeRecordDbEntity cellarMemberBalanceChangeRecordDbEntity = new CellarMemberBalanceChangeRecordDbEntity();
-        cellarMemberBalanceChangeRecordDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
-        cellarMemberBalanceChangeRecordDbEntity.setChangeBalance(changeBalance);
-        cellarMemberBalanceChangeRecordDbEntity.setBeforeBalance(beforeBalance);
-        cellarMemberBalanceChangeRecordDbEntity.setAfterBalance(afterBalance);
-        cellarMemberBalanceChangeRecordDbEntity.setCreateTime(new Date());
-        cellarMemberBalanceChangeRecordDbEntity.setState(Constants.STATE.zero.getKey());
-        cellarMemberBalanceChangeRecordDbEntity.setChangeType(Constants.CHANGETYPE.TWO.getKey());
-        cellarMemberBalanceChangeRecordDbEntity.setChangeDesc(Constants.CHANGETYPE.TWO.getValue());
-        cellarMemberBalanceChangeRecordDbEntity.setPaymentTime(new Date());
-        cellarMemberBalanceChangeRecordDbEntity.setRecordStatus(Constants.RECORDSTATUS.TWO.getKey());
-        cellarMemberBalanceChangeRecordDbEntity.setOrderNo(orderNo);
-        cellarMemberBalanceChangeRecordDbEntity.setMethodPayment(Constants.METHODPAYMENT.BALANCE.getKey());
-        cellarMemberBalanceChangeRecordDbService.save(cellarMemberBalanceChangeRecordDbEntity);
-        cellarOrderDbService.paySuccess(orderNo);
-    }
-
-    /**
-     * 储值卡余额支付
-     * @param cellarMemberDbEntity
-     * @param payOrderAmount
-     * @param orderNo
-     */
-    private void cardBalancePay(
-            CellarMemberDbEntity cellarMemberDbEntity,
-            BigDecimal payOrderAmount,
-            String orderNo,
-            String payPassword
-    ) {
-        /**
-         * 判断储值卡余额
-         */
-
-        Assert.isNull(StringUtils.isBlank(payPassword),"支付密码不能为空");
-        Assert.isTrue(payOrderAmount.compareTo(cellarMemberDbEntity.getCardBalance()) > 0,"储值卡余额不足");
-        Assert.isTrue(!DigestUtils.sha256Hex(payPassword).equals(cellarMemberDbEntity.getPayPassword()),"支付密码错误");
-        BigDecimal changeCardBalance = payOrderAmount.multiply(BigDecimal.valueOf(-1));//变动金额
-        BigDecimal beforeCardBalance = cellarMemberDbEntity.getCardBalance();//当前金额
-        BigDecimal afterCardBalance = beforeCardBalance.add(changeCardBalance);//充值之后金额
-        /**
-         *修改用户储值卡余额
-         */
-        cellarMemberDbEntity.setCardBalance(afterCardBalance);
-        cellarMemberDbService.updateById(cellarMemberDbEntity);
-        /**
-         * 增加储值卡余额记录
-         */
-        CellarMemberCardBalanceChangeRecordDbEntity cellarMemberCardBalanceChangeRecordDbEntity = new CellarMemberCardBalanceChangeRecordDbEntity();
-        cellarMemberCardBalanceChangeRecordDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
-        cellarMemberCardBalanceChangeRecordDbEntity.setChangeCardBalance(changeCardBalance);
-        cellarMemberCardBalanceChangeRecordDbEntity.setBeforeCardBalance(beforeCardBalance);
-        cellarMemberCardBalanceChangeRecordDbEntity.setAfterCardBalance(afterCardBalance);
-        cellarMemberCardBalanceChangeRecordDbEntity.setCreateTime(new Date());
-        cellarMemberCardBalanceChangeRecordDbEntity.setState(Constants.STATE.zero.getKey());
-        cellarMemberCardBalanceChangeRecordDbEntity.setChangeType(Constants.CHANGETYPE.TWO.getKey());
-        cellarMemberCardBalanceChangeRecordDbEntity.setChangeDesc(Constants.CHANGETYPE.TWO.getValue());
-        cellarMemberCardBalanceChangeRecordDbEntity.setPaymentTime(new Date());
-        cellarMemberCardBalanceChangeRecordDbEntity.setRecordStatus(Constants.RECORDSTATUS.TWO.getKey());
-        cellarMemberCardBalanceChangeRecordDbEntity.setOrderNo(orderNo);
-        cellarMemberCardBalanceChangeRecordDbEntity.setMethodPayment(Constants.METHODPAYMENT.CARDBALANCE.getKey());
-        cellarMemberCardBalanceChangeRecordDbService.save(cellarMemberCardBalanceChangeRecordDbEntity);
-        cellarOrderDbService.paySuccess(orderNo);
     }
 
 }

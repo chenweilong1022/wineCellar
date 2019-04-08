@@ -20,6 +20,11 @@ public class SubmitOrdersByCartEntity {
     @ApiModelProperty(required=false,value="订单类型0:普通订单1:自提订单2:预约订单3:预售订单")
     private Integer pickupWay;
     /**
+     * 是否自提
+     */
+    @ApiModelProperty(required=false,value="0:否1:是")
+    private Integer isHave;
+    /**
      * 地址id
      */
     @ApiModelProperty(required=false,value="地址id")
@@ -104,5 +109,13 @@ public class SubmitOrdersByCartEntity {
 
     public void setPayPassword(String payPassword) {
         this.payPassword = payPassword;
+    }
+
+    public Integer getIsHave() {
+        return isHave;
+    }
+
+    public void setIsHave(Integer isHave) {
+        this.isHave = isHave;
     }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.cellar.entity.CellarOrderDbEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +23,18 @@ public interface CellarOrderDbService extends IService<CellarOrderDbEntity> {
      */
     void paySuccess(String outtradeno);
 
+    /**
+     * 退款成功
+     * @param outtradeno
+     */
+    void refund(String outtradeno);
+
+    /**
+     * 判断是否支付
+     * @param outtradeno
+     * @return
+     */
+    List<CellarOrderDbEntity> isPay(String outtradeno);
 
 }
 

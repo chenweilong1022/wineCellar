@@ -3,7 +3,9 @@ package io.renren.modules.cellar.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.cellar.entity.CellarMemberBalanceChangeRecordDbEntity;
+import io.renren.modules.cellar.entity.CellarMemberDbEntity;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -16,5 +18,18 @@ import java.util.Map;
 public interface CellarMemberBalanceChangeRecordDbService extends IService<CellarMemberBalanceChangeRecordDbEntity> {
 
     PageUtils queryPage(CellarMemberBalanceChangeRecordDbEntity cellarMemberBalanceChangeRecordDb);
+
+    void balancePay(
+            CellarMemberDbEntity cellarMemberDbEntity,
+            BigDecimal payOrderAmount,
+            String orderNo,
+            String payPassword
+    );
+    void balanceRefund(
+            CellarMemberDbEntity cellarMemberDbEntity,
+            BigDecimal payOrderAmount,
+            String orderNo,
+            String payPassword
+    );
 }
 

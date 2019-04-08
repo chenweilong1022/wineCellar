@@ -11,6 +11,7 @@ import io.renren.modules.cellar.entity.CellarStoreDbEntity;
 import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -53,6 +54,12 @@ public abstract class AbstractEntity implements Serializable {
 	@TableField(exist = false)
 	@ApiModelProperty(required=false,value="店铺名称",hidden = true)
 	private String storeName;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="管理后台参数",hidden = true)
+	private String t;
+	@TableField(exist = false)
+	@ApiModelProperty(required=false,value="是否设置参数",hidden = true)
+	protected boolean flag = true;
 
 	public String getKey() {
 		return key;
@@ -120,5 +127,17 @@ public abstract class AbstractEntity implements Serializable {
 
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
+	}
+
+	public void setT(String t) {
+		this.t = t;
+	}
+
+	public boolean isSystem() {
+		return StringUtils.isNotBlank(t);
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
 	}
 }

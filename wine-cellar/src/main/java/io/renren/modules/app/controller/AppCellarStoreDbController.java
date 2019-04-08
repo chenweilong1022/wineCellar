@@ -59,6 +59,7 @@ public class AppCellarStoreDbController {
             @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="longitude",value="经度",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="latitude",value="纬度",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="storeType",value="类型",dataType="String",required=false,paramType="query"),
    })
     public R list(@ApiIgnore CellarStoreDbEntity cellarStoreDb){
 //        PageUtils page = cellarStoreDbService.queryPage(cellarStoreDb);

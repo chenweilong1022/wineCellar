@@ -201,7 +201,31 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	 */
 	@ApiModelProperty(required=false,value="订单积分")
 	private BigDecimal integral;
-
+	/**
+	 * 是否自提
+	 */
+	@ApiModelProperty(required=false,value="0:否1:是")
+	private Integer isHave;
+	/**
+	 * 秒杀活动id
+	 */
+	@ApiModelProperty(required=false,value="秒杀活动id")
+	private Long killActivityId;
+	/**
+	 * 拼团活动id
+	 */
+	@ApiModelProperty(required=false,value="拼团活动id")
+	private Long groupActivityId;
+	/**
+	 * 砍价活动id
+	 */
+	@ApiModelProperty(required=false,value="砍价活动id")
+	private Long bargainingActivityId;
+	/**
+	 * 会员砍价信息id
+	 */
+	@ApiModelProperty(required=false,value="会员砍价信息id")
+	private Long memberBargainingInformationId;
 	/**
 	 * 设置：订单id
 	 */
@@ -568,5 +592,45 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 
 	public void setIntegral(BigDecimal integral) {
 		this.integral = integral;
+	}
+
+	public Integer getIsHave() {
+		return isHave;
+	}
+
+	public void setIsHave(Integer isHave) {
+		this.isHave = isHave;
+	}
+
+	public Long getKillActivityId() {
+		return killActivityId;
+	}
+
+	public void setKillActivityId(Long killActivityId) {
+		this.killActivityId = killActivityId;
+	}
+
+	public Long getGroupActivityId() {
+		return groupActivityId;
+	}
+
+	public void setGroupActivityId(Long groupActivityId) {
+		this.groupActivityId = groupActivityId;
+	}
+
+	public Long getBargainingActivityId() {
+		return bargainingActivityId;
+	}
+
+	public void setBargainingActivityId(Long bargainingActivityId) {
+		this.bargainingActivityId = bargainingActivityId;
+	}
+
+	public Long getMemberBargainingInformationId() {
+		return memberBargainingInformationId;
+	}
+
+	public void setMemberBargainingInformationId(Long memberBargainingInformationId) {
+		this.memberBargainingInformationId = memberBargainingInformationId;
 	}
 }

@@ -6,6 +6,7 @@ import io.renren.common.annotation.MemberMessage;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.ShiroUtils;
 import io.renren.common.utils.pay.AliUtil;
+import io.renren.common.validator.Assert;
 import io.renren.modules.cellar.entity.*;
 import io.renren.modules.cellar.service.*;
 import io.renren.modules.sys.entity.SysUserEntity;
@@ -40,6 +41,10 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
     private CellarMemberCouponDbService cellarMemberCouponDbService;
     @Autowired
     private CellarCartDbService cellarCartDbService;
+    @Autowired
+    private CellarKillActivityDbService cellarKillActivityDbService;
+    @Autowired
+    private CellarGroupActivityDbService cellarGroupActivityDbService;
 
     @Override
     public PageUtils queryPage(CellarOrderDbEntity cellarOrderDb) {
@@ -63,6 +68,7 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
                 .eq(ObjectUtil.isNotNull(cellarOrderDb.getOrderStatus()),CellarOrderDbEntity::getOrderStatus,cellarOrderDb.getOrderStatus())
                 .eq(flag,CellarOrderDbEntity::getStoreId,storeId)
                 .like(StringUtils.isNotBlank(cellarOrderDb.getKey()),CellarOrderDbEntity::getOrderId,cellarOrderDb.getKey())
+                .orderByDesc(CellarOrderDbEntity::getCreateTime)
         );
         return new PageUtils(page);
     }
@@ -72,18 +78,7 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
     @MemberMessage(MESSAGEHEAD = "支付成功",MESSAGETYPE = Constants.MESSAGETYPE.ORDER,MESSAGECONTENT = "您的订单支付成功,等待平台发货")
     @MemberIntegral(CHANGETYPE = Constants.CHANGETYPE.TWO)//用户积分注解拦截
     public void paySuccess(String outtradeno) {
-        /**
-         * 根据支付号查询订单列表
-         */
-        List<CellarOrderDbEntity> cellarOrderDbEntities = baseMapper.selectList(new QueryWrapper<CellarOrderDbEntity>().lambda()
-                .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
-        );
-        /**
-         * 判断
-         */
-        if (ObjectUtil.isNull(cellarOrderDbEntities) && cellarOrderDbEntities.size() == 0) {
-            return;
-        }
+        List<CellarOrderDbEntity> cellarOrderDbEntities = isPay(outtradeno);
         /**
          * 循环
          */
@@ -125,6 +120,37 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
              */
             for (CellarOrderDetailsDbEntity cellarOrderDetailsDbEntity : cellarOrderDetailsDbEntities) {
                 /**
+                 * 如果是秒杀活动去修改秒杀表库存
+                 */
+                if (cellarOrderDbEntity.getOrderType().equals(Constants.CARTTYPE.FIVE.getKey())) {
+                    /**
+                     * 修改秒杀活动库存
+                     */
+                    CellarKillActivityDbEntity cellarKillActivityDbEntity = cellarKillActivityDbService.getById(cellarOrderDetailsDbEntity.getKillActivityId());
+                    cellarKillActivityDbEntity.setKillNumber(cellarKillActivityDbEntity.getKillNumber().subtract(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarKillActivityDbService.updateById(cellarKillActivityDbEntity);
+
+                    CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarOrderDetailsDbEntity.getCommodityId());
+                    cellarCommodityDbEntity.setMonthSales(cellarCommodityDbEntity.getMonthSales().add(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbEntity.setTotalSales(cellarCommodityDbEntity.getTotalSales().add(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbService.updateById(cellarCommodityDbEntity);
+                    continue;
+                }else if (cellarOrderDbEntity.getOrderType().equals(Constants.CARTTYPE.FOUR.getKey())) {
+                    /**
+                     * 修改拼团活动库存
+                     */
+                    CellarGroupActivityDbEntity cellarGroupActivityDbEntity = cellarGroupActivityDbService.getById(cellarOrderDetailsDbEntity.getGroupActivityId());
+                    cellarGroupActivityDbEntity.setHasGroupNumber(cellarGroupActivityDbEntity.getHasGroupNumber().add(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarGroupActivityDbEntity.setStayGroupNumber(cellarGroupActivityDbEntity.getGroupTotalNumber().subtract(cellarGroupActivityDbEntity.getHasGroupNumber()));
+                    cellarGroupActivityDbService.updateById(cellarGroupActivityDbEntity);
+
+                    CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarOrderDetailsDbEntity.getCommodityId());
+                    cellarCommodityDbEntity.setMonthSales(cellarCommodityDbEntity.getMonthSales().add(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbEntity.setTotalSales(cellarCommodityDbEntity.getTotalSales().add(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbService.updateById(cellarCommodityDbEntity);
+                    continue;
+                }
+                /**
                  * 修改库存
                  */
                 CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarOrderDetailsDbEntity.getCommodityId());
@@ -142,6 +168,116 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
         cellarCartDbService.update(cellarCartDbEntity,new QueryWrapper<CellarCartDbEntity>().lambda()
                 .eq(CellarCartDbEntity::getOrderNo,outtradeno)
         );
+    }
+
+    @Override
+    @Transactional
+    public void refund(String outtradeno) {
+        List<CellarOrderDbEntity> cellarOrderDbEntities = isRefund(outtradeno);
+        /**
+         * 循环
+         */
+        for (CellarOrderDbEntity cellarOrderDbEntity : cellarOrderDbEntities) {
+            /**
+             * 判断是否退款
+             */
+            if (cellarOrderDbEntity.getOrderStatus().equals(Constants.ORDERSTATUS.FUNINE.getKey())) {
+                return;
+            }
+            /**
+             * 修改退款状态时间 款状态
+             */
+            cellarOrderDbEntity.setOrderStatus(Constants.ORDERSTATUS.FUNINE.getKey());
+            baseMapper.updateById(cellarOrderDbEntity);
+            /**
+             * 查询订单下商品信息
+             */
+            List<CellarOrderDetailsDbEntity> cellarOrderDetailsDbEntities = cellarOrderDetailsDbService.list(new QueryWrapper<CellarOrderDetailsDbEntity>().lambda()
+                    .eq(CellarOrderDetailsDbEntity::getOrderId, cellarOrderDbEntity.getOrderId())
+            );
+            /**
+             * 遍历商品信息
+             */
+            for (CellarOrderDetailsDbEntity cellarOrderDetailsDbEntity : cellarOrderDetailsDbEntities) {
+                /**
+                 * 如果是秒杀活动去修改秒杀表库存
+                 */
+                if (cellarOrderDbEntity.getOrderType().equals(Constants.CARTTYPE.FIVE.getKey())) {
+                    /**
+                     * 修改秒杀活动库存
+                     */
+                    CellarKillActivityDbEntity cellarKillActivityDbEntity = cellarKillActivityDbService.getById(cellarOrderDetailsDbEntity.getKillActivityId());
+                    cellarKillActivityDbEntity.setKillNumber(cellarKillActivityDbEntity.getKillNumber().subtract(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarKillActivityDbService.updateById(cellarKillActivityDbEntity);
+
+                    CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarOrderDetailsDbEntity.getCommodityId());
+                    cellarCommodityDbEntity.setMonthSales(cellarCommodityDbEntity.getMonthSales().add(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbEntity.setTotalSales(cellarCommodityDbEntity.getTotalSales().add(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbService.updateById(cellarCommodityDbEntity);
+                    continue;
+                }else if (cellarOrderDbEntity.getOrderType().equals(Constants.CARTTYPE.FOUR.getKey())) {
+                    CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarOrderDetailsDbEntity.getCommodityId());
+                    cellarCommodityDbEntity.setMonthSales(cellarCommodityDbEntity.getMonthSales().subtract(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbEntity.setTotalSales(cellarCommodityDbEntity.getTotalSales().subtract(cellarOrderDetailsDbEntity.getNumber()));
+                    cellarCommodityDbService.updateById(cellarCommodityDbEntity);
+                    continue;
+                }
+                /**
+                 * 修改库存
+                 */
+                CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(cellarOrderDetailsDbEntity.getCommodityId());
+                cellarCommodityDbEntity.setMonthSales(cellarCommodityDbEntity.getMonthSales().subtract(cellarOrderDetailsDbEntity.getNumber()));
+                cellarCommodityDbEntity.setTotalSales(cellarCommodityDbEntity.getTotalSales().subtract(cellarOrderDetailsDbEntity.getNumber()));
+                cellarCommodityDbEntity.setInventory(cellarCommodityDbEntity.getInventory().add(cellarOrderDetailsDbEntity.getNumber()));
+                cellarCommodityDbService.updateById(cellarCommodityDbEntity);
+            }
+        }
+    }
+
+    /**
+     * 判断是否支付
+     * @param outtradeno
+     * @return
+     */
+    public List<CellarOrderDbEntity> isPay(String outtradeno) {
+        /**
+         * 根据支付号查询订单列表
+         */
+        List<CellarOrderDbEntity> cellarOrderDbEntities = baseMapper.selectList(new QueryWrapper<CellarOrderDbEntity>().lambda()
+                .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
+                .eq(CellarOrderDbEntity::getOrderStatus,Constants.ORDERSTATUS.FUONE.getKey())
+        );
+        /**
+         * 判断
+         */
+        if (ObjectUtil.isNull(cellarOrderDbEntities) || cellarOrderDbEntities.size() == 0) {
+            Assert.isTrue(true,"重复调用");
+            return null;
+        }
+        return cellarOrderDbEntities;
+    }
+
+    /**
+     * 判断是否支付
+     * @param outtradeno
+     * @return
+     */
+    public List<CellarOrderDbEntity> isRefund(String outtradeno) {
+        /**
+         * 根据支付号查询订单列表
+         */
+        List<CellarOrderDbEntity> cellarOrderDbEntities = baseMapper.selectList(new QueryWrapper<CellarOrderDbEntity>().lambda()
+                .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
+                .notIn(CellarOrderDbEntity::getOrderStatus,Constants.ORDERSTATUS.FUNINE.getKey(),Constants.ORDERSTATUS.FUONE.getKey())
+        );
+        /**
+         * 判断
+         */
+        if (ObjectUtil.isNull(cellarOrderDbEntities) || cellarOrderDbEntities.size() == 0) {
+            Assert.isTrue(true,"重复调用");
+            return null;
+        }
+        return cellarOrderDbEntities;
     }
 
 }

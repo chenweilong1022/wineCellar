@@ -50,6 +50,8 @@ public class AppCellarCallbackController extends AbstractController {
     @Autowired
     private CellarMemberDbService cellarMemberDbService;
 
+
+
     /**
      * 手动调用支付
      */
@@ -57,12 +59,12 @@ public class AppCellarCallbackController extends AbstractController {
     public PayOutMessage paySuccessSd(
             String outtradeno
     ){
-//        cellarOrderDbService.paySuccess(outtradeno);
+        cellarOrderDbService.paySuccess(outtradeno);
 //        /**
 //         * 用户余额充值
 //         */
 //        cellarMemberDbService.rechargeBalanceSuccess(outtradeno.toString());
-        cellarMemberDbService.rechargeCardBalanceSuccess(outtradeno.toString());
+//        cellarMemberDbService.rechargeCardBalanceSuccess(outtradeno.toString());
         return null;
     }
 
@@ -79,37 +81,19 @@ public class AppCellarCallbackController extends AbstractController {
         PayOutMessage payOutMessage = WechatPayUtil.paySuccess();
         CallbackUtil.callback(settlementtype,methodpayment,request,outtradeno,payOutMessage);
         if (settlementtype.equals(Constants.SETTLEMENTTYPE.ONE.getKey())) {
-            /**根据支付号查询订单列表
-             *
-             */
-            List<CellarOrderDbEntity> cellarOrderDbEntities = cellarOrderDbService.list(new QueryWrapper<CellarOrderDbEntity>().lambda()
-                    .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
-                    .eq(CellarOrderDbEntity::getOrderStatus,Constants.ORDERSTATUS.FUONE.getKey())
-            );
             /**
-             * 判断
+             * 判断是否支付
              */
-            if (ObjectUtil.isNull(cellarOrderDbEntities) && cellarOrderDbEntities.size() == 0) {
-                return null;
-            }
+            cellarOrderDbService.isPay(outtradeno.toString());
             /**
              * 购物车结算
              */
             cellarOrderDbService.paySuccess(outtradeno.toString());
         }else if (settlementtype.equals(Constants.SETTLEMENTTYPE.TWO.getKey())) {
             /**
-             * 根据支付号查询订单列表
+             * 判断是否支付
              */
-            List<CellarOrderDbEntity> cellarOrderDbEntities = cellarOrderDbService.list(new QueryWrapper<CellarOrderDbEntity>().lambda()
-                    .eq(CellarOrderDbEntity::getOrderNo, outtradeno)
-                    .eq(CellarOrderDbEntity::getOrderStatus,Constants.ORDERSTATUS.FUONE.getKey())
-            );
-            /**
-             * 判断
-             */
-            if (ObjectUtil.isNull(cellarOrderDbEntities) && cellarOrderDbEntities.size() == 0) {
-                return null;
-            }
+            cellarOrderDbService.isPay(outtradeno.toString());
             /**
              * 直接购买
              */
@@ -124,6 +108,24 @@ public class AppCellarCallbackController extends AbstractController {
              * 用户储值卡充值
              */
             cellarMemberDbService.rechargeCardBalanceSuccess(outtradeno.toString());
+        }else if (settlementtype.equals(Constants.SETTLEMENTTYPE.FIVE.getKey())) {
+            /**
+             * 判断是否支付
+             */
+            cellarOrderDbService.isPay(outtradeno.toString());
+            /**
+             * 秒杀结算
+             */
+            cellarOrderDbService.paySuccess(outtradeno.toString());
+        }else if (settlementtype.equals(Constants.SETTLEMENTTYPE.SIX.getKey())) {
+            /**
+             * 判断是否支付
+             */
+            cellarOrderDbService.isPay(outtradeno.toString());
+            /**
+             * 秒杀结算
+             */
+            cellarOrderDbService.paySuccess(outtradeno.toString());
         }
         return payOutMessage;
     }

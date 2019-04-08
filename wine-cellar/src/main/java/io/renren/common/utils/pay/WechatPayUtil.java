@@ -1,10 +1,16 @@
 package io.renren.common.utils.pay;
 
+import cn.hutool.core.util.RandomUtil;
 import com.egzosn.pay.common.bean.PayOrder;
 import com.egzosn.pay.common.bean.PayOutMessage;
 import com.egzosn.pay.wx.api.WxPayConfigStorage;
 import com.egzosn.pay.wx.api.WxPayService;
 import com.egzosn.pay.wx.bean.WxTransactionType;
+import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
+import com.github.binarywang.wxpay.config.WxPayConfig;
+import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.config.pay.WechatConfig;
@@ -55,6 +61,35 @@ public class WechatPayUtil {
         );
         Map<String, Object> map = service.orderInfo(payOrder);
         return map;
+    }
+
+    /**
+     * app支付工具类
+     * @param body
+     * @param orderId
+     * @param price
+     * @return
+     */
+    public static void refund(String orderId, BigDecimal price) {
+        WxPayConfig payConfig = new WxPayConfig();
+        payConfig.setAppId(wechatConfig.getAppid());
+        payConfig.setMchId(wechatConfig.getMchId());
+        payConfig.setMchKey(wechatConfig.getSecretKey());
+        payConfig.setKeyPath("/root/apiclient_cert.p12");
+//        WxPayService wxPayService =  new WxPayServiceImpl();
+//        wxPayService.setConfig(payConfig);
+        WxPayRefundRequest wxPayRefundRequest = new WxPayRefundRequest();
+        wxPayRefundRequest.setTotalFee(price.intValue());
+        wxPayRefundRequest.setRefundFee(price.intValue());
+        wxPayRefundRequest.setOutRefundNo(RandomUtil.randomString(12));
+        wxPayRefundRequest.setOutTradeNo(orderId);
+        wxPayRefundRequest.setNonceStr(RandomUtil.randomString(12));
+        wxPayRefundRequest.setSignType("MD5");
+//        try {
+////            final WxPayRefundResult refund1 = wxPayService.refund(wxPayRefundRequest);
+//        } catch (WxPayException e) {
+//            e.printStackTrace();
+//        }
     }
 
 

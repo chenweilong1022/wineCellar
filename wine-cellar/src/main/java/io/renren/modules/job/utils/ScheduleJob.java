@@ -21,6 +21,7 @@ import io.renren.modules.job.entity.ScheduleJobEntity;
 import io.renren.modules.job.entity.ScheduleJobLogEntity;
 import io.renren.modules.job.service.ScheduleJobLogService;
 import org.apache.commons.lang.StringUtils;
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -45,15 +46,14 @@ public class ScheduleJob extends QuartzJobBean {
 	
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        ScheduleJobEntity scheduleJob = (ScheduleJobEntity) context.getMergedJobDataMap()
-        		.get(ScheduleJobEntity.JOB_PARAM_KEY);
-        
-        //获取spring bean
+		ScheduleJobEntity scheduleJob = (ScheduleJobEntity) context.getMergedJobDataMap().get(ScheduleJobEntity.JOB_PARAM_KEY);
+
+				//获取spring bean
         ScheduleJobLogService scheduleJobLogService = (ScheduleJobLogService) SpringContextUtils.getBean("scheduleJobLogService");
         
         //数据库保存执行记录
         ScheduleJobLogEntity log = new ScheduleJobLogEntity();
-        log.setJobId(scheduleJob.getJobId());
+        log.setJobId(Long.valueOf(scheduleJob.getJobId()));
         log.setBeanName(scheduleJob.getBeanName());
         log.setMethodName(scheduleJob.getMethodName());
         log.setParams(scheduleJob.getParams());

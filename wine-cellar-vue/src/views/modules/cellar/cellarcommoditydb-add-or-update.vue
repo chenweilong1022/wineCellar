@@ -78,6 +78,14 @@
     <el-form-item label="酒币" prop="integral">
       <el-input v-model="dataForm.integral" placeholder="酒币"></el-input>
     </el-form-item>
+    <el-form-item label="预售时间" prop="presellTime">
+        <el-date-picker
+          v-model="dataForm.presellTime"
+          type="date"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          placeholder="预售商品请填写预售时间">
+        </el-date-picker>
+    </el-form-item>
     <el-form-item label="图文详情" prop="graphicDetails">
       <el-input v-model="dataForm.graphicDetailsStr" placeholder="图文详情"></el-input>
     </el-form-item>
@@ -171,7 +179,8 @@
           commodityRotationChart: '',
           productSpecifications: '',
           storeId: '',
-          categoryId: ''
+          categoryId: '',
+          presellTime: ''
         },
         dataRule: {
           commodityName: [
@@ -287,6 +296,7 @@
                 this.dataForm.commodityRotationChartList = data.cellarCommodityDb.commodityRotationChartList
                 this.dataForm.productSpecifications = data.cellarCommodityDb.productSpecifications
                 this.dataForm.storeId = data.cellarCommodityDb.storeId
+                this.dataForm.presellTime = data.cellarCommodityDb.presellTime
                 this.dataForm.categoryId = data.cellarCommodityDb.categoryId
                 this.dynamicTags = data.cellarCommodityDb.labelList
                 this.selectedOptions3 = data.cellarCommodityDb.categoryPathList
@@ -355,6 +365,7 @@
                 'commodityRotationChart': this.dataForm.commodityRotationChart,
                 'productSpecifications': this.dataForm.productSpecifications,
                 'storeId': this.dataForm.storeId,
+                'presellTime': this.dataForm.presellTime,
                 'categoryId': this.dataForm.categoryId,
                 'labelList': this.dynamicTags,
                 'categoryPathList': this.selectedOptions3,

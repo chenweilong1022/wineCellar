@@ -29,21 +29,32 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-CREATE TABLE `cellar_member_card_db` (
-  `member_card_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员储值卡id',
-  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
+CREATE TABLE `cellar_member_bargaining_record_db` (
+  `member_bargaining_record_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员砍价记录id',
+  `member_bargaining_information_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员砍价信息id',
+  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
+  `cut_price` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '砍价金额',
+  `before_cut_price` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '砍价之前金额',
+  `after_cut_price` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '砍价之后金额',
   `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  `card_balance` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '储值卡金额',
-  PRIMARY KEY (`member_card_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员储值卡表';
+  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
+  PRIMARY KEY (`member_bargaining_record_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员砍价记录表';
 
-
-会员储值卡id
-状态
-创建时间
-储值卡金额
-
-member_card_id
-state
+member_bargaining_record_id
+member_bargaining_information_id
+member_id
+cut_price
+before_cut_price
+after_cut_price
 create_time
-card_balance
+state
+
+会员砍价记录id
+会员砍价信息id
+会员id
+砍价金额
+砍价之前金额
+砍价之后金额
+创建时间
+状态
