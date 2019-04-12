@@ -239,6 +239,7 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
      * @param outtradeno
      * @return
      */
+    @Override
     public List<CellarOrderDbEntity> isPay(String outtradeno) {
         /**
          * 根据支付号查询订单列表

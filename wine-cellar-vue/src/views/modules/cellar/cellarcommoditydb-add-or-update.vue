@@ -7,7 +7,7 @@
     <el-form-item label="商品名称" prop="commodityName">
       <el-input v-model="dataForm.commodityName" placeholder="商品名称"></el-input>
     </el-form-item>
-    <el-form-item label="图片" prop="picture">
+    <el-form-item label="封面图" prop="picture">
       <el-upload
         class="avatar-uploader"
         :action="url"
@@ -18,7 +18,7 @@
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </el-form-item>
-      <el-form-item>
+      <el-form-item  label="轮播图" prop="commodityRotationChart">
         <el-upload
           :action="url"
           :on-preview="handlePictureCardPreview"
@@ -86,8 +86,9 @@
           placeholder="预售商品请填写预售时间">
         </el-date-picker>
     </el-form-item>
+
     <el-form-item label="图文详情" prop="graphicDetails">
-      <el-input v-model="dataForm.graphicDetailsStr" placeholder="图文详情"></el-input>
+      <ueditor ref="ueditor"></ueditor>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -138,7 +139,11 @@
   }
 </style>
 <script>
+  import ueditor from '@/views/demo/ueditor'
   export default {
+    components: {
+      ueditor
+    },
     data () {
       return {
         editForm: {
@@ -219,7 +224,7 @@
           highPraise: [
             { required: true, message: '好评数不能为空', trigger: 'blur' }
           ],
-          commodityRotationChart: [
+          commodityRotationChartList: [
             { required: true, message: '商品轮播图不能为空', trigger: 'blur' }
           ],
           productSpecifications: [
@@ -283,6 +288,9 @@
                 this.dataForm.originalPrice = data.cellarCommodityDb.originalPrice
                 this.dataForm.presentPrice = data.cellarCommodityDb.presentPrice
                 this.dataForm.graphicDetailsStr = data.cellarCommodityDb.graphicDetailsStr
+
+                this.$refs.ueditor.init(this.dataForm.graphicDetailsStr)
+
                 this.dataForm.picture = data.cellarCommodityDb.picture
                 this.dataForm.label = data.cellarCommodityDb.label
                 this.dataForm.creationTime = data.cellarCommodityDb.creationTime
@@ -317,6 +325,8 @@
                 }
               }
             })
+          } else {
+            this.$refs.ueditor.init('')
           }
         })
       },
@@ -353,7 +363,7 @@
                 'commodityName': this.dataForm.commodityName,
                 'originalPrice': this.dataForm.originalPrice,
                 'presentPrice': this.dataForm.presentPrice,
-                'graphicDetailsStr': this.dataForm.graphicDetailsStr,
+                'graphicDetailsStr': this.$refs.ueditor.getContent(),
                 'picture': this.dataForm.picture,
                 'creationTime': this.dataForm.creationTime,
                 'state': this.dataForm.state,

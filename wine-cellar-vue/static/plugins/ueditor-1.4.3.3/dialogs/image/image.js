@@ -773,11 +773,12 @@
             var i, data, list = [],
                 align = getAlign(),
                 prefix = editor.getOpt('imageUrlPrefix');
+
             for (i = 0; i < this.imageList.length; i++) {
                 data = this.imageList[i];
                 list.push({
-                    src: prefix + data.url,
-                    _src: prefix + data.url,
+                    src: data.basePath + data.url,
+                    _src: data.basePath + data.url,
                     title: data.title,
                     alt: data.original,
                     floatStyle: align

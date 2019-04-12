@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.cellar.dao.CellarMemberVideoShareDbDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.cellar.entity.CellarMemberVideoShareDbEntity" id="cellarMemberVideoShareDbMap">
+        <result property="memberVideoShareId" column="member_video_share_id"/>
+        <result property="shareMemberId" column="share_member_id"/>
+        <result property="memberVideoId" column="member_video_id"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="shareType" column="share_type"/>
+    </resultMap>
+
+
+</mapper>

@@ -19,7 +19,8 @@ public interface SysRoleService extends IService<SysRoleEntity> {
 
 	PageUtils queryPage(SysRoleEntity sysRoleEntity);
 
-	boolean save(SysRoleEntity role);
+	@Override
+    boolean save(SysRoleEntity role);
 
 	void update(SysRoleEntity role);
 

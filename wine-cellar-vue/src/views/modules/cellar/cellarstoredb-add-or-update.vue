@@ -68,10 +68,22 @@
       </el-col>
     </el-form-item>
     <el-form-item label="经度" prop="longitude">
-      <el-input v-model="dataForm.longitude" placeholder="经度"></el-input>
+      <el-input readonly v-model="dataForm.longitude" placeholder="经度"></el-input>
     </el-form-item>
     <el-form-item label="纬度" prop="latitude">
-      <el-input v-model="dataForm.latitude" placeholder="纬度"></el-input>
+      <el-input readonly v-model="dataForm.latitude" placeholder="纬度"></el-input>
+    </el-form-item>
+
+    <el-form-item label="地图">
+      <!--<div class="m-map">-->
+        <!--<div class="search" v-if="placeSearch">-->
+          <!--<input type="text" placeholder="请输入关键字" v-model="searchKey">-->
+          <!--<button type="button" @click="handleSearch">搜索</button>-->
+          <!--<div id="js-result" v-show="searchKey" class="result"></div>-->
+        <!--</div>-->
+        <!--<div id="js-container" class="map">正在加载数据 ...</div>-->
+      <!--</div>-->
+      <mapDrag :dataForm="dataForm" @drag="dragMap" class="mapbox"></mapDrag>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -105,10 +117,20 @@
     height: 178px;
     display: block;
   }
+  .m-map{ min-width: 500px; min-height: 300px; position: relative;     width: 178px;height: 178px;}
+  .m-map .map{ width: 100%; height: 100%; }
+  .m-map .search{ position: absolute; top: 10px; left: 10px; width: 285px; z-index: 1; }
+  .m-map .search input{ width: 180px; border: 1px solid #ccc; line-height: 20px; padding: 5px; outline: none; }
+  .m-map .search button{ line-height: 26px; background: #fff; border: 1px solid #ccc; width: 50px; text-align: center; }
+  .m-map .result{ max-height: 300px; overflow: auto; margin-top: 10px; }
 </style>
 
 <script>
+  import mapDrag from '@/components/mapDrag'
   export default {
+    components: {
+      mapDrag
+    },
     data () {
       return {
         selectedOptions3: [],
@@ -176,6 +198,10 @@
       }
     },
     methods: {
+      dragMap (data) {
+        this.dataForm.longitude = data.position.lng
+        this.dataForm.latitude = data.position.lat
+      },
       init (id) {
         this.url = this.$http.adornUrl(`/app/file/upload`)
         this.selectedOptions3 = []

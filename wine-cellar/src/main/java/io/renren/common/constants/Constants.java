@@ -95,7 +95,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (STATE value : STATE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -169,7 +169,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (GENDER value : GENDER.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -184,6 +184,7 @@ public class Constants {
 
         male(0,"是"),
         female(1,"否");
+
 
         private Integer key;
         private String value;
@@ -211,7 +212,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (SUPPORTTHEIROWN value : SUPPORTTHEIROWN.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -253,7 +254,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (ISDEFAULT value : ISDEFAULT.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -301,7 +302,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (CARTTYPE value : CARTTYPE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -344,7 +345,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (METHODPAYMENT value : METHODPAYMENT.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -394,7 +395,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (ORDERSTATUS value : ORDERSTATUS.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -443,7 +444,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (SETTLEMENTTYPE value : SETTLEMENTTYPE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -488,7 +489,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (COUPONTYPE value : COUPONTYPE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -534,7 +535,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (USINGSTATE value : USINGSTATE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -578,7 +579,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (RECEIVESTATE value : RECEIVESTATE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -622,7 +623,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (SHUFFLINGTYPE value : SHUFFLINGTYPE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -665,7 +666,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (MESSAGETYPE value : MESSAGETYPE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -708,7 +709,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (HAVEREAD value : HAVEREAD.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -752,7 +753,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (HAVEHANDPICK value : HAVEHANDPICK.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -795,7 +796,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (REVIEWSTATUS value : REVIEWSTATUS.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -837,7 +838,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (HAVECATEGORYACTIVITY value : HAVECATEGORYACTIVITY.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -882,7 +883,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (COMMODITYSORT value : COMMODITYSORT.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -924,7 +925,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (STORESORT value : STORESORT.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -965,7 +966,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (COLLECTIONTYPE value : COLLECTIONTYPE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -1008,7 +1009,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (CHANGETYPE value : CHANGETYPE.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }
@@ -1050,7 +1051,7 @@ public class Constants {
 
         public static String getValueByKey(Integer key) {
             for (RECORDSTATUS value : RECORDSTATUS.values()) {
-                if (value.getKey() == key) {
+                if (value.getKey().equals(key)) {
                     return value.value;
                 }
             }

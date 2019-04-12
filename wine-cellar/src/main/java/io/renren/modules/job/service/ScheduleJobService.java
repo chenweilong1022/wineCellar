@@ -35,7 +35,8 @@ public interface ScheduleJobService extends IService<ScheduleJobEntity> {
 	/**
 	 * 保存定时任务
 	 */
-	boolean save(ScheduleJobEntity scheduleJob);
+    @Override
+    boolean save(ScheduleJobEntity scheduleJob);
 	
 	/**
 	 * 更新定时任务

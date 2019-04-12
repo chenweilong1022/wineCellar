@@ -55,6 +55,7 @@ public class CellarMemberBalanceChangeRecordDbServiceImpl extends ServiceImpl<Ce
      * @param payOrderAmount
      * @param orderNo
      */
+    @Override
     public void balancePay(
             CellarMemberDbEntity cellarMemberDbEntity,
             BigDecimal payOrderAmount,
@@ -102,6 +103,7 @@ public class CellarMemberBalanceChangeRecordDbServiceImpl extends ServiceImpl<Ce
      * @param payOrderAmount
      * @param orderNo
      */
+    @Override
     public void balanceRefund(
             CellarMemberDbEntity cellarMemberDbEntity,
             BigDecimal payOrderAmount,

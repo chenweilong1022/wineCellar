@@ -58,3 +58,8 @@ wechat:
     mchId: 1323577401
     secretKey: tcjj1234tcjj1234tcjj1234tcjj1234
     notifyUrl: http://${project.host.name}/app/cellarcallback/paySuccess${settlementtype}/${methodpayment}
+vod:
+    regionId: cn-shanghai
+    accessKeyId: LTAIFaObgOEWIzHe
+    accessKeySecret: Udyo7RmKYiE05IlrHpzwdVXXaedM5M
+    roleArn: acs:ram::1408684116589269:role/vodrole

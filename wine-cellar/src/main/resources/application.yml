@@ -13,7 +13,7 @@ server:
 spring:
   # 环境 dev|test|prod
   profiles:
-    active: prod
+    active: dev
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
@@ -109,5 +109,5 @@ sms:
   account: N5455055
   pswd: B6iyA5YJMGc67a
   smsSingleRequestServerUrl: http://smssh1.253.com/msg/send/json
-  msg: 【同城酒窖】您正在注册同城酒窖会员，验证码${code}请于5分钟内使用，工作人员不会向您索取，请勿泄漏。
+  msg: 【同城酒窖】短信验证码为${code}，请勿泄露。验证码将在10分钟后过期，请尽快验证
   msg1: 【同城酒窖】您正在修改支付密码，验证码${code}请于5分钟内使用，工作人员不会向您索取，请勿泄漏。

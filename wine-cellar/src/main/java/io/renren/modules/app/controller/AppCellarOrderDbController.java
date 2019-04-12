@@ -17,6 +17,7 @@ import io.renren.modules.app.form.SubmitOrdersStoreEntity;
 import io.renren.modules.app.utils.IdGeneratorUtil;
 import io.renren.modules.cellar.entity.*;
 import io.renren.modules.cellar.service.*;
+import io.renren.modules.sys.controller.AbstractController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,7 +44,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("app/cellarorderdb")
 @Api(value="APP酒窖订单表",tags="APP酒窖订单表")
-public class AppCellarOrderDbController {
+public class AppCellarOrderDbController extends AbstractController {
     @Autowired
     private CellarOrderDbService cellarOrderDbService;
     @Autowired

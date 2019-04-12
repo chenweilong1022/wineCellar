@@ -38,7 +38,8 @@ public interface SysUserService extends IService<SysUserEntity> {
 	/**
 	 * 保存用户
 	 */
-	boolean save(SysUserEntity user);
+    @Override
+    boolean save(SysUserEntity user);
 	
 	/**
 	 * 修改用户

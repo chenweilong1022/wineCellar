@@ -174,13 +174,15 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 	/**
 	 * 设置：店铺名称
 	 */
-	public void setStoreName(String storeName) {
+	@Override
+    public void setStoreName(String storeName) {
 		this.storeName = storeName;
 	}
 	/**
 	 * 获取：店铺名称
 	 */
-	public String getStoreName() {
+	@Override
+    public String getStoreName() {
 		return storeName;
 	}
 	/**

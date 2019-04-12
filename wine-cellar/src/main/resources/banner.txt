@@ -29,32 +29,25 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-CREATE TABLE `cellar_member_bargaining_record_db` (
-  `member_bargaining_record_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员砍价记录id',
-  `member_bargaining_information_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员砍价信息id',
-  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
-  `cut_price` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '砍价金额',
-  `before_cut_price` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '砍价之前金额',
-  `after_cut_price` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '砍价之后金额',
-  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
+CREATE TABLE `cellar_member_video_comment_thumb_db` (
+  `member_video_comment_thumb_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员交友视频评论点赞id',
+  `thumb_member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '点赞人',
+  `member_video_comment_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员交友视频评论id',
+  `member_video_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员交友视频id',
   `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
-  PRIMARY KEY (`member_bargaining_record_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员砍价记录表';
-
-member_bargaining_record_id
-member_bargaining_information_id
-member_id
-cut_price
-before_cut_price
-after_cut_price
-create_time
-state
-
-会员砍价记录id
-会员砍价信息id
-会员id
-砍价金额
-砍价之前金额
-砍价之后金额
-创建时间
+  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`member_video_comment_thumb_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员交友视频评论点赞记录表';
+会员交友视频评论点赞id
+点赞人
+会员交友视频评论id
+会员交友视频id
 状态
+创建时间
+
+member_video_comment_thumb_id
+thumb_member_id
+member_video_comment_id
+member_video_id
+state
+create_time

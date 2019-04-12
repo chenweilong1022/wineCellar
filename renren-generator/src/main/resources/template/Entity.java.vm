@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 #if(${hasBigDecimal})
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.util.Date;
  * @email ${email}
  * @date ${datetime}
  */
+@Data
 @TableName("${tableName}")
 @ApiModel("${comments}")
 public class ${className}Entity extends AbstractEntity implements Serializable {
@@ -36,18 +38,18 @@ public class ${className}Entity extends AbstractEntity implements Serializable {
 private $column.attrType $column.attrname;
 #end
 
-#foreach ($column in $columns)
-	/**
-	 * 设置：${column.comments}
-	 */
-	public void set${column.attrName}($column.attrType $column.attrname) {
-		this.$column.attrname = $column.attrname;
-	}
-	/**
-	 * 获取：${column.comments}
-	 */
-	public $column.attrType get${column.attrName}() {
-		return $column.attrname;
-	}
-#end
+###foreach ($column in $columns)
+##	/**
+##	 * 设置：${column.comments}
+##	 */
+##	public void set${column.attrName}($column.attrType $column.attrname) {
+##		this.$column.attrname = $column.attrname;
+##	}
+##	/**
+##	 * 获取：${column.comments}
+##	 */
+##	public $column.attrType get${column.attrName}() {
+##		return $column.attrname;
+##	}
+###end
 }
