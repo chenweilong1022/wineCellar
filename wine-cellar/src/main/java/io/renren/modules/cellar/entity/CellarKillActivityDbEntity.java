@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.app.entity.NativeShareEntity;
+import io.renren.modules.app.utils.NativeShareUtil;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -25,6 +29,7 @@ import java.util.List;
  */
 @TableName("cellar_kill_activity_db")
 @ApiModel("秒杀活动表")
+@Data
 public class CellarKillActivityDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -86,6 +91,19 @@ public class CellarKillActivityDbEntity extends AbstractEntity implements Serial
 	@ApiModelProperty(required=false,value="秒杀列表")
 	@TableField(exist = false)
 	private List<CellarKillActivityDbEntity> cellarKillActivityDbEntities;
+	/**
+	 * 剩余时间
+	 */
+	@ApiModelProperty(required=false,value="剩余时间")
+	@TableField(exist = false)
+	private Long timeRemaining;
+	/**
+	 * 分享url
+	 */
+	@ApiModelProperty(required=false,value="分享url")
+	@TableField(exist = false)
+	private String shareUrl;
+
 
 	/**
 	 * 设置：秒杀活动id
@@ -199,7 +217,7 @@ public class CellarKillActivityDbEntity extends AbstractEntity implements Serial
 	}
 
 	public CellarCommodityDbEntity getCellarCommodityDbEntity() {
-		if (flag && ObjectUtil.isNotNull(commodityId)) {
+		if (this.flag && ObjectUtil.isNotNull(commodityId)) {
 			CellarCommodityDbService cellarCommodityDbService = SpringContextUtils.getBean(CellarCommodityDbService.class);
 			this.cellarCommodityDbEntity = cellarCommodityDbService.getById(this.commodityId);
 		}
@@ -212,5 +230,23 @@ public class CellarKillActivityDbEntity extends AbstractEntity implements Serial
 
 	public void setCellarKillActivityDbEntities(List<CellarKillActivityDbEntity> cellarKillActivityDbEntities) {
 		this.cellarKillActivityDbEntities = cellarKillActivityDbEntities;
+	}
+
+	public Long getTimeRemaining() {
+		if (ObjectUtil.isNotNull(this.killStartTime) && ObjectUtil.isNotNull(this.killEndTime)) {
+			this.timeRemaining = this.killEndTime.getTime() - System.currentTimeMillis();
+		}
+		return timeRemaining;
+	}
+
+	public String getShareUrl() {
+		if (ObjectUtil.isNotNull(this.storeId) && ObjectUtil.isNotNull(this.killActivityId)) {
+			NativeShareEntity nativeShareEntity = new NativeShareEntity();
+			nativeShareEntity.setNativeShare(Constants.NATIVESHARE.TWO.getKey());
+			nativeShareEntity.setStoreId(this.storeId);
+			nativeShareEntity.setKillActivityId(this.killActivityId);
+			this.shareUrl = NativeShareUtil.shareUrl(nativeShareEntity);
+		}
+		return shareUrl;
 	}
 }

@@ -93,6 +93,6 @@ public class AppRegisterController {
         cellarMemberDbEntity.setIntegral(BigDecimal.ZERO);
         cellarMemberDbEntity.setCardBalance(BigDecimal.ZERO);
         cellarMemberDbService.save(cellarMemberDbEntity);
-        return R.ok();
+        return R.data(cellarMemberDbEntity);
     }
 }

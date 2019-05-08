@@ -1,5 +1,7 @@
 package io.renren.common.constants;
 
+import lombok.Data;
+
 import java.util.List;
 
 public class Constants {
@@ -1058,5 +1060,115 @@ public class Constants {
             return "";
         }
     }
+
+
+    /**
+     * 原生分享
+     * 原生分享
+     */
+    public enum NATIVESHARE {
+
+        ONE(1,"秒杀列表"),
+        TWO(2,"秒杀详情"),
+        THREE(3,"砍价详情"),
+        FOUR(4,"拼团详情"),
+        FIVE(5,"普通详情");
+//        six(6,"用户创建充值订单"),
+//        seven(7,"用户创建充值订单"),
+//        eight(8,"已经充值");
+
+        private Integer key;
+        private String value;
+
+        private NATIVESHARE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public static NATIVESHARE valueOf(Integer key) {
+            for (NATIVESHARE value : NATIVESHARE.values()) {
+                if (value.getKey().equals(key)) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (NATIVESHARE value : NATIVESHARE.values()) {
+                if (value.getKey().equals(key)) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+    /**
+     * 酒窖规则
+     *
+     */
+    public enum RULETYPE {
+
+        ONE(1,"储值卡说明"),
+        TWO(2,"钱包说明"),
+        THREE(3,"酒币说明"),
+        FOUR(4,"关于我们"),
+        FIVE(5,"拼团规则"),
+        six(6,"预售规则"),
+        seven(7,"秒杀规则"),
+        eight(8,"砍价规则");
+
+        private Integer key;
+        private String value;
+
+        private RULETYPE(Integer key,String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public void setKey(Integer key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public static String getValueByKey(Integer key) {
+            for (RULETYPE value : RULETYPE.values()) {
+                if (value.getKey().equals(key)) {
+                    return value.value;
+                }
+            }
+            return "";
+        }
+    }
+
+
 
 }

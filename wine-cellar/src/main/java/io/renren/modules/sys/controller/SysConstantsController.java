@@ -85,4 +85,13 @@ public class SysConstantsController {
         return R.data(maps);
     }
 
+    /**
+     * 酒窖规则
+     */
+    @RequestMapping("/ruletypelist")
+    public R ruletypelist(){
+        List<Map<String, Object>> maps = EnumUtil.enumToMaps(Constants.RULETYPE.class);
+        return R.data(maps);
+    }
+
 }

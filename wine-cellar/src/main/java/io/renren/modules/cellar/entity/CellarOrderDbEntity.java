@@ -13,6 +13,7 @@ import io.renren.modules.cellar.service.CellarOrderDetailsDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -28,6 +29,7 @@ import java.util.List;
  */
 @TableName("cellar_order_db")
 @ApiModel("酒窖订单表")
+@Data
 public class CellarOrderDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.app.entity.NativeShareEntity;
+import io.renren.modules.app.utils.NativeShareUtil;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
@@ -90,11 +93,17 @@ public class CellarGroupActivityDbEntity extends AbstractEntity implements Seria
 	@ApiModelProperty(required=false,value="店铺id")
 	private Long storeId;
 	/**
-	 * 店铺id
+	 * 剩余时间
 	 */
-	@ApiModelProperty(required=false,value="店铺id")
+	@ApiModelProperty(required=false,value="剩余时间")
 	@TableField(exist = false)
 	private Long timeRemaining;
+	/**
+	 * 分享url
+	 */
+	@ApiModelProperty(required=false,value="分享url")
+	@TableField(exist = false)
+	private String shareUrl;
 
 	/**
 	 * 设置：拼团活动id
@@ -241,8 +250,19 @@ public class CellarGroupActivityDbEntity extends AbstractEntity implements Seria
 
 	public Long getTimeRemaining() {
 		if (ObjectUtil.isNotNull(this.groupStartTime) && ObjectUtil.isNotNull(this.groupEndTime)) {
-			this.timeRemaining = this.groupEndTime.getTime() - new Date().getTime();
+			this.timeRemaining = this.groupEndTime.getTime() - System.currentTimeMillis();
 		}
 		return timeRemaining;
+	}
+
+	public String getShareUrl() {
+		if (ObjectUtil.isNotNull(this.storeId) && ObjectUtil.isNotNull(this.groupActivityId)) {
+			NativeShareEntity nativeShareEntity = new NativeShareEntity();
+			nativeShareEntity.setNativeShare(Constants.NATIVESHARE.FOUR.getKey());
+			nativeShareEntity.setStoreId(this.storeId);
+			nativeShareEntity.setGroupActivityId(this.groupActivityId);
+			this.shareUrl = NativeShareUtil.shareUrl(nativeShareEntity);
+		}
+		return shareUrl;
 	}
 }

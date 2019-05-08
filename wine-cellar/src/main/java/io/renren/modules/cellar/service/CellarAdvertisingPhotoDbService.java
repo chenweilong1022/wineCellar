@@ -15,6 +15,11 @@ import java.util.Map;
  */
 public interface CellarAdvertisingPhotoDbService extends IService<CellarAdvertisingPhotoDbEntity> {
 
+    /**
+     * aaa
+     * @param cellarAdvertisingPhotoDb
+     * @return
+     */
     PageUtils queryPage(CellarAdvertisingPhotoDbEntity cellarAdvertisingPhotoDb);
 }
 

@@ -147,4 +147,16 @@ public class VodUtil {
 //        }
 //        System.out.print("RequestId = " + response.getRequestId() + "\n");
 //    }
+
+
+
+    public  static GetVideoPlayAuthResponse.VideoMeta getVideoMeta(String videoId) throws ClientException {
+        DefaultAcsClient defaultAcsClient = initVodClient();
+        GetVideoPlayAuthRequest request = new GetVideoPlayAuthRequest();
+        request.setVideoId(videoId);
+        request.setAuthInfoTimeout(Long.valueOf(2592000));
+        return defaultAcsClient.getAcsResponse(request).getVideoMeta();
+    }
+
+
 }

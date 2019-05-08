@@ -36,6 +36,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/config/**").addResourceLocations("classpath:/static/config/");
         registry.addResourceHandler("/1902151001/**").addResourceLocations("classpath:/static/1902151001/");
+        registry.addResourceHandler("/h5/**").addResourceLocations("classpath:/static/h5/");
         registry.addResourceHandler("/file/**").addResourceLocations("file:///" + fileConfig.getSaveurl());
     }
 

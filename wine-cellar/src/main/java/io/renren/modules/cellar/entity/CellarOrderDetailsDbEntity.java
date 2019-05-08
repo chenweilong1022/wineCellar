@@ -1,6 +1,8 @@
 package io.renren.modules.cellar.entity;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.common.utils.SpringContextUtils;
@@ -8,6 +10,7 @@ import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -22,6 +25,7 @@ import java.util.Date;
  */
 @TableName("cellar_order_details_db")
 @ApiModel("酒窖订单明细表")
+@Data
 public class CellarOrderDetailsDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -117,6 +121,12 @@ public class CellarOrderDetailsDbEntity extends AbstractEntity implements Serial
 	 */
 	@ApiModelProperty(required=false,value="会员砍价信息id")
 	private Long memberBargainingInformationId;
+	/**
+	 * 预售时间
+	 */
+	@ApiModelProperty(required=false,value="预售时间")
+	@TableField(exist = false)
+	private Date presellTime;
 
 	/**
 	 * 设置：订单明细id
@@ -188,11 +198,13 @@ public class CellarOrderDetailsDbEntity extends AbstractEntity implements Serial
 	 * 获取：商品id
 	 */
 	public Long getCommodityId() {
-		if (this.commodityId != null && this.commodityName == null) {
+
+		if (ObjectUtil.isNotNull(this.commodityId)) {
 			CellarCommodityDbService cellarCommodityDbService = SpringContextUtils.getBean(CellarCommodityDbService.class);
 			CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(commodityId);
 			this.picture = cellarCommodityDbEntity.getPicture();
 			this.commodityName = cellarCommodityDbEntity.getCommodityName();
+			this.presellTime = cellarCommodityDbEntity.getPresellTime();
 		}
 		return commodityId;
 	}

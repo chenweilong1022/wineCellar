@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.app.entity.NativeShareEntity;
+import io.renren.modules.app.utils.NativeShareUtil;
 import io.renren.modules.cellar.service.CellarCommodityDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
@@ -79,6 +82,12 @@ public class CellarBargainingActivityDbEntity extends AbstractEntity implements 
 	 */
 	@ApiModelProperty(required=false,value="店铺id")
 	private Long storeId;
+	/**
+	 * 分享url
+	 */
+	@ApiModelProperty(required=false,value="分享url")
+	@TableField(exist = false)
+	private String shareUrl;
 	/**
 	 * 设置：砍价活动id
 	 */
@@ -192,5 +201,16 @@ public class CellarBargainingActivityDbEntity extends AbstractEntity implements 
 			this.cellarCommodityDbEntity = cellarCommodityDbService.getById(this.commodityId);
 		}
 		return cellarCommodityDbEntity;
+	}
+
+	public String getShareUrl() {
+		if (ObjectUtil.isNotNull(this.storeId) && ObjectUtil.isNotNull(this.bargainingActivityId)) {
+			NativeShareEntity nativeShareEntity = new NativeShareEntity();
+			nativeShareEntity.setNativeShare(Constants.NATIVESHARE.THREE.getKey());
+			nativeShareEntity.setStoreId(this.storeId);
+			nativeShareEntity.setBargainingActivityId(this.bargainingActivityId);
+			this.shareUrl = NativeShareUtil.shareUrl(nativeShareEntity);
+		}
+		return shareUrl;
 	}
 }

@@ -3,11 +3,13 @@ package io.renren.modules.cellar.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.renren.common.constants.Constants;
 import io.renren.common.exception.RRException;
 import io.renren.common.validator.Assert;
 import io.renren.modules.cellar.entity.CellarMemberBalanceChangeRecordDbEntity;
 import io.renren.modules.cellar.entity.CellarMemberCardBalanceChangeRecordDbEntity;
+import io.renren.modules.cellar.entity.CellarStoreDbEntity;
 import io.renren.modules.cellar.service.CellarMemberBalanceChangeRecordDbService;
 import io.renren.modules.cellar.service.CellarMemberCardBalanceChangeRecordDbService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -146,6 +148,15 @@ public class CellarMemberDbServiceImpl extends ServiceImpl<CellarMemberDbDao, Ce
          */
         cellarMemberDbEntity.setCardBalance(afterCardBalance);
         baseMapper.updateById(cellarMemberDbEntity);
+    }
+
+    @Override
+    public PageUtils selectNearMember(CellarMemberDbEntity cellarMemberDbEntity) {
+        IPage<CellarStoreDbEntity> page = baseMapper.selectNearMember(
+                new Query<CellarMemberDbEntity>(cellarMemberDbEntity).getPage(),
+                cellarMemberDbEntity
+        );
+        return new PageUtils(page);
     }
 
 }

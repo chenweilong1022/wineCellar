@@ -150,7 +150,9 @@ public class AppCellarStoreDbController {
             @ApiIgnore CellarStoreDbEntity cellarStoreDbEntity
     ){
         CellarStoreDbEntity cellarStoreDb = cellarStoreDbService.getById(cellarStoreDbEntity.getStoreId());
-        cellarStoreDb.setMemberId(cellarMemberDbEntity == null ? null : cellarMemberDbEntity.getMemberId());
+        if (ObjectUtil.isNotNull(cellarStoreDb)) {
+            cellarStoreDb.setMemberId(cellarMemberDbEntity == null ? null : cellarMemberDbEntity.getMemberId());
+        }
         return R.data(cellarStoreDb);
     }
 

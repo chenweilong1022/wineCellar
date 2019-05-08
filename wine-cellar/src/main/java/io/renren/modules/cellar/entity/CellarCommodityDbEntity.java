@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.app.entity.NativeShareEntity;
+import io.renren.modules.app.utils.NativeShareUtil;
 import io.renren.modules.cellar.service.CellarMemberCollectionDbService;
 import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
@@ -211,6 +213,12 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	@TableField(strategy = FieldStrategy.IGNORED)
 	@ApiModelProperty(required=false,value="预售时间")
 	private Date presellTime;
+	/**
+	 * 分享url
+	 */
+	@ApiModelProperty(required=false,value="分享url")
+	@TableField(exist = false)
+	private String shareUrl;
 
 	/**
 	 * 设置：商品id
@@ -583,5 +591,16 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 
 	public void setPresellTime(Date presellTime) {
 		this.presellTime = presellTime;
+	}
+
+	public String getShareUrl() {
+		if (ObjectUtil.isNotNull(this.storeId) && ObjectUtil.isNotNull(this.commodityId)) {
+			NativeShareEntity nativeShareEntity = new NativeShareEntity();
+			nativeShareEntity.setNativeShare(Constants.NATIVESHARE.FIVE.getKey());
+			nativeShareEntity.setStoreId(this.storeId);
+			nativeShareEntity.setCommodityId(this.commodityId);
+			this.shareUrl = NativeShareUtil.shareUrl(nativeShareEntity);
+		}
+		return shareUrl;
 	}
 }

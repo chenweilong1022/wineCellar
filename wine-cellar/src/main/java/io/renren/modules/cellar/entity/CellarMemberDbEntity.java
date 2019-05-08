@@ -8,6 +8,7 @@ import io.renren.common.constants.Constants;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.Date;
  */
 @TableName("cellar_member_db")
 @ApiModel("酒窖会员表")
+@Data
 public class CellarMemberDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -119,6 +121,17 @@ public class CellarMemberDbEntity extends AbstractEntity implements Serializable
 	 */
 	@ApiModelProperty(required=false,value="储值卡余额")
 	private BigDecimal cardBalance;
+	/**
+	 * 经度
+	 */
+	@ApiModelProperty(required=false,value="经度")
+	private String longitude;
+	/**
+	 * 纬度
+	 */
+	@ApiModelProperty(required=false,value="纬度")
+	private String latitude;
+
 
 	/**
 	 * 设置：会员id

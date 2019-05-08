@@ -4,11 +4,15 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.renren.common.constants.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -23,6 +27,7 @@ import io.renren.modules.cellar.service.CellarKillActivityDbService;
 @Service("cellarKillActivityDbService")
 public class CellarKillActivityDbServiceImpl extends ServiceImpl<CellarKillActivityDbDao, CellarKillActivityDbEntity> implements CellarKillActivityDbService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public PageUtils queryPage(CellarKillActivityDbEntity cellarKillActivityDb) {
         /**

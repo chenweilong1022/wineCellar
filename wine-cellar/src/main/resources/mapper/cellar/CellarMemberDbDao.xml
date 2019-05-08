@@ -25,4 +25,23 @@
     </resultMap>
 
 
+    <!--附近好友-->
+    <select id="selectNearMember" resultMap="cellarMemberDbMap">
+        SELECT
+            *,
+            (
+                6371 * acos(
+                    cos( radians( m.latitude ) ) * cos( radians( #{ew.latitude} ) ) * cos( radians( #{ew.longitude} ) - radians( m.longitude ) ) + sin( radians( m.latitude ) ) * sin( radians( #{ew.latitude} ) )
+                )
+            ) AS distance
+        FROM
+            cellar_member_db m
+        WHERE
+            m.latitude IS NOT NULL
+            AND m.longitude IS NOT NULL
+        ORDER BY
+            distance
+    </select>
+
+
 </mapper>

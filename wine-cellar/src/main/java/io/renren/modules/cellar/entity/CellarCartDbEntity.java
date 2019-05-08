@@ -1,9 +1,6 @@
 package io.renren.modules.cellar.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.EnumUtil;
 import io.renren.common.utils.SpringContextUtils;
@@ -12,6 +9,7 @@ import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
@@ -27,6 +25,7 @@ import java.util.List;
  */
 @TableName("cellar_cart_db")
 @ApiModel("酒窖购物车")
+@Data
 public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -63,6 +62,12 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 	@ApiModelProperty(required=false,value="减")
 	@TableField(exist = false)
 	private BigDecimal reductionOf;
+	/**
+	 * 支持自取
+	 */
+	@ApiModelProperty(required=false,value="支持自取")
+	@TableField(exist = false)
+	private Integer supportTheirOwn;
 	/**
 	 * 店铺名称
 	 */
@@ -114,6 +119,12 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 	@ApiModelProperty(required=false,value="店铺下商品列表")
 	@TableField(exist = false)
 	private List<CellarCartDbEntity> cellarCartDbEntities;
+	/**
+	 * 预售时间
+	 */
+	@ApiModelProperty(required=false,value="预售时间")
+	@TableField(exist = false)
+	private Date presellTime;
 
 	/**
 	 * 设置：购物车id
@@ -204,6 +215,7 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 			}
 			this.commodityName = cellarCommodityDbEntity.getCommodityName();
 			this.picture = cellarCommodityDbEntity.getPicture();
+			this.presellTime = cellarCommodityDbEntity.getPresellTime();
 			if (this.type.equals(Constants.CARTTYPE.ZERO.getKey()) ||
 					this.type.equals(Constants.CARTTYPE.ONE.getKey()) ||
 					this.type.equals(Constants.CARTTYPE.TWO.getKey()) ||
@@ -300,6 +312,7 @@ public class CellarCartDbEntity extends AbstractEntity implements Serializable {
 			CellarStoreDbEntity cellarStoreDbEntity = cellarStoreDbService.getById(this.storeId);
 			this.full = cellarStoreDbEntity == null ? null:cellarStoreDbEntity.getFull();
 			this.reductionOf = cellarStoreDbEntity == null ? null:cellarStoreDbEntity.getReductionOf();
+			this.supportTheirOwn = cellarStoreDbEntity == null ? null:cellarStoreDbEntity.getSupportTheirOwn();
 		}
 		return full;
 	}

@@ -102,7 +102,7 @@ public class AppCellarCommodityDbController extends AbstractController {
         CellarCommodityDbEntity cellarCommodityDbEntityOne = cellarCommodityDbService.getOne(new QueryWrapper<CellarCommodityDbEntity>()
                 .lambda()
                 .eq(CellarCommodityDbEntity::getState,Constants.STATE.zero.getKey())
-                .eq(CellarCommodityDbEntity::getStoreId,cellarCommodityDb.getStoreId())
+                .eq(ObjectUtil.isNotNull(cellarCommodityDb.getStoreId()) && cellarCommodityDb.getStoreId() > Constants.Number.zero.getKey(),CellarCommodityDbEntity::getStoreId,cellarCommodityDb.getStoreId())
                 .eq(CellarCommodityDbEntity::getCommodityId, cellarCommodityDb.getCommodityId())
         );
         /**

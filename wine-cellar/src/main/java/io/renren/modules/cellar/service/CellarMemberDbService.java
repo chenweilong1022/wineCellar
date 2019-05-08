@@ -34,5 +34,11 @@ public interface CellarMemberDbService extends IService<CellarMemberDbEntity> {
      * @param outtradeno
      */
     void rechargeCardBalanceSuccess(String outtradeno);
+    /**
+     * 查询附近好友
+     * @param cellarMemberDbEntity
+     * @return
+     */
+    public PageUtils selectNearMember(CellarMemberDbEntity cellarMemberDbEntity);
 }
 

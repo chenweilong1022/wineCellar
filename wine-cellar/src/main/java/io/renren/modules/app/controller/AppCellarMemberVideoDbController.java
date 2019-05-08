@@ -72,7 +72,7 @@ public class AppCellarMemberVideoDbController {
      */
     @GetMapping("/listAll")
     @ApiOperation(value = "视频列表--抖音",notes = "视频列表--抖音",response = CellarMemberVideoDbEntity.class)
-    @Login
+//    @Login
     @ApiImplicitParams({
             @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
     })
@@ -86,7 +86,7 @@ public class AppCellarMemberVideoDbController {
          * 查看用户是否点赞
          */
         List<CellarMemberVideoDbEntity> list = (List<CellarMemberVideoDbEntity>) page.getList();
-        list.forEach( cellarMemberVideoDbEntity -> cellarMemberVideoDbEntity.setThumbMemberId(cellarMemberDbEntity.getMemberId()));
+        list.forEach( cellarMemberVideoDbEntity -> cellarMemberVideoDbEntity.setThumbMemberId(cellarMemberDbEntity == null?null:cellarMemberDbEntity.getMemberId()));
         return R.data(page);
     }
 
@@ -107,6 +107,8 @@ public class AppCellarMemberVideoDbController {
             @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
             @ApiIgnore CellarMemberVideoDbEntity cellarMemberVideoDb
     ){
+
+//        https://outin-8a6687975a9611e98dcc00163e1a3b4a.oss-cn-shanghai.aliyuncs.com/image/cover/FB0BEDA284E0401DB5BCAA9532896D96-6-2.png?Expires=1555064305&amp;OSSAccessKeyId=LTAItL9Co9nUDU5r&amp;Signature=t77fy52knLg7gZg2dcKZxDJ2BaY%3D
         cellarMemberVideoDb.setState(Constants.STATE.zero.getKey());
         cellarMemberVideoDb.setCreateTime(new Date());
         cellarMemberVideoDb.setMemberId(cellarMemberDbEntity.getMemberId());

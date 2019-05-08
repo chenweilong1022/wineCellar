@@ -1,5 +1,6 @@
 package io.renren.modules.app.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.auth.sts.AssumeRoleResponse;
 import com.aliyuncs.exceptions.ClientException;
@@ -54,7 +55,7 @@ public class AppCellarVodController extends AbstractController {
      * 获取视频上传地址和凭证
      */
     @GetMapping("/assumeRole")
-    @Login
+//    @Login
     @ApiOperation(value = "获取sts临时权限",notes = "获取sts临时权限",response = AssumeRoleResponse.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name="token",value="用户token",dataType="String",required=false,paramType="query"),
@@ -64,7 +65,7 @@ public class AppCellarVodController extends AbstractController {
     ){
         AssumeRoleResponse sts = null;
         try {
-            sts = StsUtil.assumeRole(cellarMemberDbEntity.getMemberId().toString());
+            sts = StsUtil.assumeRole(cellarMemberDbEntity == null? RandomUtil.randomNumbers(6):cellarMemberDbEntity.getMemberId().toString());
         } catch (ClientException e) {
             e.printStackTrace();
         }

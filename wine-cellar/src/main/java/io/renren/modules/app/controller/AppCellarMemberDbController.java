@@ -18,6 +18,7 @@ import io.renren.modules.cellar.service.CellarMemberBalanceChangeRecordDbService
 import io.renren.modules.cellar.service.CellarMemberCaptchaService;
 import io.renren.modules.cellar.service.CellarMemberCardBalanceChangeRecordDbService;
 import io.renren.modules.cellar.service.CellarMemberDbService;
+import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysJwtEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,7 +46,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("app/cellarmemberdb")
 @Api(value="APP会员接口",tags="APP会员接口")
-public class AppCellarMemberDbController {
+public class AppCellarMemberDbController extends AbstractController {
     @Autowired
     private CellarMemberDbService cellarMemberDbService;
     @Autowired
@@ -302,6 +303,54 @@ public class AppCellarMemberDbController {
         cellarMemberDbEntity.setPayPassword(DigestUtils.sha256Hex(cellarMemberDbEntityUpdate.getPayPassword()));
         cellarMemberDbService.updateById(cellarMemberDbEntity);
         return R.ok();
+    }
+
+    /**
+     * 更新位置
+     * @param cellarMemberDbEntityUpdate
+     * @return
+     */
+    @PostMapping("updatePosition")
+    @ApiOperation("更新位置")
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="longitude",value="经度",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="latitude",value="纬度",dataType="String",required=false,paramType="query"),
+    })
+    public R updatePosition(
+            @ApiIgnore CellarMemberDbEntity cellarMemberDbEntityUpdate
+    ){
+        Assert.isBlank(cellarMemberDbEntityUpdate.getLongitude(),"经度不能为空");
+        Assert.isBlank(cellarMemberDbEntityUpdate.getLatitude(),"纬度不能为空");
+        cellarMemberDbEntityUpdate.setMemberId(cellarMemberDbEntity.getMemberId());
+        cellarMemberDbService.updateById(cellarMemberDbEntityUpdate);
+        return R.ok();
+    }
+
+
+    /**
+     * 附近好友
+     * @param cellarMemberDbEntityUpdate
+     * @return
+     */
+    @PostMapping("selectNearMember")
+    @ApiOperation("附近好友")
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="longitude",value="经度",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="latitude",value="纬度",dataType="String",required=false,paramType="query"),
+    })
+    public R selectNearMember(
+            @ApiIgnore CellarMemberDbEntity cellarMemberDbEntityUpdate
+    ){
+        Assert.isBlank(cellarMemberDbEntityUpdate.getLongitude(),"经度不能为空");
+        Assert.isBlank(cellarMemberDbEntityUpdate.getLatitude(),"纬度不能为空");
+        PageUtils pageUtils = cellarMemberDbService.selectNearMember(cellarMemberDbEntityUpdate);
+        return R.data(pageUtils);
     }
 
 }

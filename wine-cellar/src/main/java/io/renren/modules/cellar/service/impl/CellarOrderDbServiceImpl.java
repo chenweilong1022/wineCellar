@@ -66,6 +66,7 @@ public class CellarOrderDbServiceImpl extends ServiceImpl<CellarOrderDbDao, Cell
                 .eq(ObjectUtil.isNotNull(cellarOrderDb.getMethodPayment()),CellarOrderDbEntity::getMethodPayment,cellarOrderDb.getMethodPayment())
                 .eq(ObjectUtil.isNotNull(cellarOrderDb.getOrderType()),CellarOrderDbEntity::getOrderType,cellarOrderDb.getOrderType())
                 .eq(ObjectUtil.isNotNull(cellarOrderDb.getOrderStatus()),CellarOrderDbEntity::getOrderStatus,cellarOrderDb.getOrderStatus())
+                .notIn(ObjectUtil.isNull(cellarOrderDb.getOrderType()),CellarOrderDbEntity::getOrderType, Constants.CARTTYPE.FOUR.getKey(), Constants.CARTTYPE.FIVE.getKey(), Constants.CARTTYPE.SIX.getKey())
                 .eq(flag,CellarOrderDbEntity::getStoreId,storeId)
                 .like(StringUtils.isNotBlank(cellarOrderDb.getKey()),CellarOrderDbEntity::getOrderId,cellarOrderDb.getKey())
                 .orderByDesc(CellarOrderDbEntity::getCreateTime)
