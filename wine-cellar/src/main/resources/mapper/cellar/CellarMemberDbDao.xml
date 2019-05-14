@@ -22,6 +22,8 @@
         <result property="integral" column="integral"/>
         <result property="individualitySignature" column="individuality_signature"/>
         <result property="cardBalance" column="card_balance"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
     </resultMap>
 
 

@@ -18,15 +18,15 @@ public class AnoTest {
             System.out.println(annotation);
         }
 
-        Field[] declaredFields = CellarMemberVideoDbEntity.class.getDeclaredFields();
+        Field[] declaredFields = CellarMemberDynamicDbEntity.class.getDeclaredFields();
         for (Field field : declaredFields) {
             ApiModelProperty annotation = field.getAnnotation(ApiModelProperty.class);
             if (annotation == null)
                 continue;
             String value = annotation.value();
-            System.out.println(value);
+//            System.out.println(value);
             String name = field.getName();
-//            System.out.println(name);
+            System.out.println(name);
 
         }
     }

@@ -29,32 +29,26 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-CREATE TABLE `cellar_rule_db` (
-  `rule_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '规则id',
-  `rule_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '规则类型',
-  `rule_description` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '规则描述',
-  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
+CREATE TABLE `cellar_member_dynamic_thumb_db` (
+  `member_dynamic_thumb_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员动态点赞id',
+  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
+  `member_dynamic_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员动态id',
   `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
-  PRIMARY KEY (`rule_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='酒窖规则表';
+  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`member_dynamic_thumb_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员动态点赞表';
 
-
-
-rule_description
-
-rule_id
-rule_type
-rule_description
-create_time
-state
-
-规则说明
-规则id
-规则类型
-规则描述
-创建时间
+会员动态点赞记录
+会员动态点赞记录id
+会员id
 状态
+创建时间
+会员动态id
 
-  `longitude` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '经度',
-  `latitude` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '纬度',
+member_dynamic_thumb
+member_dynamic_thumb_id
+member_id
+state
+create_time
+member_dynamic_id
 

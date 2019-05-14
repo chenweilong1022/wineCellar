@@ -75,6 +75,27 @@ public class AppCellarMemberDbController extends AbstractController {
         return R.data(cellarMemberDbEntity1);
     }
 
+
+    /**
+     * 登录
+     */
+    @GetMapping("infoByMemberId")
+    @ApiOperation(value = "根据memberId查询用户信息",notes = "根据memberId查询用户信息",response = CellarMemberDbEntity.class)
+//    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="memberId",value="用户id",dataType="String",required=false,paramType="query"),
+    })
+    public R infoByMemberId(
+            @ApiIgnore CellarMemberDbEntity cellarMemberDbEntity
+    ){
+        /**
+         * 获取用户信息
+         */
+        CellarMemberDbEntity cellarMemberDbEntity1 = cellarMemberDbService.getById(cellarMemberDbEntity.getMemberId());
+        Assert.isNull(cellarMemberDbEntity1,"用户不存在");
+        return R.data(cellarMemberDbEntity1);
+    }
+
     /**
      * 修改用户基本信息
      */
@@ -334,7 +355,7 @@ public class AppCellarMemberDbController extends AbstractController {
      * @param cellarMemberDbEntityUpdate
      * @return
      */
-    @PostMapping("selectNearMember")
+    @GetMapping("selectNearMember")
     @ApiOperation("附近好友")
     @Login
     @ApiImplicitParams({

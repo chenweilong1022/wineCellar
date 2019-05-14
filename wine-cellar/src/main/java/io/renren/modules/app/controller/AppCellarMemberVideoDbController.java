@@ -48,22 +48,23 @@ public class AppCellarMemberVideoDbController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "用户视频列表",notes = "用户视频列表",response = CellarMemberVideoDbEntity.class)
-    @Login
+//    @Login
     @ApiImplicitParams({
-            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="memberId",value="用户memberId",dataType="String",required=false,paramType="query"),
     })
     public R list(
             @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
             @ApiIgnore CellarMemberVideoDbEntity cellarMemberVideoDb
     ){
-        cellarMemberVideoDb.setMemberId(cellarMemberDbEntity.getMemberId());
+//        cellarMemberVideoDb.setMemberId(cellarMemberDbEntity.getMemberId());
         PageUtils page = cellarMemberVideoDbService.queryPage(cellarMemberVideoDb);
 
         /**
          * 查看用户是否点赞
          */
         List<CellarMemberVideoDbEntity> list = (List<CellarMemberVideoDbEntity>) page.getList();
-        list.forEach( cellarMemberVideoDbEntity -> cellarMemberVideoDbEntity.setThumbMemberId(cellarMemberDbEntity.getMemberId()));
+        list.forEach( cellarMemberVideoDbEntity -> cellarMemberVideoDbEntity.setThumbMemberId(cellarMemberVideoDb.getMemberId()));
         return R.data(page);
     }
 

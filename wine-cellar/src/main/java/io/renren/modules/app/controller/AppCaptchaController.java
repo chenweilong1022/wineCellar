@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +59,7 @@ public class AppCaptchaController {
             @ApiImplicitParam(name="uuid",value="随机数,与注册接口随机数保持一致",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="memberMobile",value="手机号",dataType="String",required=false,paramType="query"),
     })
+    @Transactional
     public R sendCaptcha(
             @ApiIgnore CellarMemberCaptchaEntity cellarMemberCaptchaEntity
     ){
