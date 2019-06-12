@@ -13,6 +13,7 @@ import io.renren.modules.app.annotation.Login;
 import io.renren.modules.app.annotation.LoginUser;
 import io.renren.modules.app.form.SubmitOrdersByCartEntity;
 import io.renren.modules.app.form.SubmitOrdersByDirectlyEntity;
+import io.renren.modules.app.form.SubmitOrdersByIntegralEntity;
 import io.renren.modules.app.form.SubmitOrdersStoreEntity;
 import io.renren.modules.app.utils.IdGeneratorUtil;
 import io.renren.modules.cellar.entity.*;
@@ -65,6 +66,8 @@ public class AppCellarOrderDbController extends AbstractController {
     private CellarMemberBalanceChangeRecordDbService cellarMemberBalanceChangeRecordDbService;
     @Autowired
     private CellarMemberCardBalanceChangeRecordDbService cellarMemberCardBalanceChangeRecordDbService;
+    @Autowired
+    private CellarMemberIntegralChangeRecordDbService cellarMemberIntegralChangeRecordDbService;
 
     /**
      * 列表
@@ -515,5 +518,105 @@ public class AppCellarOrderDbController extends AbstractController {
         }
         return R.ok();
     }
+
+
+
+    /**
+     * 积分购买商品生成订单
+     */
+    @PostMapping("/generateOrderByIntegral")
+    @ApiOperation(value = "积分购买商品生成订单",notes = "积分购买商品生成订单")
+    @Login
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="用户token",dataType="String",required=false,paramType="query"),
+    })
+    public R generateOrderByIntegral(
+            @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
+            SubmitOrdersByIntegralEntity submitOrdersByIntegralEntity
+    ){
+
+        /**
+         * 酒窖系统配置
+         */
+        CellarConfigDbEntity cellarConfigDbEntity = cellarConfigDbService.getById(Constants.Number.one.getKey());
+        Assert.isNull(submitOrdersByIntegralEntity,"提交订单为空");
+        Assert.isNull(submitOrdersByIntegralEntity.getMethodPayment(),"支付方式不能为空");
+        BigDecimal payOrderAmount = BigDecimal.ZERO;//订单支付金额
+        String orderNo = IdGeneratorUtil.getOrderNo();//订单编号 用来记录一批订单
+        Long orderId = IdGeneratorUtil.getOrderId();//订单id
+        BigDecimal totalIntegralPrice = BigDecimal.ZERO;//订单总积分
+        /**
+         * 设置订单数据
+         */
+        CellarOrderDbEntity cellarOrderDbEntity = new CellarOrderDbEntity();
+        cellarOrderDbEntity.setOrderId(orderId);
+        cellarOrderDbEntity.setState(Constants.STATE.zero.getKey());//状态
+        cellarOrderDbEntity.setCreateTime(new Date());//创建时间
+        cellarOrderDbEntity.setAddressId(submitOrdersByIntegralEntity.getAddressId());//地址id
+        cellarOrderDbEntity.setDeliveryTime(submitOrdersByIntegralEntity.getDeliveryTime());//送达时间
+        cellarOrderDbEntity.setMethodPayment(submitOrdersByIntegralEntity.getMethodPayment());//支付方式
+        cellarOrderDbEntity.setOrderNote(submitOrdersByIntegralEntity.getOrderNote());//订单备注
+        cellarOrderDbEntity.setOrderNo(orderNo);//订单编号
+        cellarOrderDbEntity.setIsHave(submitOrdersByIntegralEntity.getIsHave());
+        cellarOrderDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());//会员id
+        cellarOrderDbEntity.setPickUpPhone(submitOrdersByIntegralEntity.getPickUpPhone());//自提人手机号
+        cellarOrderDbEntity.setOrderType(submitOrdersByIntegralEntity.getPickupWay());//订单类型
+        cellarOrderDbEntity.setOrderStatus(Constants.ORDERSTATUS.FUONE.getKey());//订单待支付
+
+        Long[] commodityIds = submitOrdersByIntegralEntity.getCommodityId();
+        BigDecimal[] numbers = submitOrdersByIntegralEntity.getNumber();
+        for (int i = 0; i < commodityIds.length; i++) {
+            CellarCommodityDbEntity cellarCommodityDbEntity = cellarCommodityDbService.getById(commodityIds[i]);
+            /**
+             * 订单明细表设置数据
+             */
+            CellarOrderDetailsDbEntity cellarOrderDetailsDbEntity = new CellarOrderDetailsDbEntity();
+            cellarOrderDetailsDbEntity.setOrderId(orderId);
+            cellarOrderDetailsDbEntity.setState(Constants.STATE.zero.getKey());//状态
+            cellarOrderDetailsDbEntity.setCreatetime(new Date());//创建时间
+            cellarOrderDetailsDbEntity.setCommodityId(cellarCommodityDbEntity.getCommodityId());//商品id
+            cellarOrderDetailsDbEntity.setNumber(numbers[i]);//数量
+            cellarOrderDetailsDbEntity.setMemberId(cellarMemberDbEntity.getMemberId());
+            cellarOrderDetailsDbEntity.setIntegralPrice(cellarCommodityDbEntity.getIntegralPrice());//积分价格
+            cellarOrderDetailsDbEntity.setTotalIntegralPrice(cellarOrderDetailsDbEntity.getIntegralPrice().multiply(cellarOrderDetailsDbEntity.getNumber()));//总积分价格
+            /**
+             * 订单明细保存
+             */
+            cellarOrderDetailsDbService.save(cellarOrderDetailsDbEntity);
+            totalIntegralPrice = totalIntegralPrice.add(cellarOrderDetailsDbEntity.getTotalIntegralPrice());
+        }
+        cellarOrderDbEntity.setIntegralPrice(totalIntegralPrice);
+        /**
+         * 保存订单
+         */
+        cellarOrderDbService.save(cellarOrderDbEntity);
+
+        Assert.isTrue(!submitOrdersByIntegralEntity.getMethodPayment().equals(Constants.METHODPAYMENT.INTEGRAL.getKey()),"此订单只能使用积分支付");
+
+        /**
+         * 微信
+         */
+        if (submitOrdersByIntegralEntity.getMethodPayment().equals(Constants.METHODPAYMENT.WECHAT.getKey())) {
+            Map map = WechatPayUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.TWO);
+            return R.data(map);
+            /**
+             * 支付宝
+             */
+        }else if (submitOrdersByIntegralEntity.getMethodPayment().equals(Constants.METHODPAYMENT.ALIPAY.getKey())) {
+            String order = AliUtil.appOrder("同城酒窖", orderNo, payOrderAmount, Constants.SETTLEMENTTYPE.TWO);
+            return R.data(order);
+        }else if (submitOrdersByIntegralEntity.getMethodPayment().equals(Constants.METHODPAYMENT.BALANCE.getKey())) {
+            cellarMemberBalanceChangeRecordDbService.balancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByIntegralEntity.getPayPassword());
+        }else if (submitOrdersByIntegralEntity.getMethodPayment().equals(Constants.METHODPAYMENT.CARDBALANCE.getKey())) {
+            cellarMemberCardBalanceChangeRecordDbService.cardBalancePay(cellarMemberDbEntity,payOrderAmount,orderNo,submitOrdersByIntegralEntity.getPayPassword());
+        }else if (submitOrdersByIntegralEntity.getMethodPayment().equals(Constants.METHODPAYMENT.INTEGRAL.getKey())) {
+            cellarMemberIntegralChangeRecordDbService.integralPay(cellarMemberDbEntity,totalIntegralPrice,orderNo,submitOrdersByIntegralEntity.getPayPassword());
+        }
+
+        return R.ok();
+    }
+
+
+
 
 }

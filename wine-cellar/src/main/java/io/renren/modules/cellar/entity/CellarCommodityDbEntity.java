@@ -14,6 +14,7 @@ import io.renren.modules.cellar.service.CellarStoreDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
@@ -29,6 +30,7 @@ import java.util.Date;
  */
 @TableName("cellar_commodity_db")
 @ApiModel("酒窖商品表")
+@Data
 public class CellarCommodityDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -58,6 +60,11 @@ public class CellarCommodityDbEntity extends AbstractEntity implements Serializa
 	 */
 	@ApiModelProperty(required=false,value="积分")
 	private BigDecimal integral;
+	/**
+	 * 积分价格|酒币价格
+	 */
+	@ApiModelProperty(required=false,value="积分价格|酒币价格")
+	private BigDecimal integralPrice;
 	/**
 	 * 图文详情
 	 */

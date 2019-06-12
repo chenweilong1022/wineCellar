@@ -69,14 +69,17 @@
     <el-form-item label="商品规格" prop="productSpecifications">
       <el-input v-model="dataForm.productSpecifications" placeholder="商品规格"></el-input>
     </el-form-item>
-    <el-form-item label="原价" prop="originalPrice">
+    <el-form-item v-if="!this.system" label="原价" prop="originalPrice">
       <el-input v-model="dataForm.originalPrice" placeholder="原价"></el-input>
     </el-form-item>
-    <el-form-item label="现价" prop="presentPrice">
+    <el-form-item v-if="!this.system" label="现价" prop="presentPrice">
       <el-input v-model="dataForm.presentPrice" placeholder="现价"></el-input>
     </el-form-item>
-    <el-form-item label="酒币" prop="integral">
+    <el-form-item v-if="!this.system" label="酒币" prop="integral">
       <el-input v-model="dataForm.integral" placeholder="酒币"></el-input>
+    </el-form-item>
+    <el-form-item v-if="this.system" label="酒比兑换价格" prop="integralPrice">
+      <el-input v-model="dataForm.integralPrice" placeholder="酒比兑换价格"></el-input>
     </el-form-item>
     <el-form-item label="预售时间" prop="presellTime">
         <el-date-picker
@@ -165,6 +168,7 @@
         inputValue: '',
         url: '',
         visible: false,
+        system: true,
         dataForm: {
           commodityId: 0,
           commodityName: '',
@@ -180,6 +184,7 @@
           totalSales: '',
           inventory: '',
           integral: '',
+          integralPrice: '',
           highPraise: '',
           commodityRotationChart: '',
           productSpecifications: '',
@@ -268,6 +273,7 @@
         this.inputValue = ''
       },
       init (id) {
+        this.getUserInfo()
         this.editFiles = []
         this.listOneLevel()
         this.commodityRotationChartList = []
@@ -288,9 +294,7 @@
                 this.dataForm.originalPrice = data.cellarCommodityDb.originalPrice
                 this.dataForm.presentPrice = data.cellarCommodityDb.presentPrice
                 this.dataForm.graphicDetailsStr = data.cellarCommodityDb.graphicDetailsStr
-
                 this.$refs.ueditor.init(this.dataForm.graphicDetailsStr)
-
                 this.dataForm.picture = data.cellarCommodityDb.picture
                 this.dataForm.label = data.cellarCommodityDb.label
                 this.dataForm.creationTime = data.cellarCommodityDb.creationTime
@@ -300,6 +304,7 @@
                 this.dataForm.inventory = data.cellarCommodityDb.inventory
                 this.dataForm.highPraise = data.cellarCommodityDb.highPraise
                 this.dataForm.integral = data.cellarCommodityDb.integral
+                this.dataForm.integralPrice = data.cellarCommodityDb.integralPrice
                 this.dataForm.commodityRotationChart = data.cellarCommodityDb.commodityRotationChart
                 this.dataForm.commodityRotationChartList = data.cellarCommodityDb.commodityRotationChartList
                 this.dataForm.productSpecifications = data.cellarCommodityDb.productSpecifications
@@ -372,6 +377,7 @@
                 'inventory': this.dataForm.inventory,
                 'highPraise': this.dataForm.highPraise,
                 'integral': this.dataForm.integral,
+                'integralPrice': this.dataForm.integralPrice,
                 'commodityRotationChart': this.dataForm.commodityRotationChart,
                 'productSpecifications': this.dataForm.productSpecifications,
                 'storeId': this.dataForm.storeId,
@@ -396,6 +402,17 @@
                 this.$message.error(data.msg)
               }
             })
+          }
+        })
+      },
+      getUserInfo () {
+        this.$http({
+          url: this.$http.adornUrl('/sys/user/info'),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.system = !data.user.storeId
           }
         })
       }

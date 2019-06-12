@@ -14,10 +14,7 @@ import io.renren.modules.app.entity.MemberBalanceRechargeEntity;
 import io.renren.modules.app.entity.MemberCardBalanceRechargeEntity;
 import io.renren.modules.app.utils.IdGeneratorUtil;
 import io.renren.modules.cellar.entity.*;
-import io.renren.modules.cellar.service.CellarMemberBalanceChangeRecordDbService;
-import io.renren.modules.cellar.service.CellarMemberCaptchaService;
-import io.renren.modules.cellar.service.CellarMemberCardBalanceChangeRecordDbService;
-import io.renren.modules.cellar.service.CellarMemberDbService;
+import io.renren.modules.cellar.service.*;
 import io.renren.modules.sys.controller.AbstractController;
 import io.renren.modules.sys.entity.SysJwtEntity;
 import io.swagger.annotations.Api;
@@ -33,7 +30,9 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -55,6 +54,8 @@ public class AppCellarMemberDbController extends AbstractController {
     private CellarMemberBalanceChangeRecordDbService cellarMemberBalanceChangeRecordDbService;
     @Autowired
     private CellarMemberCardBalanceChangeRecordDbService cellarMemberCardBalanceChangeRecordDbService;
+    @Autowired
+    private CellarMemberDynamicDbService cellarMemberDynamicDbService;
 
     /**
      * 登录
@@ -372,6 +373,19 @@ public class AppCellarMemberDbController extends AbstractController {
         Assert.isBlank(cellarMemberDbEntityUpdate.getLatitude(),"纬度不能为空");
         PageUtils pageUtils = cellarMemberDbService.selectNearMember(cellarMemberDbEntityUpdate);
         return R.data(pageUtils);
+    }
+
+    /**
+     * 活跃动态用户查询 根据动态数量判断
+     * @return
+     */
+    @GetMapping("activeMember")
+    @ApiOperation("活跃动态用户查询 根据动态数量判断")
+    @ApiImplicitParams({
+    })
+    public R activeMember(){
+        List<CellarMemberDbEntity> cellarMemberDbEntities = cellarMemberDynamicDbService.activeMember().stream().map(cellarMemberDynamicDbEntity -> cellarMemberDbService.getById(cellarMemberDynamicDbEntity.getMemberId())).collect(Collectors.toList());
+        return R.data(cellarMemberDbEntities);
     }
 
 }

@@ -75,6 +75,34 @@ public class AppCellarCommodityDbController extends AbstractController {
         return R.data(page);
     }
 
+    /**
+     * 积分商城商品列表
+     * 平台上传商品都为积分商城商品
+     * 只能使用积分购买
+     */
+    @GetMapping("/listIntegral")
+    @ApiOperation(value = "积分商城商品列表",notes = "积分商城商品列表",response = CellarCommodityDbEntity.class)
+    @ApiImplicitParams({
+//            @ApiImplicitParam(name="storeId",value="店铺id",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="categoryId",value="分类id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="key",value="搜索条件",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="haveHandpick",value="精选商品",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="categoryActivityId",value="分类活动id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="sort",value="排序 1按销量 2按时间 3按价格升序 4按价格倒序 5好评",dataType="String",required=false,paramType="query"),
+    })
+    public R listIntegral(
+            @ApiIgnore CellarCommodityDbEntity cellarCommodityDb
+    ){
+        /**
+         * 查询
+         */
+        PageUtils page = cellarCommodityDbService.queryPageIntegral(cellarCommodityDb);
+
+        return R.data(page);
+    }
+
 
     /**
      * 信息

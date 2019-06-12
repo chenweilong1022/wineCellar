@@ -108,7 +108,7 @@ public class MemberIntegralAspect {
 				 * 如果积分大于0增加用户积分
 				 * 增加用户积分记录
 				 */
-				if (cellarOrderDbEntity.getIntegral().compareTo(BigDecimal.ZERO) > Constants.Number.zero.getKey()) {
+				if (ObjectUtil.isNotNull(cellarOrderDbEntity.getIntegral()) && cellarOrderDbEntity.getIntegral().compareTo(BigDecimal.ZERO) > Constants.Number.zero.getKey()) {
 					CellarMemberIntegralChangeRecordDbEntity cellarMemberIntegralChangeRecordDbEntity = new CellarMemberIntegralChangeRecordDbEntity();
 					cellarMemberIntegralChangeRecordDbEntity.setCreateTime(new Date());
 					cellarMemberIntegralChangeRecordDbEntity.setState(Constants.STATE.zero.getKey());

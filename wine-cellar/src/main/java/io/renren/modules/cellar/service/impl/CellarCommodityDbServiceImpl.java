@@ -35,6 +35,7 @@ public class CellarCommodityDbServiceImpl extends ServiceImpl<CellarCommodityDbD
                 new Query<CellarCommodityDbEntity>(cellarCommodityDb).getPage(),
                 new QueryWrapper<CellarCommodityDbEntity>().lambda()
                         .eq(ObjectUtil.isNotNull(userEntity.getStoreId()),CellarCommodityDbEntity::getStoreId,userEntity.getStoreId())
+                        .isNull(ObjectUtil.isNull(userEntity.getStoreId()),CellarCommodityDbEntity::getStoreId)
                         .like(StringUtils.isNotBlank(cellarCommodityDb.getKey()),CellarCommodityDbEntity::getCommodityName,cellarCommodityDb.getKey())
                         .eq(CellarCommodityDbEntity::getState, Constants.STATE.zero.getKey())
         );
@@ -61,6 +62,29 @@ public class CellarCommodityDbServiceImpl extends ServiceImpl<CellarCommodityDbD
         );
         return new PageUtils(page);
     }
+
+    @Override
+    public PageUtils queryPageIntegral(CellarCommodityDbEntity cellarCommodityDb) {
+        IPage<CellarCommodityDbEntity> page = baseMapper.selectPage(
+                new Query<CellarCommodityDbEntity>(cellarCommodityDb).getPage(),
+                new QueryWrapper<CellarCommodityDbEntity>().lambda()
+                        .eq(CellarCommodityDbEntity::getState, Constants.STATE.zero.getKey())
+                        .isNull(CellarCommodityDbEntity::getStoreId)
+//                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getStoreId()),CellarCommodityDbEntity::getStoreId,cellarCommodityDb.getStoreId())
+//                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryId()),CellarCommodityDbEntity::getCategoryId,cellarCommodityDb.getCategoryId())
+//                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getHaveHandpick()),CellarCommodityDbEntity::getHaveHandpick,cellarCommodityDb.getHaveHandpick())
+//                        .like(StringUtils.isNotBlank(cellarCommodityDb.getKey()),CellarCommodityDbEntity::getCommodityName,cellarCommodityDb.getKey())
+//                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryActivityId()),CellarCommodityDbEntity::getCategoryActivityId,cellarCommodityDb.getCategoryActivityId())
+//                        .eq(ObjectUtil.isNotNull(cellarCommodityDb.getCategoryActivityId()),CellarCommodityDbEntity::getHaveCategoryActivity, Constants.HAVECATEGORYACTIVITY.YES.getKey())
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.ONE.getKey()),CellarCommodityDbEntity::getTotalSales)
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.TWO.getKey()),CellarCommodityDbEntity::getCreationTime)
+                        .orderByAsc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.THREE.getKey()),CellarCommodityDbEntity::getPresentPrice)
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.FOUR.getKey()),CellarCommodityDbEntity::getPresentPrice)
+                        .orderByDesc(cellarCommodityDb.getSort().equals(Constants.COMMODITYSORT.FIVE.getKey()),CellarCommodityDbEntity::getHighPraise)
+        );
+        return new PageUtils(page);
+    }
+
 
     @Override
     public void evaluationStarNumbers(Long commodityId, Integer evaluationStarNumber) {

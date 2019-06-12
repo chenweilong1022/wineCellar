@@ -114,11 +114,17 @@ public class AppCellarMemberAddressDbController {
             @ApiImplicitParam(name="token",value="登录token",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="contact",value="联系人",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="contactPhone",value="联系电话",dataType="String",required=false,paramType="query"),
-            @ApiImplicitParam(name="provinceId",value="省id",dataType="String",required=false,paramType="query"),
-            @ApiImplicitParam(name="cityId",value="市id",dataType="String",required=false,paramType="query"),
-            @ApiImplicitParam(name="countyId",value="县id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="provinceName",value="省名称",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="cityName",value="市名称",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="countyName",value="县名称",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="provinceId",value="省id",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="cityId",value="市id",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="countyId",value="县id",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="detailedAddress",value="详细地址",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="mapAddress",value="地图地址",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="isDefault",value="是否默认 1 默认 0 非默认",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="longitude",value="经度",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="latitude",value="纬度",dataType="String",required=false,paramType="query"),
     })
     public R save(
             @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,
@@ -127,13 +133,17 @@ public class AppCellarMemberAddressDbController {
         /**
          * 校验
          */
-        Assert.isNull(cellarMemberAddressDb.getProvinceId(),"省id不能为空");
-        Assert.isNull(cellarMemberAddressDb.getCityId(),"市id不能为空");
-        Assert.isNull(cellarMemberAddressDb.getCountyId(),"县id不能为空");
+        Assert.isBlank(cellarMemberAddressDb.getProvinceName(),"省名称不能为空");
+        Assert.isBlank(cellarMemberAddressDb.getCityName(),"市名称不能为空");
+        Assert.isBlank(cellarMemberAddressDb.getCountyName(),"县名称不能为空");
+//        Assert.isNull(cellarMemberAddressDb.getProvinceId(),"省id不能为空");
+//        Assert.isNull(cellarMemberAddressDb.getCityId(),"市id不能为空");
+//        Assert.isNull(cellarMemberAddressDb.getCountyId(),"县id不能为空");
         Assert.isBlank(cellarMemberAddressDb.getContact(),"联系人不能为空");
         Assert.isBlank(cellarMemberAddressDb.getContactPhone(),"联系人手机号不能为空");
         Assert.isPhone(cellarMemberAddressDb.getContactPhone());
         Assert.isBlank(cellarMemberAddressDb.getDetailedAddress(),"详细地址不能为空");
+        Assert.isBlank(cellarMemberAddressDb.getMapAddress(),"详细地址不能为空");
         /**
          * 保存用户地址
          */
@@ -160,11 +170,17 @@ public class AppCellarMemberAddressDbController {
             @ApiImplicitParam(name="addressId",value="地址id",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="contact",value="联系人",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="contactPhone",value="联系电话",dataType="String",required=false,paramType="query"),
-            @ApiImplicitParam(name="provinceId",value="省id",dataType="String",required=false,paramType="query"),
-            @ApiImplicitParam(name="cityId",value="市id",dataType="String",required=false,paramType="query"),
-            @ApiImplicitParam(name="countyId",value="县id",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="provinceName",value="省名称",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="cityName",value="市名称",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="countyName",value="县名称",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="provinceId",value="省id",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="cityId",value="市id",dataType="String",required=false,paramType="query"),
+//            @ApiImplicitParam(name="countyId",value="县id",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="detailedAddress",value="详细地址",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="mapAddress",value="地图地址",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="isDefault",value="是否默认 1 默认 0 非默认",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="longitude",value="经度",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="latitude",value="纬度",dataType="String",required=false,paramType="query"),
     })
     public R update(
             @ApiIgnore @LoginUser CellarMemberDbEntity cellarMemberDbEntity,

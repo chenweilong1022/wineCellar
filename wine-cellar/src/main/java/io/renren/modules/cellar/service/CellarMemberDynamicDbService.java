@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.cellar.entity.CellarMemberDynamicDbEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,11 @@ import java.util.Map;
 public interface CellarMemberDynamicDbService extends IService<CellarMemberDynamicDbEntity> {
 
     PageUtils queryPage(CellarMemberDynamicDbEntity cellarMemberDynamicDb);
+
+    /**
+     * 活跃动态用户查询 根据动态数量判断
+     * @return
+     */
+    List<CellarMemberDynamicDbEntity> activeMember();
 }
 

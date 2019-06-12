@@ -76,15 +76,27 @@ public class CellarOrderDetailsDbEntity extends AbstractEntity implements Serial
 	@ApiModelProperty(required=false,value="商品总金额")
 	private BigDecimal totalAmountGoods;
 	/**
-	 * 商品金额
+	 * 商品积分
 	 */
-	@ApiModelProperty(required=false,value="商品金额")
+	@ApiModelProperty(required=false,value="商品积分")
 	private BigDecimal integral;
 	/**
-	 * 商品总金额
+	 * 商品总积分
 	 */
-	@ApiModelProperty(required=false,value="商品总金额")
+	@ApiModelProperty(required=false,value="商品总积分")
 	private BigDecimal totalIntegral;
+
+	/**
+	 * 积分价格
+	 */
+	@ApiModelProperty(required=false,value="积分价格")
+	private BigDecimal integralPrice;
+	/**
+	 * 商品总积分价格
+	 */
+	@ApiModelProperty(required=false,value="商品总积分价格")
+	private BigDecimal totalIntegralPrice;
+
 
 	/**
 	 * 商品名称

@@ -1,6 +1,7 @@
 package io.renren.modules.app.controller;
 import java.util.Date;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.constants.Constants;
 import io.renren.common.utils.PageUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -43,6 +45,7 @@ public class AppCellarMemberDynamicDbController extends AbstractController {
             @ApiImplicitParam(name="key",value="搜索条件",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="page",value="当前页数",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="limit",value="每页个数",dataType="String",required=false,paramType="query"),
+            @ApiImplicitParam(name="token",value="用户token,用于校验当前用户",dataType="String",required=false,paramType="query"),
             @ApiImplicitParam(name="memberId",value="用户id,此接口使用memberId来标识用户",dataType="String",required=false,paramType="query"),
     })
     public R list(
@@ -51,6 +54,11 @@ public class AppCellarMemberDynamicDbController extends AbstractController {
 //        Assert.isNull(cellarMemberDynamicDb.getMemberId(),"用户id不能为空");
         cellarMemberDynamicDb.setMemberId(cellarMemberDynamicDb.getMemberId());
         PageUtils page = cellarMemberDynamicDbService.queryPage(cellarMemberDynamicDb);
+        /**
+         * 判断当前用户是否点赞
+         */
+        List<CellarMemberDynamicDbEntity> cellarMemberDynamicDbEntities = (List<CellarMemberDynamicDbEntity>) page.getList();
+        cellarMemberDynamicDbEntities.forEach(cellarMemberDynamicDbEntity -> cellarMemberDynamicDbEntity.setCurrentMemberId(ObjectUtil.isNotNull(this.cellarMemberDbEntity)?this.cellarMemberDbEntity.getMemberId():null));
         return R.data(page);
     }
     /**
@@ -79,18 +87,7 @@ public class AppCellarMemberDynamicDbController extends AbstractController {
         cellarMemberDynamicDbService.save(cellarMemberDynamicDb);
         return R.ok();
     }
-//
-//    /**
-//     * 修改
-//     */
-//    @RequestMapping("/update")
-//    @RequiresPermissions("cellar:cellarmemberdynamicdb:update")
-//    public R update(@RequestBody CellarMemberDynamicDbEntity cellarMemberDynamicDb){
-//			cellarMemberDynamicDbService.updateById(cellarMemberDynamicDb);
-//
-//        return R.ok();
-//    }
-//
+
     /**
      * 删除动态
      */

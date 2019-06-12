@@ -29,26 +29,39 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
 */
-CREATE TABLE `cellar_member_dynamic_thumb_db` (
-  `member_dynamic_thumb_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员动态点赞id',
-  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
+CREATE TABLE `cellar_member_dynamic_comment_db` (
+  `member_dynamic_comment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '会员动态评论id',
   `member_dynamic_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员动态id',
-  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
+  `member_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员id',
+  `nickname` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员名称',
+  `head_portrait` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '会员头像',
+  `comment_content` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '评论内容',
   `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`member_dynamic_thumb_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员动态点赞表';
+  `state` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '状态',
+  PRIMARY KEY (`member_dynamic_comment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='会员动态评论表';
 
-会员动态点赞记录
-会员动态点赞记录id
-会员id
-状态
-创建时间
+会员动态评论记录
 会员动态id
+会员id
+会员名称
+会员头像
+评论内容
+创建时间
+状态
 
-member_dynamic_thumb
-member_dynamic_thumb_id
-member_id
-state
-create_time
+member_dynamic_comment_id
 member_dynamic_id
+member_id
+nickname
+head_portrait
+comment_content
+create_time
+state
+
+
+
+ALTER TABLE cellar_order_db add `integral_price` decimal(11,2) DEFAULT NULL COMMENT '订单积分价格';
+ALTER TABLE cellar_order_details_db add `integral_price` decimal(11,2) DEFAULT NULL COMMENT '积分价格';
+ALTER TABLE cellar_order_details_db add `total_integral_price` decimal(11,2) DEFAULT NULL COMMENT '商品总积分价格';
 

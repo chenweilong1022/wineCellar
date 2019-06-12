@@ -275,7 +275,8 @@ public class Constants {
         THREE(3,"预售"),
         FOUR(4,"拼团"),
         FIVE(5,"秒杀"),
-        SIX(6,"砍价");
+        SIX(6,"砍价"),
+        SEVEN(7,"积分");
 //        seven(7,"");
 
         private Integer key;
@@ -320,7 +321,8 @@ public class Constants {
         WECHAT(0,"微信"),
         ALIPAY(1,"支付宝"),
         BALANCE(2,"余额"),
-        CARDBALANCE(3,"储值卡余额");
+        CARDBALANCE(3,"储值卡余额"),
+        INTEGRAL(4,"积分");
         private Integer key;
         private String value;
 
@@ -983,7 +985,8 @@ public class Constants {
 
         ONE(1,"充值"),
         TWO(2,"消费"),
-        THREE(3,"退款");
+        THREE(3,"退款"),
+        FOUR(4,"积分兑换商品");
 
         private Integer key;
         private String value;

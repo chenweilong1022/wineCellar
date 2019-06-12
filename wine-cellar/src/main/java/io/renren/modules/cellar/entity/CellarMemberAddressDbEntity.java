@@ -9,6 +9,7 @@ import io.renren.modules.sys.entity.AbstractEntity;
 import io.renren.modules.sys.service.SysAreaService;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import java.util.Date;
  */
 @TableName("cellar_member_address_db")
 @ApiModel("会员地址表")
+@Data
 public class CellarMemberAddressDbEntity extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -83,6 +85,11 @@ public class CellarMemberAddressDbEntity extends AbstractEntity implements Seria
 	@ApiModelProperty(required=false,value="详细地址")
 	private String detailedAddress;
 	/**
+	 * 地图地址
+	 */
+	@ApiModelProperty(required=false,value="地图地址")
+	private String mapAddress;
+	/**
 	 * 创建时间
 	 */
 	@ApiModelProperty(required=false,value="创建时间")
@@ -97,6 +104,16 @@ public class CellarMemberAddressDbEntity extends AbstractEntity implements Seria
 	 */
 	@ApiModelProperty(required=false,value="是否默认 1 默认 0 非默认")
 	private Integer isDefault;
+	/**
+	 * 经度
+	 */
+	@ApiModelProperty(required=false,value="经度")
+	private String longitude;
+	/**
+	 * 纬度
+	 */
+	@ApiModelProperty(required=false,value="纬度")
+	private String latitude;
 
 	/**
 	 * 设置：地址id

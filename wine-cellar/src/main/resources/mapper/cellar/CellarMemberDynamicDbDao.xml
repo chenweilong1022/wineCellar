@@ -17,5 +17,21 @@
         <result property="headPortrait" column="head_portrait"/>
     </resultMap>
 
+    <!--活跃用户-->
+    <select id="activeMember" resultMap="cellarMemberDynamicDbMap">
+        SELECT
+            member_id
+        FROM
+            `cellar_member_dynamic_db` d
+        WHERE
+            d.state = 0
+        GROUP BY
+            d.member_id
+        ORDER BY
+            COUNT( d.member_id ) DESC
+            LIMIT 0,
+            10
+    </select>
+
 
 </mapper>

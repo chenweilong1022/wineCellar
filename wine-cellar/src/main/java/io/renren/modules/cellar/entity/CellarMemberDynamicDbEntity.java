@@ -1,8 +1,13 @@
 package io.renren.modules.cellar.entity;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.cellar.service.CellarMemberDynamicThumbDbService;
 import io.renren.modules.sys.entity.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -75,5 +80,28 @@ public class CellarMemberDynamicDbEntity extends AbstractEntity implements Seria
 	 */
 	@ApiModelProperty(required=false,value="会员头像")
 	private String headPortrait;
+	/**
+	 * 是否点赞
+	 */
+	@ApiModelProperty(required=false,value="是否点赞")
+	@TableField(exist = false)
+	private int isThumb;
+	/**
+	 * 当前会员id
+	 */
+	@ApiModelProperty(required=false,value="当前会员id")
+	@TableField(exist = false)
+	private Long currentMemberId;
 
+
+	public int getIsThumb() {
+		if (ObjectUtil.isNotNull(this.currentMemberId)) {
+			CellarMemberDynamicThumbDbService cellarMemberDynamicThumbDbService = SpringContextUtils.getBean(CellarMemberDynamicThumbDbService.class);
+			this.isThumb = cellarMemberDynamicThumbDbService.count(new QueryWrapper<CellarMemberDynamicThumbDbEntity>().lambda()
+					.eq(CellarMemberDynamicThumbDbEntity::getMemberId, this.currentMemberId)
+					.eq(CellarMemberDynamicThumbDbEntity::getMemberDynamicId, this.memberDynamicId)
+			);
+		}
+		return isThumb;
+	}
 }

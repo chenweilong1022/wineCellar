@@ -4,6 +4,8 @@ import io.renren.modules.cellar.entity.CellarMemberDynamicDbEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 会员动态表
  * 
@@ -13,5 +15,11 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CellarMemberDynamicDbDao extends BaseMapper<CellarMemberDynamicDbEntity> {
-	
+
+    /**
+     * 活跃动态用户查询 根据动态数量判断
+     * @return
+     */
+    List<CellarMemberDynamicDbEntity> activeMember();
+
 }

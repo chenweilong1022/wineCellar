@@ -199,10 +199,15 @@ public class CellarOrderDbEntity extends AbstractEntity implements Serializable 
 	@ApiModelProperty(required=false,value="会员优惠券id")
 	private Long memberCouponId;
 	/**
-	 * 订单积分
+	 * 订单积分---赠送积分
 	 */
-	@ApiModelProperty(required=false,value="订单积分")
+	@ApiModelProperty(required=false,value="订单积分---赠送积分")
 	private BigDecimal integral;
+	/**
+	 * 订单积分价格
+	 */
+	@ApiModelProperty(required=false,value="订单积分价格")
+	private BigDecimal integralPrice;
 	/**
 	 * 是否自提
 	 */
