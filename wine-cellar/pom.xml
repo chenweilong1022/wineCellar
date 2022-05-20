@@ -46,7 +46,7 @@
 		<com.gaols.utils>1.0-SNAPSHOT</com.gaols.utils>
 		<com.aliyun.aliyun-java-sdk-core>4.3.3</com.aliyun.aliyun-java-sdk-core>
 		<com.aliyun.aliyun-java-sdk-vod>2.15.1</com.aliyun.aliyun-java-sdk-vod>
-		<com.google.code.gson.gson>2.8.2</com.google.code.gson.gson>
+		<com.google.code.gson.gson>2.8.9</com.google.code.gson.gson>
 
 		<!--wagon plugin 配置-->
 		<service-path>/work/renren</service-path>
